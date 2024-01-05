@@ -43,7 +43,7 @@ namespace BizzManWebErp
             {
                 //BizzzManERP_New
                
-                conHo = new System.Data.SqlClient.SqlConnection("Data Source=DESKTOP-S053FQR;Initial Catalog=BizzzManERP_New;User ID=sa;Password=123;Persist Security Info=True");
+                conHo = new System.Data.SqlClient.SqlConnection("Data Source=US12MES1-DEV\\MESDEV;Initial Catalog=MESUpcomingModules_Renew;User ID=mes_report;Password= =bhV6VVP;Persist Security Info=True");
 
             
                 // *****************************************

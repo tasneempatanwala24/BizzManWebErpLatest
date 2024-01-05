@@ -87,11 +87,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\alertify.css" />
+    <Content Include="css\all.min.css" />
+    <Content Include="css\bootstrap-datepicker.min.css" />
     <Content Include="css\bootstrap-timepicker.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\bt.min.css" />
     <Content Include="css\CrmLeadMaster.css" />
     <Content Include="css\CrmLeadStyle.css" />
+    <Content Include="css\dataTables.bootstrap4.min.css" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\InventPutawayRule.css" />
     <Content Include="css\InventWarehouseMaster.css" />
@@ -119,6 +122,7 @@
     <Content Include="Scripts\AdminModuleMaster.js" />
     <Content Include="Scripts\AdminRoleMaster.js" />
     <Content Include="Scripts\AdminUserMaster.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bt.min.js" />
     <Content Include="Scripts\CrmCustomerMaster.js" />
     <Content Include="Scripts\CrmLeadMaster.js" />
@@ -149,6 +153,7 @@
     <Content Include="Scripts\InventStockReportPutwayRule.js" />
     <Content Include="Scripts\InventWarehouseMaster.js" />
     <Content Include="Scripts\jqq.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.js" />
     <Content Include="Scripts\Maino.js" />
     <Content Include="Scripts\ManufactureOrder.js" />
     <Content Include="Scripts\MaterialPurchaseGateInword.js" />
@@ -197,6 +202,7 @@
     <Content Include="Scripts\SalesOrder.js" />
     <Content Include="Scripts\SalesOrderDelivery.js" />
     <Content Include="Scripts\SdSalesMisReport.js" />
+    <Content Include="Scripts\SdSalesQuotationMaster.js" />
     <Content Include="Scripts\select2.min.js" />
     <Content Include="css\SidebarMenu.css" />
     <Content Include="Scripts\tableHTMLExport.js" />
@@ -240,6 +246,7 @@
     <Content Include="wfAdminLogin.aspx" />
     <Content Include="wfMmMainMenu.aspx" />
     <Content Include="wfSdSalesMisReport.aspx" />
+    <Content Include="wSdSalesQuotationMaster.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMain.Master.cs">
@@ -291,6 +298,7 @@
     <Compile Include="Model\CommonModel.cs" />
     <Compile Include="Model\CrmLeadModel.cs" />
     <Compile Include="Model\Quotation.cs" />
+    <Compile Include="Model\SalesQuotationDetail.cs" />
     <Compile Include="POS.Master.cs">
       <DependentUpon>POS.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -585,6 +593,13 @@
     </Compile>
     <Compile Include="wfSdSalesMisReport.aspx.designer.cs">
       <DependentUpon>wfSdSalesMisReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wSdSalesQuotationMaster.aspx.cs">
+      <DependentUpon>wSdSalesQuotationMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wSdSalesQuotationMaster.aspx.designer.cs">
+      <DependentUpon>wSdSalesQuotationMaster.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

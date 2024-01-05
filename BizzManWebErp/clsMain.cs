@@ -42,10 +42,10 @@ namespace BizzManWebErp
             try
             {
                 //BizzzManERP_New
-               
-                conHo = new System.Data.SqlClient.SqlConnection("Data Source=US12MES1-DEV\\MESDEV;Initial Catalog=MESUpcomingModules_Renew;User ID=mes_report;Password= =bhV6VVP;Persist Security Info=True");
 
-            
+                //conHo = new System.Data.SqlClient.SqlConnection("Data Source=US12MES1-DEV\\MESDEV;Initial Catalog=MESUpcomingModules_Renew;User ID=mes_report;Password= =bhV6VVP;Persist Security Info=True");
+
+                conHo = new System.Data.SqlClient.SqlConnection("Server=IN01TPATANWALA7\\SQLEXPRESS;Integrated Security=True;Database=BizzManWebErp;");
                 // *****************************************
                 conHo.Open();
                 gblConHoStatus = true;

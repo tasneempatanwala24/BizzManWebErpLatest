@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using BizzManWebErp.Model;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using Newtonsoft.Json;
 
 namespace BizzManWebErp
@@ -127,7 +128,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
         }
 
         [WebMethod]
-        public static string AddtSalesQuotationMasterAndDetails(List<SalesQuotationDetail> data,string QuotationId,int CustomerId,string  QuotationDate,string CreateBy)
+        public static string AddtSalesQuotationMasterAndDetails(List<SalesQuotationDetail> data,string QuotationId,int CustomerId,string  QuotationDate,string CreateBy,double NetTotal, double NetGST, double ShippingCharges, double NetAmount, string Notes,string  TermsAndConditions)
         {
             StringBuilder strBuild = new StringBuilder();
             strBuild.Append("<XMLData>");
@@ -135,6 +136,13 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             strBuild.Append("<CustomerId>" + CustomerId + "</CustomerId>");
             strBuild.Append("<QuotationDate>" + DateTime.ParseExact(QuotationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture) + "</QuotationDate>");
             strBuild.Append("<CreateBy>" + CreateBy + "</CreateBy>");
+            strBuild.Append("<NetTotal>" + NetTotal + "</NetTotal>");
+            strBuild.Append("<NetGST>" + NetGST + "</NetGST>");
+            strBuild.Append("<ShippingCharges>" + ShippingCharges + "</ShippingCharges>");
+            strBuild.Append("<NetAmount>" + NetAmount + "</NetAmount>");
+            strBuild.Append("<Notes>" + Notes + "</Notes>");
+            strBuild.Append("<TermsAndConditions>" + TermsAndConditions + "</TermsAndConditions>");
+           
             strBuild.Append("<SalesQuotationDetails>");
             if (data.Count > 0)
             {
@@ -142,7 +150,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 {
                     strBuild.Append("<SalesQuotationDetail>");
                     strBuild.Append("<ItemId>" + Convert.ToInt32(item.ItemID) + "</ItemId>");
-                    strBuild.Append("<Qty>" + item.Qty+ "</Qty>");
+                    strBuild.Append("<Qty>" + item.Quantity+ "</Qty>");
                     strBuild.Append("<Rate>" + item.Rate + "</Rate>");
                     strBuild.Append("<Discount>" + item.Discount + "</Discount>");
                     strBuild.Append("<GST>" + item.GST + "</GST>");

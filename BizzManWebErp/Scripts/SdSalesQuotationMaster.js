@@ -237,9 +237,10 @@ function calculateTotalRowAmount(obj) {
 function calculateGrandTotal() {
     var grandTotal = 0;
     var grandTotalGST = 0;
-
+    var shippingCharges = parseFloat($('#ShippingCharges').val());
     // Iterate through each row in the table body
     $('#dataTable tbody tr').each(function () {
+       
         var totalAmount = parseFloat($(this).find('.txtAmount').val());
         grandTotal += totalAmount;
 
@@ -250,6 +251,7 @@ function calculateGrandTotal() {
     // Display the calculated values in the table footer
     $('#grandTotal').val(grandTotal.toFixed(2));
     $('#grandTotalGST').val(grandTotalGST.toFixed(2));
+    grandTotal += shippingCharges
     $('#netAmount').val(grandTotal.toFixed(2));
 }
 
@@ -310,12 +312,18 @@ function saveData() {
     var customerId = $('#ddlClientName').val();
     var quotationDate = $('#quotationDate').val();
     var loginuser = $('#ContentPlaceHolder1_loginuser').val();
+    var NetTotal = $('#grandTotal').val(); 
+    var NetGST = $('#grandTotalGST').val(); 
+    var ShippingCharges = $('#ShippingCharges').val(); 
+    var NetAmount = $('#netAmount').val(); 
+    var Notes = $('#notes').val(); 
+    var TermsAndConditions = $('#terms').val(); 
     // Send data to server using AJAX
     $.ajax({
         type: "POST",
         url: "wSdSalesQuotationMaster.aspx/AddtSalesQuotationMasterAndDetails", // Adjust the URL based on your setup
         contentType: "application/json; charset=utf-8",
-        data: JSON.stringify({ data: data, QuotationId: quotationId, CustomerId: customerId, QuotationDate: quotationDate, CreateBy: loginuser }),
+        data: JSON.stringify({ data: data, QuotationId: quotationId, CustomerId: customerId, QuotationDate: quotationDate, CreateBy: loginuser, NetTotal: NetTotal, NetGST: NetGST, ShippingCharges: ShippingCharges, NetAmount: NetAmount, Notes: Notes, TermsAndConditions: TermsAndConditions }),
         dataType: "json",
         success: function (response) {
             alertify.success('Sales Quotation details added successfully');

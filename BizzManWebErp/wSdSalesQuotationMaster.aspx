@@ -113,7 +113,7 @@
            <tr>
               <th colspan="5" style="text-align:right">Shipping Charges</th>
               <th>
-                  <input type="text" value="0" class="form-control" disabled>
+                  <input type="text" value="0" class="form-control" id="ShippingCharges" onchange="calculateGrandTotal()" oninput="handleNumericInput(event)">
               </th>
           </tr>
            <tr>

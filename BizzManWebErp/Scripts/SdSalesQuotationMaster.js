@@ -1,6 +1,6 @@
 ﻿var optionsOfMaterialDropdownGrid = '';
 $(document).ready(function () {
-    $("#addRowBtn,#saveDataBtn").click(function (event) {
+    $("#addRowBtn,#saveDataBtn,.preventDefault").click(function (event) {
         event.preventDefault();
     }); 
     $(".delete-row").click(function (event) {
@@ -345,7 +345,112 @@ function ClearAll() {
     $('#txtEmail').val('');
     $('#notes').val('');
     $('#terms').val('');
-
+    $('#ShippingCharges').val('')
     toggleTfootVisibility();
     $('#ddlClientName').val('');
+}
+
+function CreateData() {
+    //  $('#divEmpJobList').hide();
+    $('#divDataList').hide();
+    $('#divDataItemsView').hide();
+    $('#PrintDataBtn').hide();
+    //  $('#divEmpJobEntry').show();
+    $('#divDataEntry').show();
+    $('#saveDataBtn').show();
+    ClearAll();
+}
+
+function ViewDataList() {
+    //  $('#divEmpJobList').hide();
+    $('#divDataList').show();
+    $('#divDataItemsView').hide();
+    $('#PrintDataBtn').hide();
+    //  $('#divEmpJobEntry').show();
+    $('#divDataEntry').hide();
+    $('#saveDataBtn').hide();
+   
+}
+
+
+function GetSdSalesQuotationMasterById(QuoatId) {
+   
+    $('#divDataList').hide();
+    $('#divDataEntry').hide();
+    $('#saveDataBtn').hide();
+    $.ajax({
+        type: "POST",
+        url: 'wSdSalesQuotationMaster.aspx/GetSdSalesQuotationMasterById',
+        data: JSON.stringify({
+            "QuotationId": QuoatId
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            $('#disptxtCustomerName').val(data.SalesQuotationMastertInfo.CustomerName)
+            $('#dispQuotationDate').val(data.SalesQuotationMastertInfo.QuotationDate)
+            $('#disptxtClientAddress').val(data.SalesQuotationMastertInfo.Address)
+            $('#disptxtQuotation').val(data.SalesQuotationMastertInfo.QuotationId)
+            $('#disptxtContactNumber').val(data.SalesQuotationMastertInfo.Mobile)
+            $('#disptxtEmail').val(data.SalesQuotationMastertInfo.Email)
+            $('#dispgrandTotal').val(data.SalesQuotationMastertInfo.NetTotal)
+            $('#dispgrandTotalGST').val(data.SalesQuotationMastertInfo.NetGST)
+            $('#dispShippingCharges').val(data.SalesQuotationMastertInfo.ShippingCharges)
+            $('#dispnetAmount').val(data.SalesQuotationMastertInfo.NetAmount)
+            $('#dispnotes').val(data.SalesQuotationMastertInfo.Notes)
+            $('#dispterms').val(data.SalesQuotationMastertInfo.TermsAndConditions)
+
+            var html = '';
+            for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
+                html = html + '<tr"><td>' + data.SalesItems[0].Table[i].materialName + '</td>'
+                    + '<td>' + data.SalesItems[0].Table[i].Qty + '</td>'
+                    + '<td>' + data.SalesItems[0].Table[i].Rate + '</td>'
+                    + '<td>' + data.SalesItems[0].Table[i].Discount + '</td>'
+                    + '<td>' + data.SalesItems[0].Table[i].GST + '</td>'
+                    + '<td>' + data.SalesItems[0].Table[i].Amount + '</td></tr>';
+            }
+            $('#salesItemBody').html(html);
+            $('#divDataItemsView').show();   
+            $('#PrintDataBtn').show();
+        },
+        complete: function () {
+
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+}
+
+function generatePDF() {
+
+    $('#divDataList').hide();
+    $('#divDataEntry').hide();
+    $('#saveDataBtn').hide();
+    $.ajax({
+        type: "POST",
+        url: 'wSdSalesQuotationMaster.aspx/GeneratePDF',
+        data: JSON.stringify({
+            "QuotationId": $('#disptxtQuotation').val()
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+            var data = JSON.parse(response.d);
+
+        },
+        complete: function () {
+
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
 }

@@ -24,8 +24,33 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+     <button onclick="CreateData();" class="preventDefault">Create</button>
+    <button onclick="ViewDataList();"  class="preventDefault">View</button>
+  <button id="saveDataBtn" onclick="saveData()"  class="preventDefault" style="display:none">Save</button>
+ <button id="PrintDataBtn" onclick="generatePDF()"  class="preventDefault" style="display:none">Print</button>
+
  <input type="hidden" id="loginuser" runat="server" />
-      <div class="container" id="divDataEntry" style="margin-top: 10px;">
+
+        <div class="container" id="divDataList" style="margin-top: 10px; overflow: auto;">
+            <div id="dataTable_wrapper"></div>  
+        <table id="tblEmpJobList" class="display table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>QuoatationID</th>
+                   
+                </tr>
+            </thead>
+            <tbody id="tbody_EmpJob_List">
+                <tr onclick="GetSdSalesQuotationMasterById('QUOT17/01/2024/5901')">
+                    <td>
+                        Quosfsi
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+      <div class="container" id="divDataEntry" style="margin-top: 10px;display:none">
         <%--<div class="card">
             <div class="card-header">
                 <b>KPI Sub Group </b>
@@ -75,12 +100,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    <%--</div>--%>
-
-
-
-    <div class="container mt-5">
+              <div class="container mt-5">
   <button class="btn btn-success mb-3 pull-right" id="addRowBtn"><i class="fas fa-plus"></i></button>
   <table class="table table-bordered" id="dataTable">
     <thead>
@@ -137,7 +157,120 @@
     </div>
         <br />
 
-  <button class="btn btn-success" id="saveDataBtn" onclick="saveData()">Save Data</button>
+ <%-- <button class="btn btn-success" id="saveDataBtn" onclick="saveData()">Save Data</button>--%>
 </div>
+        </div>
+    <%--</div>--%>
+
+    <div class="container" id="divDataItemsView" style="margin-top: 10px;display:none">
+           <div class="card-body">
+                <div class="panel panel-default">   
+                    <div class="panel-body">
+                        <table class="tbl">
+                            <tr>
+                                <td>
+                                    <label class="control-label">Client's Name</label>
+                                </td>
+                                <td>
+                                    
+									
+									 <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="disptxtCustomerName" name="disptxtCustomerName" disabled/>
+                                </td>
+                                 <td style="width: 10%;">Date</td>
+                                <td>
+                                <input type="text" class="form-control rounded border-dark" id="dispQuotationDate" name="dispQuotationDate" disabled>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td style="width: 15%;">Client's Address</td>
+                                <td>
+                                   <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="disptxtClientAddress" name="disptxtClientAddress" disabled />
+                                </td> 
+                               
+                                  <td style="width: 10%;">Quotation #</td>
+                                <td>
+                                   <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="disptxtQuotation" name="disptxtQuotation" disabled/>
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td style="width: 15%;">Client's Contact Number</td>
+                                <td>
+                                   <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="disptxtContactNumber" name="disptxtContactNumber" disabled/>
+                                </td>                               
+                            </tr>  
+                            <tr>
+                                <td style="width: 15%;">Client's Email</td>
+                                <td>
+                                   <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="disptxtEmail" name="disptxtEmail" disabled/>
+                                </td>                               
+                            </tr> 
+                        </table>
+                    </div>
+                </div>
+            </div>
+              <div class="container mt-5">
+  
+  <table class="table table-bordered" id="dispdataTable">
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Qty</th>
+        <th>Rate</th>
+           <th>Discount %</th>
+            <th>GST %</th>
+            <th>Amount</th>
+            
+      </tr>
+    </thead>
+    <tbody id="salesItemBody">
+      <!-- Rows will be added dynamically -->
+    </tbody>
+      <tfoot>
+          <tr>
+              <th colspan="5" style="text-align:right"><b>Total</b></th>
+              <th>
+                  <input type="text" id="dispgrandTotal" value="0" class="form-control" disabled>
+              </th>
+          </tr>
+           <tr>
+              <th colspan="5" style="text-align:right"><b>GST</b></th>
+              <th>
+                  <input type="text" id="dispgrandTotalGST"  value="0" class="form-control" disabled>
+              </th>
+          </tr>
+           <tr>
+              <th colspan="5" style="text-align:right">Shipping Charges</th>
+              <th>
+                  <input type="text" value="0" class="form-control" id="dispShippingCharges" disabled>
+              </th>
+          </tr>
+           <tr>
+              <th colspan="5" style="text-align:right"><b>Net Amount</b></th>
+              <th>
+                  <input type="text" value="0" id="dispnetAmount"  class="form-control" disabled>
+              </th>
+          </tr>
+      </tfoot>
+  </table>
+        <br />
+        <br />
+        <div class="form-group">
+      <label for="notes">Notes:</label>
+      <textarea class="form-control" id="dispnotes" disabled ></textarea>
+    </div>
+         <br />
+        <div class="form-group">
+      <label for="notes">Terms & Conditions</label>
+      <textarea class="form-control" id="dispterms" disabled></textarea>
+    </div>
+        <br />
+
+ 
+</div>
+        </div>
+
+
+
+
 
 </asp:Content>

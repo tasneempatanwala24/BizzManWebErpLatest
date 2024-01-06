@@ -182,6 +182,94 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             return "";
         }
 
+        [WebMethod]
+        public static string GetSdSalesQuotationMasterById(string QuotationId)
+        {
+            //  clsMain objMain = new clsMain();
+            DataTable dtQuotationDetails = new DataTable();
+            DataTable dtSalesQuotationDetail = new DataTable();
+            try
+            {
 
+                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
+
+                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+
+                if (dtQuotationDetails!=null && dtQuotationDetails.Rows.Count>0)
+                {
+                    DataRow dr = dtQuotationDetails.Rows[0];
+                    // Create an anonymous object containing SalesQuotationMasterinfo and sales items
+                    var invoiceData = new
+                    {
+                        SalesQuotationMastertInfo = new
+                        {
+                            QuotationId = dr["QuotationId"].ToString(),
+                            QuotationDate = dr["QuotationDate"].ToString(),
+                            QuotationStatus = dr["QuotationStatus"].ToString(),
+                            NetTotal = dr["NetTotal"].ToString(),
+                            NetGST = dr["NetGST"].ToString(),
+                            NetAmount = dr["NetAmount"].ToString(),
+                            ShippingCharges = dr["ShippingCharges"].ToString(),
+                            Notes = dr["Notes"].ToString(),
+                            TermsAndConditions = dr["TermsAndConditions"].ToString(),
+                            CustomerId = dr["CustomerId"].ToString(),
+                            CustomerName = dr["CustomerName"].ToString(),
+                            Mobile = dr["Mobile"].ToString(),
+                            Email = dr["Email"].ToString(),
+                            Address = dr["Address"].ToString()
+                           
+                        },
+                        SalesItems = dtSalesQuotationDetail.AsEnumerable().ToList()
+
+                };
+                    return JsonConvert.SerializeObject(invoiceData);
+                }
+                else
+                {
+                    return "";
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+          
+        }
+
+        public static string GeneratePDF(string QuotationId)
+        {
+            //  clsMain objMain = new clsMain();
+            DataTable dtQuotationDetails = new DataTable();
+            DataTable dtSalesQuotationDetail = new DataTable();
+            try
+            {
+
+                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
+
+                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+
+                if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
+                {
+                    //add logic here
+
+                    return "";
+                }
+                else
+                {
+                    return "";
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+
+        }
     }
 }

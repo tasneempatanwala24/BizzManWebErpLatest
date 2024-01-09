@@ -15,7 +15,7 @@ $(document).ready(function () {
     });
 
     BindCustomerDropdown();
-
+    fetchDataList();
     // Add Row button click event
     $("#addRowBtn").on("click", function () {
         addRow();
@@ -296,6 +296,28 @@ function generateRandomNumber() {
 }
 
 function saveData() {
+    if ($('#quotationDate').val() == '') {
+        alertify.error("Please enter Quotation Date");
+        return;
+    }
+    else if ($('#ddlClientName').val() == '')
+    {
+        alertify.error("Please Select Customer Name");
+        return;
+    }
+    else if ($('#notes').val() == '') {
+        alertify.error("Please Enter Notes");
+        return;
+    }
+    else if ($('#terms').val() == '') {
+        alertify.error("Please Enter Terms and Conditions");
+        return;
+    }
+    var hasRows = $('#dataTable tbody tr').length > 0;
+    if (!hasRows) {
+        alertify.error("Please Enter some items.");
+        return;
+    }
     var data = [];
     $("#dataTable tbody tr").each(function () {
        
@@ -345,7 +367,7 @@ function ClearAll() {
     $('#txtEmail').val('');
     $('#notes').val('');
     $('#terms').val('');
-    $('#ShippingCharges').val('')
+    $('#ShippingCharges').val('0')
     toggleTfootVisibility();
     $('#ddlClientName').val('');
 }
@@ -354,7 +376,7 @@ function CreateData() {
     //  $('#divEmpJobList').hide();
     $('#divDataList').hide();
     $('#divDataItemsView').hide();
-    $('#PrintDataBtn').hide();
+    $('#ContentPlaceHolder1_PrintDataBtn').hide();
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').show();
     $('#saveDataBtn').show();
@@ -365,13 +387,74 @@ function ViewDataList() {
     //  $('#divEmpJobList').hide();
     $('#divDataList').show();
     $('#divDataItemsView').hide();
-    $('#PrintDataBtn').hide();
+    $('#ContentPlaceHolder1_PrintDataBtn').hide();
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
    
 }
 
+function fetchDataList() {
+    console.log("Fetching data...");
+    $.ajax({
+        type: "POST",
+        url: 'wSdSalesQuotationMaster.aspx/FetchMasterList',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            console.log("Data fetched successfully:", data);
+            displayDataList(data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log("Error");
+            console.error("AJAX Error:", textStatus, errorThrown);
+        }
+    });
+    console.log("End...");
+}
+
+
+function displayDataList(data) {
+    var tableBody = $('#tbody_EmpJob_List');
+    tableBody.empty(); // Clear existing rows
+    console.log("display details me");
+    for (var i = 0; i < data.length; i++) {
+        var sqlDate = new Date(data[i].QuotationDate);
+        var formattedDate = formatDate(sqlDate);
+        var row = '<tr onclick="GetSdSalesQuotationMasterById(\'' + data[i].QuotationId + '\')">';
+        row += '<td>' + data[i].QuotationId + '</td>';
+        row += '<td>' + formattedDate + '</td>';
+        row += '<td>' + data[i].ContactName + '</td>';
+        row += '<td>' + data[i].NetTotal + '</td>';
+        row += '<td>' + data[i].NetAmount + '</td>';
+        row += '<td>' + data[i].ShippingCharges + '</td>';
+        row += '<td>' + data[i].Notes + '</td>';
+        row += '<td>' + data[i].TermsAndConditions + '</td>';
+        row += '</tr>';
+
+        tableBody.append(row);
+    }
+
+    // Initialize or reinitialize DataTable
+    $('#tblEmpJobList').DataTable();
+}
+function formatDate(date) {
+    var day = date.getDate();
+    var month = date.getMonth() + 1; // Month is zero-based
+    var year = date.getFullYear();
+
+    // Add leading zero if day or month is a single digit
+    if (day < 10) {
+        day = '0' + day;
+    }
+    if (month < 10) {
+        month = '0' + month;
+    }
+
+    return month + '/' + day + '/' + year;
+}
 
 function GetSdSalesQuotationMasterById(QuoatId) {
    
@@ -415,7 +498,7 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             }
             $('#salesItemBody').html(html);
             $('#divDataItemsView').show();   
-            $('#PrintDataBtn').show();
+            $('#ContentPlaceHolder1_PrintDataBtn').show();
         },
         complete: function () {
 
@@ -431,26 +514,50 @@ function generatePDF() {
     $('#divDataList').hide();
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
-    $.ajax({
-        type: "POST",
-        url: 'wSdSalesQuotationMaster.aspx/GeneratePDF',
-        data: JSON.stringify({
-            "QuotationId": $('#disptxtQuotation').val()
-        }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        beforeSend: function () {
 
-        },
-        success: function (response) {
-            var data = JSON.parse(response.d);
+    $('#ContentPlaceHolder1_printQuotationId').val($('#disptxtQuotation').val());
+    
 
-        },
-        complete: function () {
+    //$.ajax({
+    //    type: "POST",
+    //    url: 'wSdSalesQuotationMaster.aspx/GeneratePDF',
+    //    data: JSON.stringify({
+    //        "QuotationId": $('#disptxtQuotation').val()
+    //    }),
+    //    contentType: "application/json; charset=utf-8",
+    //    dataType: "json",
+    //    beforeSend: function () {
 
-        },
-        failure: function (jqXHR, textStatus, errorThrown) {
+    //    },
+    //    success: function (response) {
+    //        // Trigger download on success
+    //        // Log the PDF data
+    //        console.log(response.d);
+    //      // downloadPDF(response.d);
+    //       // window.location.href = response.d;
+    //        window.open(response.d, '_blank');
+    //    },
+    //    complete: function () {
 
-        }
-    });
+    //    },
+    //    failure: function (jqXHR, textStatus, errorThrown) {
+
+    //    }
+    //});
+}
+function downloadPDF(pdfData) {
+    // Create a blob from the PDF data
+    var blob = new Blob([pdfData], { type: "application/pdf" });
+
+    // Create a link element to trigger the download
+    var link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "example.pdf";
+
+    // Append the link to the document and trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    document.body.removeChild(link);
 }

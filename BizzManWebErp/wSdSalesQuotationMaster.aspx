@@ -27,28 +27,36 @@
      <button onclick="CreateData();" class="preventDefault">Create</button>
     <button onclick="ViewDataList();"  class="preventDefault">View</button>
   <button id="saveDataBtn" onclick="saveData()"  class="preventDefault" style="display:none">Save</button>
- <button id="PrintDataBtn" onclick="generatePDF()"  class="preventDefault" style="display:none">Print</button>
+ <%--<button id="PrintDataBtn" runat="server" OnClientClick="generatePDF()" OnClick="btnPrint_Click"  style="display:none">Print</button>--%>
+    <asp:Button runat="server" ID="PrintDataBtn" style="display:none;background-color:#7952b3;color:#fff;padding:7px;border:none" OnClientClick="generatePDF()" OnClick="btnPrint_Click" Text="Print"/>
+ 
+    
+    <input type="hidden" id="loginuser" runat="server" />
+    <input type="hidden" id="printQuotationId" runat="server" />
 
- <input type="hidden" id="loginuser" runat="server" />
 
-        <div class="container" id="divDataList" style="margin-top: 10px; overflow: auto;">
-            <div id="dataTable_wrapper"></div>  
-        <table id="tblEmpJobList" class="display table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>QuoatationID</th>
-                   
-                </tr>
-            </thead>
-            <tbody id="tbody_EmpJob_List">
-                <tr onclick="GetSdSalesQuotationMasterById('QUOT17/01/2024/5901')">
-                    <td>
-                        Quosfsi
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+
+
+       <div class="container" id="divDataList" style="margin-top: 10px; overflow: auto;">
+    <table id="tblEmpJobList" class="display table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Quotation ID</th>
+                <th>Quotation Date</th>
+                <th>Customer Name</th>
+                <th>Net Total</th>
+                <th>Net Amount</th>
+                <th>Shipping Charges</th>
+             
+                <th>Notes</th>
+                <th>Terms and Conditions</th>
+            </tr>
+        </thead>
+        <tbody id="tbody_EmpJob_List">
+            <!-- Table rows will be added dynamically -->
+        </tbody>
+    </table>
+</div>
 
       <div class="container" id="divDataEntry" style="margin-top: 10px;display:none">
         <%--<div class="card">

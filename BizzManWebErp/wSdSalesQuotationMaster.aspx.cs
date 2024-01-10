@@ -251,7 +251,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             try
             {
                 Console.WriteLine("Fetching data...");
-                dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,b.ContactName from tblSdSalesQuotationMaster as a Left Join tblCrmCustomerContacts as b on a.[CustomerId]=b.[CustomerId]");
+                dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,b.ContactName from tblSdSalesQuotationMaster as a Inner Join tblCrmCustomerContacts as b on a.[CustomerId]=b.[CustomerId] order by a.CreateDate desc");
 
                 if (dtEmpList == null)
                 {
@@ -473,7 +473,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 clientInfoCell.Padding = 0;
                 //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 billToTable.AddCell(clientInfoCell);
-                DataTable dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
+                DataTable dtQuotationDetails = objMain.dtFetchData("select QuotationId,FORMAT(QuotationDate, 'dd/MM/yyyy') as QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
                 // Quotation details on the right
                 PdfPCell quotationDetailsCell = new PdfPCell();
                 quotationDetailsCell.AddElement(new Paragraph("Quotation ID: " + QuotationId, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
@@ -572,7 +572,9 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
         {
             string QuotationId = printQuotationId.Value;
             // Output directory for the PDF file
-            string filePath = Server.MapPath("~/example.pdf");
+            string filePath = Server.MapPath("~/"+ QuotationId.Replace("/","") + ".pdf");
+            //if (File.Exists(filePath))
+            //    File.Delete(filePath);
             DataTable dtQuotationDetails = new DataTable();
             DataTable dtSalesQuotationDetail = new DataTable();
             try
@@ -584,12 +586,17 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
 
                 if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
                 {
-                    var fs = new FileStream(filePath, FileMode.Create);
-                    Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-                    PdfWriter writer = PdfWriter.GetInstance(document, fs);
-                    document.Open();
-                    AddInvoiceContent(document, QuotationId);
-                    document.Close();
+                    //var fs = new FileStream(filePath, FileMode.Create);
+                  //  MemoryStream fs = new MemoryStream();
+                  using(var fs = new FileStream(filePath, FileMode.Create))
+                    {
+                        Document document = new Document(PageSize.A4, 25, 25, 30, 30);
+                        PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                        document.Open();
+                        AddInvoiceContent(document, QuotationId);
+                        document.Close();
+                    }
+                    
                 }
                 else
                 {
@@ -597,7 +604,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 }
 
                 Response.ContentType = "application/pdf";
-                Response.AppendHeader("Content-Disposition", "attachment; filename=example.pdf");
+                Response.AppendHeader("Content-Disposition", "attachment; filename="+ QuotationId.Replace("/", "") + ".pdf");
                 Response.TransmitFile(filePath);
                 Response.End();
 

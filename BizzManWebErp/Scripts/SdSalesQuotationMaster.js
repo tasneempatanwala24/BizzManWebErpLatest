@@ -3,6 +3,9 @@ $(document).ready(function () {
     $("#addRowBtn,#saveDataBtn,.preventDefault").click(function (event) {
         event.preventDefault();
     }); 
+
+    $('#ddlClientName').select2();
+
     $(".delete-row").click(function (event) {
         event.preventDefault();
     });
@@ -240,12 +243,14 @@ function calculateGrandTotal() {
     var shippingCharges = parseFloat($('#ShippingCharges').val());
     // Iterate through each row in the table body
     $('#dataTable tbody tr').each(function () {
-       
+        var qty = parseFloat($(this).find('.txtQuantity').val());
+        var rate = parseFloat($(this).find('.txtRate').val());
+
         var totalAmount = parseFloat($(this).find('.txtAmount').val());
         grandTotal += totalAmount;
 
         const gst = parseFloat($(this).find('.txtGST').val());
-        grandTotalGST += totalAmount * (gst / 100);
+        grandTotalGST += (qty * rate) * (gst / 100);
     });
 
     // Display the calculated values in the table footer
@@ -294,6 +299,8 @@ function QuotationDateChange() {
 function generateRandomNumber() {
     return Math.floor(Math.random() * 9000) + 1000;
 }
+
+
 
 function saveData() {
     if ($('#quotationDate').val() == '') {
@@ -391,6 +398,7 @@ function ViewDataList() {
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
+    fetchDataList();
    
 }
 

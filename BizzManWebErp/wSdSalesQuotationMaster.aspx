@@ -72,9 +72,18 @@
                                     <label class="control-label">Client's Name</label>
                                 </td>
                                 <td>
-                                    <select style="width: 100%;" id="ddlClientName" name="ddlClientName" onchange="GetCustomerDetails()" class="form-control rounded border-dark">
+                                   
+
+                                    <div class="input-group mb-3">
+
+ <select style="width: 100%;" id="ddlClientName" name="ddlClientName" onchange="GetCustomerDetails()" class="rounded border-dark">
                                         <option value="">-Select Client Name-</option>
                                     </select>
+  <div class="input-group-append">
+    <button class="btn btn-sm btn-outline-secondary preventDefault" onclick="location.href='wfCrmCustomerMaster.aspx'"><i class="fas fa-plus"></i></button>  Add New Client
+  </div>
+</div>
+                                    
                                 </td>
                                  <td style="width: 10%;">Date</td>
                                 <td>

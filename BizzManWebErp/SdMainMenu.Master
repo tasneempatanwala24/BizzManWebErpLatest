@@ -115,7 +115,7 @@
             Orders
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="#">Quotations</a></li>
+            <li><a class="dropdown-item" href="./wSdSalesQuotationMaster.aspx">Quotations</a></li>
             <li><a class="dropdown-item" href="#">Orders</a></li>
               <li><a class="dropdown-item" href="#">Sales Teams</a></li>
               <li><a class="dropdown-item" href="#">Customers</a></li>

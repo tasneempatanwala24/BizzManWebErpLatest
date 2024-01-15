@@ -18,6 +18,7 @@ using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Vml;
 
 namespace BizzManWebErp
 {
@@ -422,10 +423,19 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             companyInfoTable.SetWidths(new float[] { 3f, 1f }); // Adjust the widths as needed
             PdfPCell companyInfoCell = new PdfPCell();
             DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1,PhoneNo,EmailAddress,WebSiteAddress from tblAdminCompanyMaster");
+
+ 
             if (dtCompanyDetails != null && dtCompanyDetails.Rows.Count > 0)
             {
                 string companyName = Convert.ToString(dtCompanyDetails.Rows[0]["CompanyName"]);
                 companyInfoCell.AddElement(new Paragraph("Company Name : " + companyName, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
+
+                //adding company logo
+                byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
+
+
+
+
                 string companyAddress = Convert.ToString(dtCompanyDetails.Rows[0]["Address1"]);
                 companyInfoCell.AddElement(new Paragraph("Company Address : " + companyAddress, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                 string companyEmail = Convert.ToString(dtCompanyDetails.Rows[0]["EmailAddress"]);
@@ -433,22 +443,29 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 string companyPhone = Convert.ToString(dtCompanyDetails.Rows[0]["PhoneNo"]);
                 companyInfoCell.AddElement(new Paragraph("Contact: " + companyPhone, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
 
+                companyInfoCell.BorderWidth = 0;
+
+                companyInfoTable.AddCell(companyInfoCell);
+                // Company logo on the right
+                PdfPCell companyLogoCell = new PdfPCell();
+                // Replace "path/to/your/logo.png" with the actual path to your logo image
+                //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
+
+                // Attempt to create an iTextSharp Image instance from the byte array
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
+
+
+                logo.ScaleToFit(100, 100); // Adjust the width and height as needed
+                companyLogoCell.AddElement(logo);
+                companyLogoCell.BorderWidth = 0;
+                companyLogoCell.HorizontalAlignment = Element.ALIGN_RIGHT; // Align to the right
+
+                companyInfoTable.AddCell(companyLogoCell);
+                document.Add(companyInfoTable);
+
             }
 
-            companyInfoCell.BorderWidth = 0;
-
-            companyInfoTable.AddCell(companyInfoCell);
-            // Company logo on the right
-            PdfPCell companyLogoCell = new PdfPCell();
-            // Replace "path/to/your/logo.png" with the actual path to your logo image
-            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
-            logo.ScaleToFit(100, 100); // Adjust the width and height as needed
-            companyLogoCell.AddElement(logo);
-            companyLogoCell.BorderWidth = 0;
-            companyLogoCell.HorizontalAlignment = Element.ALIGN_RIGHT; // Align to the right
-
-            companyInfoTable.AddCell(companyLogoCell);
-            document.Add(companyInfoTable);
+           
 
             // Bill To section
             PdfPTable billToTable = new PdfPTable(2);

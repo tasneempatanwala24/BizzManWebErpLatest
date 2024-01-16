@@ -16,6 +16,8 @@
   <%--  <script src="Scripts/jquery-3.5.1.slim.min.js"></script>--%>
     <script src="Scripts/bootstrap.min.js"></script>
       <script src="Scripts/bootstrap-datepicker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
     <script src="Scripts/SdSalesQuotationMaster.js"></script>
     <style>
     .no-rows-footer {
@@ -79,11 +81,14 @@
  <select style="width: 100%;" id="ddlClientName" name="ddlClientName" onchange="GetCustomerDetails()" class="rounded border-dark">
                                         <option value="">-Select Client Name-</option>
                                     </select>
-  <div class="input-group-append">
+  <%--<div class="input-group-append">
     <button class="btn btn-sm btn-outline-secondary preventDefault" onclick="location.href='wfCrmCustomerMaster.aspx'"><i class="fas fa-plus"></i></button>  Add New Client
-  </div>
+  </div>--%>
 </div>
                                     
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary preventDefault" onclick="location.href='wfCrmCustomerMaster.aspx'" style="margin-bottom:17%"><i class="fas fa-plus"></i></button>
                                 </td>
                                  <td style="width: 10%;">Date</td>
                                 <td>
@@ -96,7 +101,7 @@
                                    <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="txtClientAddress" name="txtClientAddress" disabled />
                                 </td> 
                                
-                                  <td style="width: 10%;">Quotation #</td>
+                                  <td style="width: 10%; text-align:center" colspan="2">Quotation #</td>
                                 <td>
                                    <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="txtQuotation" name="txtQuotation" disabled/>
                                 </td>
@@ -117,8 +122,8 @@
                     </div>
                 </div>
             </div>
-              <div class="container mt-5">
-  <button class="btn btn-success mb-3 pull-right" id="addRowBtn"><i class="fas fa-plus"></i></button>
+              <div class="container">
+  
   <table class="table table-bordered" id="dataTable">
     <thead>
       <tr>
@@ -128,7 +133,7 @@
            <th>Discount %</th>
             <th>GST %</th>
             <th>Amount</th>
-            <th></th>
+            <th><button class="btn btn-success mb-3 pull-right" id="addRowBtn"><i class="fas fa-plus"></i></button></th>
       </tr>
     </thead>
     <tbody>
@@ -161,7 +166,7 @@
           </tr>
       </tfoot>
   </table>
-        <br />
+       
         <br />
         <div class="form-group">
       <label for="notes">Notes:</label>
@@ -225,7 +230,7 @@
                     </div>
                 </div>
             </div>
-              <div class="container mt-5">
+              <div class="container">
   
   <table class="table table-bordered" id="dispdataTable">
     <thead>
@@ -269,7 +274,7 @@
           </tr>
       </tfoot>
   </table>
-        <br />
+      
         <br />
         <div class="form-group">
       <label for="notes">Notes:</label>

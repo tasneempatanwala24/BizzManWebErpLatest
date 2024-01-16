@@ -288,10 +288,20 @@ function QuotationDateChange() {
     // Generate Quotation ID based on the selected date
     const selectedDate = $('#quotationDate').val();
     if (selectedDate) {
-        const quotationId = 'QUOT' + selectedDate + '/' + generateRandomNumber();
+        // Parse the date using moment.js with the correct format
+        const momentDate = moment(selectedDate, 'DD/MM/YYYY');
+        // Check if the parsed date is valid
+        if (momentDate.isValid()) {
+            // Format the date as 'YYYY/MM/DD'
+            const formattedDate = momentDate.format('YYYY/MM/DD');
+            const quotationId = 'QUOT' + formattedDate + '/' + generateRandomNumber();
 
-        // Set the generated Quotation ID to the textbox
-        $('#txtQuotation').val(quotationId);
+            // Set the generated Quotation ID to the textbox
+            $('#txtQuotation').val(quotationId);
+        } else {
+            // Handle invalid date input
+            console.error('Invalid date format:', selectedDate);
+        }
     }
 }
 

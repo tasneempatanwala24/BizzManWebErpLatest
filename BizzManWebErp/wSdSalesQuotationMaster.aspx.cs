@@ -280,149 +280,17 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
         }
 
 
-        private  void AddInvoiceContent(Document document)
-        {// Open the document before adding content
-         // Your company information
-            string filePath = Server.MapPath("Images\\logo.jpg");
-            //filePath=Path.Combine(filePath, "Images\\logo.jpg");
-            PdfPTable companyInfoTable = new PdfPTable(2);
-            companyInfoTable.WidthPercentage = 100;
-            companyInfoTable.SetWidths(new float[] { 3f, 1f }); // Adjust the widths as needed
 
-            // Company information on the left
-            PdfPCell companyInfoCell = new PdfPCell();
-            companyInfoCell.AddElement(new Paragraph("Your Company Name", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
-            companyInfoCell.AddElement(new Paragraph("Your Company Address", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            companyInfoCell.AddElement(new Paragraph("Email: yourcompany@example.com", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            companyInfoCell.AddElement(new Paragraph("Contact: +1234567890", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            companyInfoCell.BorderWidth = 0;
-
-            companyInfoTable.AddCell(companyInfoCell);
-
-
-
-
-            // Company logo on the right
-            PdfPCell companyLogoCell = new PdfPCell();
-            // Replace "path/to/your/logo.png" with the actual path to your logo image
-            iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
-            logo.ScaleToFit(100, 100); // Adjust the width and height as needed
-            companyLogoCell.AddElement(logo);
-            companyLogoCell.BorderWidth = 0;
-            companyLogoCell.HorizontalAlignment = Element.ALIGN_RIGHT; // Align to the right
-
-            companyInfoTable.AddCell(companyLogoCell);
-            document.Add(companyInfoTable);
-
-            // Bill To section
-            PdfPTable billToTable = new PdfPTable(2);
-            billToTable.WidthPercentage = 100;
-            billToTable.SetWidths(new float[] { 3f, 1f });
-
-            // Client information on the left
-            PdfPCell clientInfoCell = new PdfPCell();
-            clientInfoCell.AddElement(new Paragraph("Client Name", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            clientInfoCell.AddElement(new Paragraph("Client Address", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            clientInfoCell.AddElement(new Paragraph("Phone: Client Phone", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            clientInfoCell.AddElement(new Paragraph("Email: client@example.com", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            // Set border width and padding to zero
-            clientInfoCell.BorderWidth = 0;
-            clientInfoCell.Padding = 0;
-            //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
-            billToTable.AddCell(clientInfoCell);
-
-            // Quotation details on the right
-            PdfPCell quotationDetailsCell = new PdfPCell();
-            quotationDetailsCell.AddElement(new Paragraph("Quotation ID: YourQuotationID", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            quotationDetailsCell.AddElement(new Paragraph("Quotation Date: YourQuotationDate", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            quotationDetailsCell.BorderWidth = 0;
-            quotationDetailsCell.Padding = 0;
-            quotationDetailsCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            billToTable.AddCell(quotationDetailsCell);
-
-            document.Add(new Paragraph("Bill To", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
-            document.Add(billToTable);
-
-            // Add a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-
-
-            // Add your invoice content here
-
-            // Example: Adding a table
-            PdfPTable itemTable = new PdfPTable(6);
-            itemTable.WidthPercentage = 100;
-            itemTable.SetWidths(new float[] { 2f, 1f, 1f, 1f, 1f, 1f });
-
-            // Add table header
-            itemTable.AddCell(new PdfPCell(new Phrase("Item", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-            itemTable.AddCell(new PdfPCell(new Phrase("Qty", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-            itemTable.AddCell(new PdfPCell(new Phrase("Rate", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-            itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-            itemTable.AddCell(new PdfPCell(new Phrase("GST", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-            itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-
-            // Add table rows with item details
-            // Replace the following with your actual data
-            itemTable.AddCell("Item 1");
-            itemTable.AddCell("2");
-            itemTable.AddCell("$50.00");
-            itemTable.AddCell("$5.00");
-            itemTable.AddCell("$7.00");
-            itemTable.AddCell("$95.00");
-
-            // Add more rows as needed
-
-            // Add table footer
-            PdfPCell totalAmountCell = new PdfPCell(new Phrase("Total Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
-            totalAmountCell.Colspan = 5;
-            totalAmountCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            itemTable.AddCell(totalAmountCell);
-            itemTable.AddCell(new PdfPCell(new Phrase("$189.50")));
-
-            PdfPCell netGSTCell = new PdfPCell(new Phrase("Net GST", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
-            netGSTCell.Colspan = 5;
-            netGSTCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            itemTable.AddCell(netGSTCell);
-            itemTable.AddCell(new PdfPCell(new Phrase("$11.50")));
-
-            PdfPCell shippingChargesCell = new PdfPCell(new Phrase("Shipping Charges", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
-            shippingChargesCell.Colspan = 5;
-            shippingChargesCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            itemTable.AddCell(shippingChargesCell);
-            itemTable.AddCell(new PdfPCell(new Phrase("$10.00")));
-
-            PdfPCell netAmountCell = new PdfPCell(new Phrase("Net Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
-            netAmountCell.Colspan = 5;
-            netAmountCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-            itemTable.AddCell(netAmountCell);
-            itemTable.AddCell(new PdfPCell(new Phrase("$211.00")));
-
-            document.Add(itemTable);
-            // Add a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
-            // Example: Adding notes
-            document.Add(new Paragraph("Notes: Add any additional notes here.", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-
-            // Example: Adding terms and conditions
-            document.Add(new Paragraph("Terms and Conditions: Add your terms and conditions here.", FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-
-        }
         private  void AddInvoiceContent(Document document, string QuotationId)
         {// Open the document before adding content
          // Your company information
-            string filePath = Server.MapPath("Images\\logo.jpg");
+            //string filePath = Server.MapPath("Images\\logo.jpg");
             //filePath=Path.Combine(filePath, "Images\\logo.jpg");
             PdfPTable companyInfoTable = new PdfPTable(2);
             companyInfoTable.WidthPercentage = 100;
             companyInfoTable.SetWidths(new float[] { 3f, 1f }); // Adjust the widths as needed
             PdfPCell companyInfoCell = new PdfPCell();
-            DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1,PhoneNo,EmailAddress,WebSiteAddress from tblAdminCompanyMaster");
+            DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1,PhoneNo,EmailAddress,WebSiteAddress,Logo from tblAdminCompanyMaster");
 
  
             if (dtCompanyDetails != null && dtCompanyDetails.Rows.Count > 0)
@@ -430,9 +298,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 string companyName = Convert.ToString(dtCompanyDetails.Rows[0]["CompanyName"]);
                 companyInfoCell.AddElement(new Paragraph("Company Name : " + companyName, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
 
-                //adding company logo
-                byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
-
+              
 
 
 
@@ -447,19 +313,29 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
 
                 companyInfoTable.AddCell(companyInfoCell);
                 // Company logo on the right
+                //adding company logo
                 PdfPCell companyLogoCell = new PdfPCell();
-                // Replace "path/to/your/logo.png" with the actual path to your logo image
-                //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
+                if (dtCompanyDetails.Rows[0]["Logo"]!= System.DBNull.Value)
+                {
+                    byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
 
-                // Attempt to create an iTextSharp Image instance from the byte array
-                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
+                   
+                    // Replace "path/to/your/logo.png" with the actual path to your logo image
+                    //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
+
+                    // Attempt to create an iTextSharp Image instance from the byte array
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
 
 
-                logo.ScaleToFit(100, 100); // Adjust the width and height as needed
-                companyLogoCell.AddElement(logo);
+                    logo.ScaleToFit(100, 100); // Adjust the width and height as needed
+                    companyLogoCell.AddElement(logo);
+                   
+
+                    
+                   
+                }
                 companyLogoCell.BorderWidth = 0;
                 companyLogoCell.HorizontalAlignment = Element.ALIGN_RIGHT; // Align to the right
-
                 companyInfoTable.AddCell(companyLogoCell);
                 document.Add(companyInfoTable);
 

@@ -1,10 +1,16 @@
 ﻿var optionsOfMaterialDropdownGrid = '';
+var SalesQuotTable = '';
 $(document).ready(function () {
     $("#addRowBtn,#saveDataBtn,.preventDefault").click(function (event) {
         event.preventDefault();
     }); 
 
     $('#ddlClientName').select2();
+    
+    $('#dispddlQuotStatus').select2();
+
+   
+
 
     $(".delete-row").click(function (event) {
         event.preventDefault();
@@ -102,7 +108,7 @@ function addRow() {
     var cols = "";
 
     // Add ItemName column
-    cols += '<td><select  class="ddlMaterialName form-control" onchange="FetchUnitMeasure(this);"> < option value = "" > -Select Material Name -</option > </select ></td>';
+    cols += '<td style="width:fit-content"><select  class="ddlMaterialName form-control" onchange="FetchUnitMeasure(this);"> < option value = "" > -Select Material Name -</option > </select ></td>';
 
     // Add Qty with input
     cols += '<td><input class="txtQuantity" onchange="calculateTotalRowAmount(this)" type="text" value="0" class="form-control"oninput="handleNumericInput(event)"></td>';
@@ -394,6 +400,7 @@ function CreateData() {
     $('#divDataList').hide();
     $('#divDataItemsView').hide();
     $('#ContentPlaceHolder1_PrintDataBtn').hide();
+    $('#EditDataBtn').hide();
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').show();
     $('#saveDataBtn').show();
@@ -405,6 +412,7 @@ function ViewDataList() {
     $('#divDataList').show();
     $('#divDataItemsView').hide();
     $('#ContentPlaceHolder1_PrintDataBtn').hide();
+    $('#EditDataBtn').hide();
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
@@ -423,11 +431,16 @@ function fetchDataList() {
         success: function (response) {
             var data = JSON.parse(response.d);
             console.log("Data fetched successfully:", data);
+            $('#tblEmpJobList').DataTable().clear();
+            $('#tblEmpJobList').DataTable().destroy();
             displayDataList(data);
+            $('#tblEmpJobList').DataTable()
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log("Error");
-            console.error("AJAX Error:", textStatus, errorThrown);
+        complete: function () {
+            //SalesQuotTable.draw();
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
         }
     });
     console.log("End...");
@@ -445,18 +458,21 @@ function displayDataList(data) {
         row += '<td>' + data[i].QuotationId + '</td>';
         row += '<td>' + formattedDate + '</td>';
         row += '<td>' + data[i].ContactName + '</td>';
+
+        row += '<td>' + data[i].QuotationStatus + '</td>';
+      
+        
         row += '<td>' + data[i].NetTotal + '</td>';
-        row += '<td>' + data[i].NetAmount + '</td>';
+        row += '<td>' + data[i].NetGST + '</td>';
         row += '<td>' + data[i].ShippingCharges + '</td>';
-        row += '<td>' + data[i].Notes + '</td>';
-        row += '<td>' + data[i].TermsAndConditions + '</td>';
+        row += '<td>' + data[i].NetAmount + '</td>';
+      
         row += '</tr>';
 
         tableBody.append(row);
     }
 
-    // Initialize or reinitialize DataTable
-    $('#tblEmpJobList').DataTable();
+   
 }
 function formatDate(date) {
     var day = date.getDate();
@@ -496,6 +512,9 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             $('#dispQuotationDate').val(data.SalesQuotationMastertInfo.QuotationDate)
             $('#disptxtClientAddress').val(data.SalesQuotationMastertInfo.Address)
             $('#disptxtQuotation').val(data.SalesQuotationMastertInfo.QuotationId)
+            $('#dispddlQuotStatus').prop('disabled', false);
+            $('#dispddlQuotStatus').val(data.SalesQuotationMastertInfo.QuotationStatus)
+            $('#dispddlQuotStatus').prop('disabled', true);
             $('#disptxtContactNumber').val(data.SalesQuotationMastertInfo.Mobile)
             $('#disptxtEmail').val(data.SalesQuotationMastertInfo.Email)
             $('#dispgrandTotal').val(data.SalesQuotationMastertInfo.NetTotal)
@@ -517,14 +536,59 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             $('#salesItemBody').html(html);
             $('#divDataItemsView').show();   
             $('#ContentPlaceHolder1_PrintDataBtn').show();
+            $('#EditDataBtn').show();
         },
         complete: function () {
 
         },
         failure: function (jqXHR, textStatus, errorThrown) {
-
+            alertify.error('Something went wrong');
         }
     });
+}
+
+function onEditButtonClick() {
+  
+    var buttonText = $('#EditDataBtn').text();
+
+    // Check the current text content of the button
+    if (buttonText === 'Edit') {
+        // Change the text to 'Update'
+        $('#EditDataBtn').text('Update');
+        $('#dispddlQuotStatus').prop('disabled', false);
+    } else {
+        // Handle the update logic here
+        // ...
+        $.ajax({
+            type: "POST",
+            url: 'wSdSalesQuotationMaster.aspx/UpdateQuotationStatus',
+            data: JSON.stringify({
+                "QuotationId": $('#disptxtQuotation').val(),
+                "QuotationStatus": $('#dispddlQuotStatus').val()
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+                // After handling the update, change the text back to 'Edit'
+                GetSdSalesQuotationMasterById($('#disptxtQuotation').val());
+                alertify.success('Quotation Status updated successfully');
+                $('#EditDataBtn').text('Edit');
+                $('#dispddlQuotStatus').prop('disabled', true);
+
+            },
+            complete: function () {
+
+            },
+            failure: function (jqXHR, textStatus, errorThrown) {
+                alertify.error('Something went wrong');
+            }
+        });
+        
+       
+    }
 }
 
 function generatePDF() {

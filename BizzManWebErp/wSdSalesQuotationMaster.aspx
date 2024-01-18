@@ -31,7 +31,7 @@
   <button id="saveDataBtn" onclick="saveData()"  class="preventDefault" style="display:none">Save</button>
  <%--<button id="PrintDataBtn" runat="server" OnClientClick="generatePDF()" OnClick="btnPrint_Click"  style="display:none">Print</button>--%>
     <asp:Button runat="server" ID="PrintDataBtn" style="display:none;background-color:#7952b3;color:#fff;padding:7px;border:none" OnClientClick="generatePDF()" OnClick="btnPrint_Click" Text="Print"/>
- 
+   <button onclick="onEditButtonClick();" ID="EditDataBtn"  class="preventDefault" style="display:none">Edit</button>
     
     <input type="hidden" id="loginuser" runat="server" />
     <input type="hidden" id="printQuotationId" runat="server" />
@@ -46,12 +46,12 @@
                 <th>Quotation ID</th>
                 <th>Quotation Date</th>
                 <th>Customer Name</th>
+                <th>Quotation Status</th>
                 <th>Net Total</th>
+                 <th>Net GST</th>
+                  <th>Shipping Charges</th>
                 <th>Net Amount</th>
-                <th>Shipping Charges</th>
-             
-                <th>Notes</th>
-                <th>Terms and Conditions</th>
+              
             </tr>
         </thead>
         <tbody id="tbody_EmpJob_List">
@@ -81,9 +81,7 @@
  <select style="width: 100%;" id="ddlClientName" name="ddlClientName" onchange="GetCustomerDetails()" class="rounded border-dark">
                                         <option value="">-Select Client Name-</option>
                                     </select>
-  <%--<div class="input-group-append">
-    <button class="btn btn-sm btn-outline-secondary preventDefault" onclick="location.href='wfCrmCustomerMaster.aspx'"><i class="fas fa-plus"></i></button>  Add New Client
-  </div>--%>
+
 </div>
                                     
                                 </td>
@@ -215,10 +213,25 @@
                                 </td>
                             </tr>  
                             <tr>
-                                <td style="width: 15%;">Client's Contact Number</td>
+                                <td style="width: 10%;">Client's Contact Number</td>
                                 <td>
                                    <input type="text" style="width: 100%;" class="form-control rounded border-dark" id="disptxtContactNumber" name="disptxtContactNumber" disabled/>
-                                </td>                               
+                                </td>   
+                                 <td style="width: 10%;">Quotation Status</td>
+                                <td>
+                                 
+                                
+                                    <div class="input-group mb-3">
+
+ <select style="width: 100%;" id="dispddlQuotStatus" name="dispddlQuotStatus"  class="form-control rounded border-dark" disabled>
+                                        <option value="Process">Process</option>
+     <option value="Approve">Approve</option>
+     <option value="Cancel">Cancel</option>
+     <option value="Completed">Completed</option>
+                                    </select>
+
+</div>
+                                </td>
                             </tr>  
                             <tr>
                                 <td style="width: 15%;">Client's Email</td>

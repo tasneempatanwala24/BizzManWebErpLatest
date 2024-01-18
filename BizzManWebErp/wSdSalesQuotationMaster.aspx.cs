@@ -252,7 +252,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             try
             {
                 Console.WriteLine("Fetching data...");
-                dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,b.ContactName from tblSdSalesQuotationMaster as a Inner Join tblCrmCustomerContacts as b on a.[CustomerId]=b.[CustomerId] order by a.CreateDate desc");
+                dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,a.QuotationStatus,b.ContactName from tblSdSalesQuotationMaster as a Inner Join tblCrmCustomerContacts as b on a.[CustomerId]=b.[CustomerId] order by a.CreateDate desc");
 
                 if (dtEmpList == null)
                 {
@@ -501,11 +501,40 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 Response.TransmitFile(filePath);
                 Response.End();
 
+
+                //if (File.Exists(filePath))
+                //    File.Delete(filePath);
+
             }
             catch (Exception ex)
             {
 
             }
+        }
+
+
+        [WebMethod]
+        public static string UpdateQuotationStatus(string QuotationId, string QuotationStatus)
+        {
+            //  clsMain objMain = new clsMain();
+            SqlParameter[] objParam = new SqlParameter[2];
+
+
+            objParam[0] = new SqlParameter("@QuotationId", SqlDbType.VarChar);
+            objParam[0].Direction = ParameterDirection.Input;
+            objParam[0].Value = QuotationId;
+
+
+            objParam[1] = new SqlParameter("@QuotationStatus", SqlDbType.VarChar);
+            objParam[1].Direction = ParameterDirection.Input;
+            objParam[1].Value = QuotationStatus;
+
+
+
+            var result = objMain.ExecuteProcedure("procSdSalesQuotationMasterUpdate", objParam);
+
+
+            return "";
         }
     }
 }

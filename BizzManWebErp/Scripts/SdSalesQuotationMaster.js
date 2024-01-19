@@ -99,7 +99,7 @@ function GetCustomerDetails() {
         });
     }
     else {
-       
+        ClearAll();
     }
 }
 
@@ -392,7 +392,7 @@ function ClearAll() {
     $('#terms').val('');
     $('#ShippingCharges').val('0')
     toggleTfootVisibility();
-    $('#ddlClientName').val('');
+    $('#ddlClientName').val('').trigger('change');;
 }
 
 function CreateData() {
@@ -404,6 +404,8 @@ function CreateData() {
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').show();
     $('#saveDataBtn').show();
+    $('#EditDataBtn').text('Edit');
+    $('#dispddlQuotStatus').prop('disabled', true);
     ClearAll();
 }
 
@@ -416,12 +418,17 @@ function ViewDataList() {
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
+
+    $('#EditDataBtn').text('Edit');
+    $('#dispddlQuotStatus').prop('disabled', true);
+
+
     fetchDataList();
    
 }
 
 function fetchDataList() {
-    console.log("Fetching data...");
+   
     $.ajax({
         type: "POST",
         url: 'wSdSalesQuotationMaster.aspx/FetchMasterList',
@@ -430,7 +437,7 @@ function fetchDataList() {
         dataType: "json",
         success: function (response) {
             var data = JSON.parse(response.d);
-            console.log("Data fetched successfully:", data);
+           
             $('#tblEmpJobList').DataTable().clear();
             $('#tblEmpJobList').DataTable().destroy();
             displayDataList(data);
@@ -450,7 +457,7 @@ function fetchDataList() {
 function displayDataList(data) {
     var tableBody = $('#tbody_EmpJob_List');
     tableBody.empty(); // Clear existing rows
-    console.log("display details me");
+   
     for (var i = 0; i < data.length; i++) {
         var sqlDate = new Date(data[i].QuotationDate);
         var formattedDate = formatDate(sqlDate);
@@ -513,7 +520,7 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             $('#disptxtClientAddress').val(data.SalesQuotationMastertInfo.Address)
             $('#disptxtQuotation').val(data.SalesQuotationMastertInfo.QuotationId)
             $('#dispddlQuotStatus').prop('disabled', false);
-            $('#dispddlQuotStatus').val(data.SalesQuotationMastertInfo.QuotationStatus)
+            $('#dispddlQuotStatus').val(data.SalesQuotationMastertInfo.QuotationStatus).trigger('change');
             $('#dispddlQuotStatus').prop('disabled', true);
             $('#disptxtContactNumber').val(data.SalesQuotationMastertInfo.Mobile)
             $('#disptxtEmail').val(data.SalesQuotationMastertInfo.Email)
@@ -597,49 +604,9 @@ function generatePDF() {
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
 
+    $('#EditDataBtn').text('Edit');
+    $('#dispddlQuotStatus').prop('disabled', true);
+
     $('#ContentPlaceHolder1_printQuotationId').val($('#disptxtQuotation').val());
-    
-
-    //$.ajax({
-    //    type: "POST",
-    //    url: 'wSdSalesQuotationMaster.aspx/GeneratePDF',
-    //    data: JSON.stringify({
-    //        "QuotationId": $('#disptxtQuotation').val()
-    //    }),
-    //    contentType: "application/json; charset=utf-8",
-    //    dataType: "json",
-    //    beforeSend: function () {
-
-    //    },
-    //    success: function (response) {
-    //        // Trigger download on success
-    //        // Log the PDF data
-    //        console.log(response.d);
-    //      // downloadPDF(response.d);
-    //       // window.location.href = response.d;
-    //        window.open(response.d, '_blank');
-    //    },
-    //    complete: function () {
-
-    //    },
-    //    failure: function (jqXHR, textStatus, errorThrown) {
-
-    //    }
-    //});
-}
-function downloadPDF(pdfData) {
-    // Create a blob from the PDF data
-    var blob = new Blob([pdfData], { type: "application/pdf" });
-
-    // Create a link element to trigger the download
-    var link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "example.pdf";
-
-    // Append the link to the document and trigger the download
-    document.body.appendChild(link);
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
+   
 }

@@ -465,7 +465,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
         {
             string QuotationId = printQuotationId.Value;
             // Output directory for the PDF file
-            string filePath = Server.MapPath("~/"+ QuotationId.Replace("/","") + ".pdf");
+           // string filePath = Server.MapPath("~/"+ QuotationId.Replace("/","") + ".pdf");
             //if (File.Exists(filePath))
             //    File.Delete(filePath);
             DataTable dtQuotationDetails = new DataTable();
@@ -480,14 +480,21 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
                 {
                     //var fs = new FileStream(filePath, FileMode.Create);
-                  //  MemoryStream fs = new MemoryStream();
-                  using(var fs = new FileStream(filePath, FileMode.Create))
+                    //  MemoryStream fs = new MemoryStream();
+
+                    Response.ContentType = "application/pdf";
+                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + QuotationId.Replace("/", "") + ".pdf");
+
+                    using (MemoryStream fs = new MemoryStream())
                     {
                         Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-                        PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                        //PdfWriter writer = PdfWriter.GetInstance(document, fs);
+                        PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
+
                         document.Open();
                         AddInvoiceContent(document, QuotationId);
                         document.Close();
+                        Response.End();
                     }
                     
                 }
@@ -495,15 +502,15 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 {
 
                 }
-
-                Response.ContentType = "application/pdf";
-                Response.AppendHeader("Content-Disposition", "attachment; filename="+ QuotationId.Replace("/", "") + ".pdf");
-                Response.TransmitFile(filePath);
-                Response.End();
-
-
                 //if (File.Exists(filePath))
                 //    File.Delete(filePath);
+
+             
+              //  Response.TransmitFile(filePath);
+            
+
+
+               
 
             }
             catch (Exception ex)

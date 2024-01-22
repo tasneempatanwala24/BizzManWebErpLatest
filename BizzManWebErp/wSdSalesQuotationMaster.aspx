@@ -23,6 +23,43 @@
     .no-rows-footer {
       display: none;
     }
+  
+     /* Add this style block to set a fixed width for the "Item Name" column */
+   /*#dataTable th:first-child,
+  #dataTable td:first-child {
+    min-width: 230px;*/ /* Adjust the minimum width as needed */
+  /*}*/
+
+  /* Optional: Set a specific width for other columns if needed */
+  /*#dataTable th:nth-child(2),
+  #dataTable td:nth-child(2) {
+    min-width: 80px;
+  }
+
+   #dataTable th:nth-child(3),
+  #dataTable td:nth-child(3) {
+    min-width: 80px;
+  }
+
+    #dataTable th:nth-child(4),
+  #dataTable td:nth-child(4) {
+    min-width: 80px;
+  }
+
+     #dataTable th:nth-child(5),
+  #dataTable td:nth-child(5) {
+    min-width: 80px;
+  }
+
+      #dataTable th:nth-child(6),
+  #dataTable td:nth-child(6) {
+    min-width: 80px;
+  }
+
+            #dataTable th:nth-child(7),
+  #dataTable td:nth-child(7) {
+    min-width: 80px;
+  }*/
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -60,11 +97,8 @@
     </table>
 </div>
 
-      <div class="container" id="divDataEntry" style="margin-top: 10px;display:none">
-        <%--<div class="card">
-            <div class="card-header">
-                <b>KPI Sub Group </b>
-            </div>--%>
+      <div class="container" id="divDataEntry" style="margin-top: 10px;display:none; overflow: auto;">
+       
             <div class="card-body">
                 <div class="panel panel-default">   
                     <div class="panel-body">
@@ -90,7 +124,7 @@
                                 </td>
                                  <td style="width: 10%;">Date</td>
                                 <td>
-                                <input type="text" class="form-control rounded border-dark datepicker" id="quotationDate" name="quotationDate" onchange="QuotationDateChange()">
+                                <input type="text" class="form-control rounded border-dark datepicker" id="quotationDate" name="quotationDate" onchange="GenerateQuotationID()">
                                 </td>
                             </tr>
                              <tr>
@@ -120,22 +154,29 @@
                     </div>
                 </div>
             </div>
-              <div class="container">
-  
-  <table class="table table-bordered" id="dataTable">
+         
+            
+
+            <div class="card-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+  <table id="dataTable" class="table table-bordered table-responsive" style="width: 100%;">
     <thead>
       <tr>
         <th>Item Name</th>
-        <th>Qty</th>
-        <th>Rate</th>
-           <th>Discount %</th>
-            <th>GST %</th>
-            <th>Amount</th>
-            <th><button class="btn btn-success mb-3 pull-right" id="addRowBtn"><i class="fas fa-plus"></i></button></th>
+        <th  style="width:10%">Qty</th>
+        <th style="width:10%">Rate</th>
+           <th style="width:10%">Discount %</th>
+            <th style="width:10%">GST %</th>
+            <th style="width:20%">Amount</th>
+            <th  style="width:5%"><button class="btn btn-success mb-3 pull-right" id="addRowBtn"><i class="fas fa-plus"></i></button></th>
       </tr>
     </thead>
     <tbody>
       <!-- Rows will be added dynamically -->
+        <tr>
+           
+        </tr>
     </tbody>
       <tfoot class="no-rows-footer">
           <tr>
@@ -165,6 +206,7 @@
       </tfoot>
   </table>
        
+    
         <br />
         <div class="form-group">
       <label for="notes">Notes:</label>
@@ -176,11 +218,14 @@
       <textarea class="form-control" id="terms" placeholder="Terms and conditions- late fees,payment methods,delivery schedule ..."></textarea>
     </div>
         <br />
+                         </div>
+                </div>
+            </div>
+ </div>
 
- <%-- <button class="btn btn-success" id="saveDataBtn" onclick="saveData()">Save Data</button>--%>
-</div>
-        </div>
-    <%--</div>--%>
+
+       
+
 
     <div class="container" id="divDataItemsView" style="margin-top: 10px;display:none">
            <div class="card-body">

@@ -209,7 +209,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                         SalesQuotationMastertInfo = new
                         {
                             QuotationId = dr["QuotationId"].ToString(),
-                            QuotationDate = dr["QuotationDate"].ToString(),
+                            QuotationDate = Convert.ToDateTime(dr["QuotationDate"].ToString()).ToString("dd/MM/yyyy"),
                             QuotationStatus = dr["QuotationStatus"].ToString(),
                             NetTotal = dr["NetTotal"].ToString(),
                             NetGST = dr["NetGST"].ToString(),
@@ -398,7 +398,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 itemTable.AddCell(new PdfPCell(new Phrase("Qty", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Rate", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-                itemTable.AddCell(new PdfPCell(new Phrase("GST", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+                itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 DataTable dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
                 // Add table rows with item details
@@ -432,7 +432,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 netGSTCell.HorizontalAlignment = Element.ALIGN_RIGHT;
                 itemTable.AddCell(netGSTCell);
                 itemTable.AddCell(gst);
-                string ship = Convert.ToString(dtQuotationDetails.Rows[0]["NetAmount"]);
+                string ship = Convert.ToString(dtQuotationDetails.Rows[0]["ShippingCharges"]);
                 PdfPCell shippingChargesCell = new PdfPCell(new Phrase("Shipping Charges", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
                 shippingChargesCell.Colspan = 5;
                 shippingChargesCell.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -542,6 +542,24 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
 
 
             return "";
+        }
+
+        [WebMethod]
+        public static string GenerateQuotationID(string QuotationDate)
+        {
+            DataTable dtNewQuotationID = new DataTable();
+
+            try
+            {
+                string formattedQuotationDate = DateTime.ParseExact(QuotationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+                dtNewQuotationID = objMain.dtFetchData("select 'QUOT' + CONVERT(NVARCHAR(10), '"+ formattedQuotationDate + "', 120) + '/' +\r\n                             RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(QuotationID, LEN(QuotationID) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4)\r\n as QuotationID    FROM tblSdSalesQuotationMaster\r\n    WHERE QuotationDate ='" + formattedQuotationDate + "'");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtNewQuotationID);
         }
     }
 }

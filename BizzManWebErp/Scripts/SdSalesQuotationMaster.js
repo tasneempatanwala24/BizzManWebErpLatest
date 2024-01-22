@@ -108,29 +108,29 @@ function addRow() {
     var cols = "";
 
     // Add ItemName column
-    cols += '<td style="width:fit-content"><select  class="ddlMaterialName form-control" onchange="FetchUnitMeasure(this);"> < option value = "" > -Select Material Name -</option > </select ></td>';
+    cols += '<td><select  class="ddlMaterialName form-control" onchange="FetchUnitMeasure(this);" > < option value = "" > -Select Material Name -</option > </select ></td>';
 
     // Add Qty with input
-    cols += '<td><input class="txtQuantity" onchange="calculateTotalRowAmount(this)" type="text" value="0" class="form-control"oninput="handleNumericInput(event)"></td>';
+    cols += '<td style="width:10%"><input class="txtQuantity form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0" oninput="handleNumericInput(event)" ></td>';
 
     // Add Rate with input
-    cols += '<td><input class="txtRate" onchange="calculateTotalRowAmount(this)" type="text" value="0" class="form-control" oninput="handleNumericInput(event)"></td>';
+    cols += '<td style="width:10%"><input class="txtRate form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)"></td>';
 
     // Add Discount with input
-    cols += '<td><input class="txtDiscount" onchange="calculateTotalRowAmount(this)" type="text" value="0" class="form-control" oninput="handleNumericInput(event)"></td>';
+    cols += '<td style="width:10%"><input class="txtDiscount form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)" ></td>';
 
     // Add GST
-    cols += '<td><input class="txtGST" type="text" class="form-control" disabled></td>';
+    cols += '<td style="width:10%"><input class="txtGST form-control" type="text"  disabled></td>';
 
     // Add Amount
-    cols += '<td><input class="txtAmount" type="text" class="form-control" disabled></td>';
+    cols += '<td style="width:20%"><input class="txtAmount form-control" type="text" disabled></td>';
 
 
    
 
     // Add Action column with delete button
-    cols += '<td>' +
-        '<button class="btn btn-danger delete-row"><i class="fas fa-trash"></i></button>' +
+    cols += '<td style="width:5%">' +
+        '<button class="btn btn-danger delete-row  form-control"><i class="fas fa-trash"></i></button>' +
         '</td>';
 
     newRow.append(cols);
@@ -316,7 +316,38 @@ function generateRandomNumber() {
     return Math.floor(Math.random() * 9000) + 1000;
 }
 
+function GenerateQuotationID() {
+    if ($('#quotationDate').val() != '') {
+        $.ajax({
+            type: "POST",
+            url: 'wSdSalesQuotationMaster.aspx/GenerateQuotationID',
+            data: JSON.stringify({
+                "QuotationDate": $('#quotationDate').val()
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function () {
 
+            },
+            success: function (response) {
+
+                var data = JSON.parse(response.d);
+                $('#txtQuotation').val(data[0].QuotationID);
+              
+
+            },
+            complete: function () {
+
+            },
+            failure: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+    else {
+        $('#txtQuotation').val('');
+    }
+}
 
 function saveData() {
     if ($('#quotationDate').val() == '') {

@@ -95,7 +95,7 @@ namespace BizzManWebErp
 
                 dtCustomerlist = objMain.dtFetchData(@"select tblCrmCustomers.CustomerID,isnull(CustomerName,'')as CustomerName,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address
 ,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email from tblCrmCustomerContacts
-inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.CustomerID");
+inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId");
             }
             catch (Exception ex)
             {
@@ -122,7 +122,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             try
             {
 
-                dtCustomerDetails = objMain.dtFetchData("select tblCrmCustomers.CustomerID,isnull(CustomerName,'')as CustomerName,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\n,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email from tblCrmCustomerContacts\r\ninner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.CustomerID where tblCrmCustomers.CustomerID=" + CustomerId + "");
+                dtCustomerDetails = objMain.dtFetchData("select tblCrmCustomers.CustomerID,isnull(CustomerName,'')as CustomerName,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\n,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email from tblCrmCustomerContacts\r\ninner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId where tblCrmCustomers.CustomerID=" + CustomerId + "");
             }
             catch (Exception ex)
             {
@@ -196,7 +196,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             try
             {
 
-                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
+                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
 
                 dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
 
@@ -251,8 +251,10 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
 
             try
             {
-                Console.WriteLine("Fetching data...");
-                dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,a.QuotationStatus,b.ContactName from tblSdSalesQuotationMaster as a Inner Join tblCrmCustomerContacts as b on a.[CustomerId]=b.[CustomerId] order by a.CreateDate desc");
+              
+                dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,a.QuotationStatus,b.CustomerName as ContactName
+                    from tblSdSalesQuotationMaster as a Inner Join tblCrmCustomers as b 
+                    on a.[CustomerId]=b.[CustomerId] order by a.CreateDate desc");
 
                 if (dtEmpList == null)
                 {
@@ -350,7 +352,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
 
             // Client information on the left
             PdfPCell clientInfoCell = new PdfPCell();
-            DataTable dtClientDetails = objMain.dtFetchData("SELECT ContactName, Street1, Phone, Email FROM tblCrmCustomerContacts WHERE CustomerId = (SELECT CustomerId FROM tblSdSalesQuotationMaster WHERE QuotationId = '" + QuotationId + "')");
+            DataTable dtClientDetails = objMain.dtFetchData(@"SELECT CustomerName as ContactName, Street1, Phone, Email from tblCrmCustomerContacts inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WHERE tblCrmCustomers.CustomerId = (SELECT CustomerId FROM tblSdSalesQuotationMaster WHERE QuotationId = '" + QuotationId + "')");
             if (dtClientDetails.Rows.Count > 0)
             {
                 string clientName = Convert.ToString(dtClientDetails.Rows[0]["ContactName"]);
@@ -366,7 +368,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
                 clientInfoCell.Padding = 0;
                 //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 billToTable.AddCell(clientInfoCell);
-                DataTable dtQuotationDetails = objMain.dtFetchData("select QuotationId,FORMAT(QuotationDate, 'dd/MM/yyyy') as QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
+                DataTable dtQuotationDetails = objMain.dtFetchData("select QuotationId,FORMAT(QuotationDate, 'dd/MM/yyyy') as QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
                 // Quotation details on the right
                 PdfPCell quotationDetailsCell = new PdfPCell();
                 quotationDetailsCell.AddElement(new Paragraph("Quotation ID: " + QuotationId, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
@@ -473,7 +475,7 @@ inner join tblCrmCustomers on tblCrmCustomers.CustomerID=tblCrmCustomerContacts.
             try
             {
 
-                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.CustomerId=cust.CustomerId where SM.QuotationId='" + QuotationId + "'");
+                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
 
                 dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
 

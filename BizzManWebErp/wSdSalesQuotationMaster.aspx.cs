@@ -19,9 +19,14 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Vml;
+using System.Security;
+using DocumentFormat.OpenXml.Office.CoverPageProps;
+//using DocumentFormat.OpenXml.Drawing.Charts;
 
+[assembly: AllowPartiallyTrustedCallers]
 namespace BizzManWebErp
 {
+
     public partial class wSdSalesQuotationMaster : System.Web.UI.Page
     {
         static clsMain objMain;
@@ -74,7 +79,7 @@ namespace BizzManWebErp
             try
             {
 
-                dtMaterialDetails = objMain.dtFetchData("select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent from tblMmMaterialMaster where Id=" + MaterialId + "");
+                dtMaterialDetails = objMain.dtFetchData("select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,isnull(CentralTaxPercent,0) as CentralTaxPercent,isnull(StateTaxPercent,0) as StateTaxPercent,isnull(CessPercent,0) as CessPercent from tblMmMaterialMaster where Id=" + MaterialId + "");
             }
             catch (Exception ex)
             {
@@ -159,6 +164,11 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                     strBuild.Append("<Rate>" + item.Rate + "</Rate>");
                     strBuild.Append("<Discount>" + item.Discount + "</Discount>");
                     strBuild.Append("<GST>" + item.GST + "</GST>");
+
+                    strBuild.Append("<CentralTaxPercent>" + item.CentralTaxPercent + "</CentralTaxPercent>");
+                    strBuild.Append("<StateTaxPercent>" + item.StateTaxPercent + "</StateTaxPercent>");
+                    strBuild.Append("<CessPercent>" + item.CessPercent + "</CessPercent>");
+
                     strBuild.Append("<Amount>" + item.Amount + "</Amount>");
                     strBuild.Append("</SalesQuotationDetail>");
                 }
@@ -198,7 +208,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
 
                 dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
 
-                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
 
                 if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
                 {
@@ -286,8 +296,34 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
         private  void AddInvoiceContent(Document document, string QuotationId)
         {// Open the document before adding content
          // Your company information
-            //string filePath = Server.MapPath("Images\\logo.jpg");
-            //filePath=Path.Combine(filePath, "Images\\logo.jpg");
+         //string filePath = Server.MapPath("Images\\logo.jpg");
+         //filePath=Path.Combine(filePath, "Images\\logo.jpg");
+
+            //PdfPTable QuotationHeadingTable = new PdfPTable(1);
+            //QuotationHeadingTable.WidthPercentage = 100;
+            //QuotationHeadingTable.SetWidths(new float[] { 4f }); // Adjust the widths as needed
+            //PdfPCell QuotationHeadingCell = new PdfPCell();
+            //QuotationHeadingCell.AddElement(new Paragraph("QUOTATION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)));
+            //QuotationHeadingCell.BorderWidth = 0;
+            //QuotationHeadingCell.Colspan = 1;
+            //QuotationHeadingCell.HorizontalAlignment = Element.ALIGN_CENTER; // Align to the center
+            //QuotationHeadingTable.AddCell(QuotationHeadingCell);
+            //document.Add(QuotationHeadingTable);
+
+            PdfPTable QuotationHeadingTable = new PdfPTable(1);
+            QuotationHeadingTable.WidthPercentage = 100;
+
+            PdfPCell QuotationHeadingCell = new PdfPCell(new Phrase("QUOTATION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)));
+            QuotationHeadingCell.BorderWidth = 0;
+            QuotationHeadingCell.HorizontalAlignment = Element.ALIGN_CENTER; // Align to the center
+            QuotationHeadingCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Align to the middle vertically
+            QuotationHeadingCell.FixedHeight = 50f; // Adjust the height as needed
+
+            QuotationHeadingTable.AddCell(QuotationHeadingCell);
+            document.Add(QuotationHeadingTable);
+
+
+
             PdfPTable companyInfoTable = new PdfPTable(2);
             companyInfoTable.WidthPercentage = 100;
             companyInfoTable.SetWidths(new float[] { 3f, 1f }); // Adjust the widths as needed
@@ -298,14 +334,14 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
             if (dtCompanyDetails != null && dtCompanyDetails.Rows.Count > 0)
             {
                 string companyName = Convert.ToString(dtCompanyDetails.Rows[0]["CompanyName"]);
-                companyInfoCell.AddElement(new Paragraph("Company Name : " + companyName, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
+                companyInfoCell.AddElement(new Paragraph("" + companyName, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
 
               
 
 
 
                 string companyAddress = Convert.ToString(dtCompanyDetails.Rows[0]["Address1"]);
-                companyInfoCell.AddElement(new Paragraph("Company Address : " + companyAddress, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+                companyInfoCell.AddElement(new Paragraph("" + companyAddress, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                 string companyEmail = Convert.ToString(dtCompanyDetails.Rows[0]["EmailAddress"]);
                 companyInfoCell.AddElement(new Paragraph("Email: " + companyEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                 string companyPhone = Convert.ToString(dtCompanyDetails.Rows[0]["PhoneNo"]);
@@ -402,9 +438,21 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-                DataTable dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+                DataTable dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
                 // Add table rows with item details
                 // Replace the following with your actual data
+
+                decimal centralTaxValue = 0;
+                decimal stateTaxValue = 0;
+                decimal cessTaxValue = 0;
+
+                decimal centralTaxPercent = 0;
+                decimal stateTaxPercent = 0;
+                decimal cessTaxPercent = 0;
+                decimal qty = 0;
+                decimal actualRate = 0;
+
+
                 if (dtSalesQuotationDetail != null && dtSalesQuotationDetail.Rows.Count > 0)
                 {
                     foreach (DataRow row in dtSalesQuotationDetail.Rows)
@@ -415,6 +463,16 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                         itemTable.AddCell(row["Discount"].ToString());
                         itemTable.AddCell(row["GST"].ToString());
                         itemTable.AddCell(row["Amount"].ToString());
+
+                        centralTaxPercent = Convert.ToDecimal(row["CentralTaxPercent"].ToString()); 
+                        stateTaxPercent = Convert.ToDecimal(row["StateTaxPercent"].ToString());
+                        cessTaxPercent = Convert.ToDecimal(row["CessPercent"].ToString());
+                        qty = Convert.ToDecimal(row["Qty"].ToString());
+                        actualRate = Convert.ToDecimal(row["ActualRate"].ToString());
+
+                        centralTaxValue += (qty * actualRate) * (centralTaxPercent / 100);
+                        stateTaxValue += (qty * actualRate) * (stateTaxPercent / 100);
+                        cessTaxValue += (qty * actualRate) * (cessTaxPercent / 100);
                     }
 
 
@@ -428,6 +486,27 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 itemTable.AddCell(totalAmountCell);
                 string amt = Convert.ToString(dtQuotationDetails.Rows[0]["NetTotal"]);
                 itemTable.AddCell(amt);
+
+
+                PdfPCell CentralTaxValueCell = new PdfPCell(new Phrase("Central Tax Value", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+                CentralTaxValueCell.Colspan = 5;
+                CentralTaxValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                itemTable.AddCell(CentralTaxValueCell);
+                itemTable.AddCell(centralTaxValue.ToString("0.00"));
+
+                PdfPCell StateTaxValueCell = new PdfPCell(new Phrase("State Tax Value", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+                StateTaxValueCell.Colspan = 5;
+                StateTaxValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                itemTable.AddCell(StateTaxValueCell);
+                itemTable.AddCell(stateTaxValue.ToString("0.00"));
+
+                PdfPCell CessTaxValueCell = new PdfPCell(new Phrase("Cess Value", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+                CessTaxValueCell.Colspan = 5;
+                CessTaxValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                itemTable.AddCell(CessTaxValueCell);
+                itemTable.AddCell(cessTaxValue.ToString("0.00"));
+
+
                 string gst = Convert.ToString(dtQuotationDetails.Rows[0]["NetGST"]);
                 PdfPCell netGSTCell = new PdfPCell(new Phrase("Net GST", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
                 netGSTCell.Colspan = 5;

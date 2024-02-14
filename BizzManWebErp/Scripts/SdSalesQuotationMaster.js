@@ -9,7 +9,7 @@ $(document).ready(function () {
     
     $('#dispddlQuotStatus').select2();
 
-   
+
 
 
     $(".delete-row").click(function (event) {
@@ -55,7 +55,7 @@ function BindCustomerDropdown() {
            // var abranch = "<option value=''>-Select Customer-</option>";
             var abranch = '';
             for (var i = 0; i < JSON.parse(response.d).length; i++) {
-                abranch = abranch + "<option value='" + JSON.parse(response.d)[i].CustomerID + "'>" + JSON.parse(response.d)[i].CustomerName + "</option>";
+                abranch = abranch + "<option value='" + JSON.parse(response.d)[i].CustomerID + "'>" + JSON.parse(response.d)[i].CustomerName + " " + JSON.parse(response.d)[i].Mobile +"</option>";
             }
             $('#ddlClientName').append(abranch);
         },
@@ -114,13 +114,13 @@ function addRow() {
     cols += '<td style="width:10%"><input class="txtQuantity form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0" oninput="handleNumericInput(event)" ></td>';
 
     // Add Rate with input
-    cols += '<td style="width:10%"><input class="txtRate form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)"></td>';
+    cols += '<td style="width:10%"><input class="txtRate form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)"><input type="hidden" value="" class="hdnActualRate"></td>';
 
     // Add Discount with input
     cols += '<td style="width:10%"><input class="txtDiscount form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)" ></td>';
 
     // Add GST
-    cols += '<td style="width:10%"><input class="txtGST form-control" type="text"  disabled></td>';
+    cols += '<td style="width:10%"><input class="txtGST form-control" type="text"  disabled><input type="hidden" value="" class="hdnCentralTaxPercent"><input type="hidden" value="" class="hdnStateTaxPercent"><input type="hidden" value="" class="hdnCessPercent"></td>';
 
     // Add Amount
     cols += '<td style="width:20%"><input class="txtAmount form-control" type="text" disabled></td>';
@@ -143,6 +143,7 @@ function addRow() {
         var dropdown = $('#dataTable tbody tr:last-child .ddlMaterialName');
 
         dropdown.append(optionsOfMaterialDropdownGrid);
+        dropdown.select2();
     }
 
     toggleTfootVisibility();
@@ -175,6 +176,8 @@ function FetchBOMDetailsMaterials() {
                 }
                 optionsOfMaterialDropdownGrid = req;
                 dropdown.append(req);
+
+                dropdown.select2();
             },
             complete: function () {
 
@@ -206,8 +209,15 @@ function FetchUnitMeasure(dropdown) {
                 var data = JSON.parse(response.d);
                 //  $('#txtMaterialUnitMeasure').val(data[0].IntegratedTaxPercent);
                 //$('#txtMaterialRate').val(data[0].MRP);
-                row.find('.txtRate').val(data[0].MRP);
+                var rate = parseFloat(data[0].MRP);
+                const gst = parseFloat(data[0].IntegratedTaxPercent);
+                var inclRate=rate+(rate*gst/100)
+                row.find('.txtRate').val(inclRate);
                 row.find('.txtGST').val(data[0].IntegratedTaxPercent);
+                row.find('.hdnActualRate').val(data[0].MRP);
+                row.find('.hdnCentralTaxPercent').val(data[0].CentralTaxPercent);
+                row.find('.hdnStateTaxPercent').val(data[0].StateTaxPercent);
+                row.find('.hdnCessPercent').val(data[0].CessPercent);
                 calculateTotalRowAmount(dropdown);
             },
             complete: function () {
@@ -232,7 +242,8 @@ function calculateTotalRowAmount(obj) {
         var qty = $(row).find('.txtQuantity').val();
         var rate = $(row).find('.txtRate').val();
         var discount = $(row).find('.txtDiscount').val();
-        var gst = $(row).find('.txtGST').val();
+      //  var gst = $(row).find('.txtGST').val();
+        var gst = 0;
         var amount = (qty * rate) * (1 - discount / 100) * (1 + gst / 100);
 
       
@@ -251,12 +262,12 @@ function calculateGrandTotal() {
     $('#dataTable tbody tr').each(function () {
         var qty = parseFloat($(this).find('.txtQuantity').val());
         var rate = parseFloat($(this).find('.txtRate').val());
-
+        var actualRate = parseFloat($(this).find('.hdnActualRate').val());
         var totalAmount = parseFloat($(this).find('.txtAmount').val());
         grandTotal += totalAmount;
 
         const gst = parseFloat($(this).find('.txtGST').val());
-        grandTotalGST += (qty * rate) * (gst / 100);
+        grandTotalGST += (qty * actualRate) * (gst / 100);
     });
 
     // Display the calculated values in the table footer
@@ -382,7 +393,12 @@ function saveData() {
         var discount = $(this).find('.txtDiscount').val();
         var gst = $(this).find('.txtGST').val();
         var amount = $(this).find('.txtAmount').val();
-        data.push({ ItemID: materialID, Quantity: qty, Rate: rate, Discount: discount, GST: gst, Amount: amount });
+
+        var centralTaxPercent = $(this).find('.hdnCentralTaxPercent').val();
+        var stateTaxPercent = $(this).find('.hdnStateTaxPercent').val();
+        var cessPercent = $(this).find('.hdnCessPercent').val();
+
+        data.push({ ItemID: materialID, Quantity: qty, Rate: rate, Discount: discount, GST: gst, CentralTaxPercent: centralTaxPercent, StateTaxPercent: stateTaxPercent, CessPercent: cessPercent, Amount: amount });
     });
     var quotationId = $('#txtQuotation').val();
     var customerId = $('#ddlClientName').val();
@@ -556,11 +572,23 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             $('#disptxtContactNumber').val(data.SalesQuotationMastertInfo.Mobile)
             $('#disptxtEmail').val(data.SalesQuotationMastertInfo.Email)
             $('#dispgrandTotal').val(data.SalesQuotationMastertInfo.NetTotal)
+
+
             $('#dispgrandTotalGST').val(data.SalesQuotationMastertInfo.NetGST)
             $('#dispShippingCharges').val(data.SalesQuotationMastertInfo.ShippingCharges)
             $('#dispnetAmount').val(data.SalesQuotationMastertInfo.NetAmount)
             $('#dispnotes').val(data.SalesQuotationMastertInfo.Notes)
             $('#dispterms').val(data.SalesQuotationMastertInfo.TermsAndConditions)
+
+            var centralTaxValue = 0;
+            var stateTaxValue = 0;
+            var cessTaxValue = 0;
+
+            var centralTaxPercent = 0;
+            var stateTaxPercent = 0;
+            var cessTaxPercent = 0;
+            var qty = 0;
+            var actualRate = 0;
 
             var html = '';
             for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
@@ -570,7 +598,24 @@ function GetSdSalesQuotationMasterById(QuoatId) {
                     + '<td>' + data.SalesItems[0].Table[i].Discount + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].GST + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].Amount + '</td></tr>';
+
+                centralTaxPercent = parseFloat(data.SalesItems[0].Table[i].CentralTaxPercent);
+                stateTaxPercent = parseFloat(data.SalesItems[0].Table[i].StateTaxPercent);
+                cessTaxPercent = parseFloat(data.SalesItems[0].Table[i].CessPercent);
+                qty = parseFloat(data.SalesItems[0].Table[i].Qty);
+                actualRate = parseFloat(data.SalesItems[0].Table[i].ActualRate);
+
+                centralTaxValue += (qty * actualRate) * (centralTaxPercent / 100);
+                stateTaxValue += (qty * actualRate) * (stateTaxPercent / 100);
+                cessTaxValue += (qty * actualRate) * (cessTaxPercent / 100);
             }
+
+
+            $('#dispgrandCentralTaxValue').val(centralTaxValue)
+            $('#disgrandStateTaxValue').val(stateTaxValue)
+            $('#dispgrandCessValue').val(cessTaxValue)
+
+
             $('#salesItemBody').html(html);
             $('#divDataItemsView').show();   
             $('#ContentPlaceHolder1_PrintDataBtn').show();

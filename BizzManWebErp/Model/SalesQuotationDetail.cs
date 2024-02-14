@@ -12,6 +12,9 @@ namespace BizzManWebErp.Model
         public decimal Quantity { get; set; }
         public decimal Discount { get; set; }
         public decimal GST { get; set; }
+        public decimal CentralTaxPercent { get; set; }
+        public decimal StateTaxPercent { get; set; }
+        public decimal CessPercent { get; set; }
         public decimal Amount { get; set; }
     }
 }

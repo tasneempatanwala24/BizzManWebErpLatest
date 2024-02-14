@@ -307,13 +307,29 @@
     </tbody>
       <tfoot>
           <tr>
-              <th colspan="5" style="text-align:right"><b>Total</b></th>
+              <th colspan="5" style="text-align:right"><b>Total Amount</b></th>
               <th>
                   <input type="text" id="dispgrandTotal" value="0" class="form-control" disabled>
               </th>
           </tr>
+            <tr>
+              <th colspan="5" style="text-align:right"><b>Central Tax Value</b></th>
+              <th>
+                  <input type="text" id="dispgrandCentralTaxValue" value="0" class="form-control" disabled>
+              </th>
+          </tr>  <tr>
+              <th colspan="5" style="text-align:right"><b>State Tax Value</b></th>
+              <th>
+                  <input type="text" id="disgrandStateTaxValue" value="0" class="form-control" disabled>
+              </th>
+          </tr>  <tr>
+              <th colspan="5" style="text-align:right"><b>Cess Value</b></th>
+              <th>
+                  <input type="text" id="dispgrandCessValue" value="0" class="form-control" disabled>
+              </th>
+          </tr>
            <tr>
-              <th colspan="5" style="text-align:right"><b>GST</b></th>
+              <th colspan="5" style="text-align:right"><b>Net GST</b></th>
               <th>
                   <input type="text" id="dispgrandTotalGST"  value="0" class="form-control" disabled>
               </th>

@@ -115,7 +115,7 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="wfHrBranchMasterNew.aspx">Branch Master</a></li>
-            <li><a class="dropdown-item" href="wfHrDeptMaster.aspx">Department Master</a></li>
+            <li><a class="dropdown-item" href="wfHrDeptMasterNew.aspx">Department Master</a></li>
             <li><a class="dropdown-item" href="wfHrDesignationMaster.aspx">Designation Master</a></li>
             <li><a class="dropdown-item" href="wfHrPfMaster.aspx">PF Master</a></li>
             <li><a class="dropdown-item" href="wfHrEsiMaster.aspx">ESI Master</a></li>   
@@ -129,7 +129,8 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="wfHrEmpJobAssign.aspx">Employees Job Assign</a></li>
-            <li><a class="dropdown-item" href="wfHrEmpLoan.aspx">Employees Loan</a></li>
+            <li><a class="dropdown-item" href="wfHrEmpLoan.aspx">Old Employees Loan</a></li>
+              <li><a class="dropdown-item" href="wfHrEmpLoanApplicationMaster.aspx">Employees Loan</a></li>
             <li><a class="dropdown-item" href="wfHrEmpKpi.aspx">Employees KPI Entry</a></li>
             <li><a class="dropdown-item" href="wfHrEmpKpiSelfAsseesmentEntry.aspx">Employees KPI Self Assessment Entry</a></li>
             <li><a class="dropdown-item" href="wfHrEmpKpiReport.aspx">Employees KPI Report</a></li>

@@ -18,7 +18,7 @@ $(document).ready(function () {
 function BindWarehouseDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmMaterialPurchaseGateInword.aspx/WarehouseList',
+        url: 'wfSdManufactureOrder.aspx/WarehouseList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -54,7 +54,7 @@ function BindWarehouseDropdown() {
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpAttendance.aspx/BranchMasterList',
+        url: 'wfSdManufactureOrder.aspx/BranchMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -115,7 +115,7 @@ function BindMaterialMasterDropdown() {
 function BindStateDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfSdSalesOrder.aspx/FetchStateList',
+        url: 'wfSdManufactureOrder.aspx/FetchStateList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -180,7 +180,7 @@ function BindCityDropdown() {
 function BindCustomerDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfSdSalesOrder.aspx/CustomerMasterList',
+        url: 'wfSdManufactureOrder.aspx/CustomerMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -210,7 +210,7 @@ function BindCustomerDropdown() {
 function BindFormulaDropdown(BOMId) {
     $.ajax({
         type: "POST",
-        url: 'wfMmBomEntry.aspx/FormulaList',
+        url: 'wfSdManufactureOrder.aspx/FormulaList',
         data: JSON.stringify({
             "BOMId": BOMId
         }),
@@ -243,7 +243,7 @@ function BindFormulaDropdown(BOMId) {
 function BindCustomerTypeDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfSdSalesOrder.aspx/CustomerTypeMasterList',
+        url: 'wfSdManufactureOrder.aspx/CustomerTypeMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",

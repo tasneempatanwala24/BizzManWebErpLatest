@@ -18,7 +18,7 @@ $(document).ready(function () {
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmRequisitionNote.aspx/GetBranchDetails',
+        url: 'wfSdSalesOrder.aspx/GetBranchDetails',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -46,7 +46,7 @@ function BindBranchDropdown() {
 function BindDepartmentDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmRequisitionNote.aspx/GetDeptDetails',
+        url: 'wfSdSalesOrder.aspx/GetDeptDetails',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -199,12 +199,12 @@ function BindCityDropdown() {
 
 }
 
-
+ 
 
 function BindCurrencyDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmMaterialMaster.aspx/BindCurrencyList',
+        url: 'wfSdSalesOrder.aspx/BindCurrencyList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -632,7 +632,7 @@ function FetchMaterialDetails() {
     if ($('#ddlMaterialName').val() != '') {
         $.ajax({
             type: "POST",
-            url: 'wfMmBomEntry.aspx/FetchMaterialDetails',
+            url: 'wfSdSalesOrder.aspx/FetchMaterialDetails',
             data: JSON.stringify({
                 "MaterialId": $('#ddlMaterialName').val()
             }),

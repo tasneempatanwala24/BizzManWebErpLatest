@@ -1,0 +1,318 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MmMainMenu.Master" AutoEventWireup="true" CodeBehind="wfSdSalesOrder.aspx.cs" Inherits="BizzManWebErp.wfSdSalesOrder" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link href="css/style.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap.min.js"></script>
+    <link href="css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="Scripts/jquery-ui.min.js"></script>
+    <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>--%>
+    <script src="Scripts/moment.min.js"></script>
+    <link href="css/bootstrap-timepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="Scripts/bootstrap-timepicker.js"></script>
+    <script src="Scripts/SalesOrder.js"></script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <input type="hidden" id="loginuser" runat="server" />
+    <input type="hidden" id="hdnSalesOrderId" />
+    <button onclick="CreateSalesOrder();" id="btnCreate">Create</button>
+    <button onclick="ViewSalesOrderList();" id="btnView">View</button>
+    <button onclick="DownloadFile();" id="btnExport">Export To Excel</button>
+    <button onclick="AddSalesOrder();" style="display: none;" id="btnSave">Save</button>
+    <button onclick="UpdateSalesOrderStatus('2');" style="display: none;" id="btnConfirm">Confirm</button>
+    <button onclick="UpdateSalesOrderStatus('4');" style="display: none;" id="btnCancel">Cancel</button>
+
+    <div class="container" id="divSalesOrderList" style="margin-top: 10px; overflow: auto;">
+        <table id="tblSalesOrderList" class="display">
+            <thead>
+                <tr>
+                    <th>
+                        <input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+                    <th style="white-space: nowrap;">Sales Order Id</th>
+                    <th style="white-space: nowrap;">Order Source</th>
+                    <th style="white-space: nowrap;">Customer</th>
+                    <th style="white-space: nowrap;">Branch</th>
+                    <th style="white-space: nowrap;">Department</th>
+                    <th style="white-space: nowrap;">GST Treatment</th>
+                    <th style="white-space: nowrap;">Expiration Date</th>
+                    <th style="white-space: nowrap;">Quotation Date</th>
+                    <th style="white-space: nowrap;">Currency</th>
+                    <th style="white-space: nowrap;">Payment Terms</th>
+                    <th style="white-space: nowrap;">Order Status</th>
+                    <th style="white-space: nowrap;">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody id="tbody_SalesOrder_List">
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="container" id="divSalesOrderEntry" style="display: none; margin-top: 10px;">
+        <div class="card">
+            <div class="card-header">
+                Add Sales Order
+            </div>
+            <div class="card-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="tbl">
+                            <tr>
+
+                                <td>Customer *</td>
+                                <td>
+                                    <select id="ddlCustomer" name="ddlCustomer" class="form-control" style="width: 300px;">
+                                        <option value="">-Select Customer-</option>
+                                    </select>
+                                    <a href="#" onclick="AddNewCustomer();">Add</a>
+                                </td>
+                                <td>Expiration Date *</td>
+                                <td>
+                                    <input type="date" class="form-control" id="txtExpirationDate" name="txtExpirationDate" />
+                                </td>
+
+                            </tr>
+                            <tr>
+
+                                <td>GST Treatment *</td>
+                                <td>
+                                    <select id="ddlGSTTreatment" name="ddlGSTTreatment" class="form-control">
+                                        <option value="">-Select GST Treatment-</option>
+                                        <option value="Registered Business - Regular">Registered Business - Regular</option>
+                                        <option value="Registered Business - Composition">Registered Business - Composition</option>
+                                        <option value="Unregistered Business">Unregistered Business</option>
+                                        <option value="Consumer">Consumer</option>
+                                        <option value="Overseas">Overseas</option>
+                                        <option value="Special Economic Zone">Special Economic Zone</option>
+                                        <option value="Deemed Export">Deemed Export</option>
+                                    </select>
+                                    
+                                </td>
+                                <td>Quotation Date *</td>
+                                <td>
+                                    <input type="date" class="form-control" id="txtQuotationDate" name="txtQuotationDate" />
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Currency *</td>
+                                <td>
+                                    <select id="ddlCurrency" name="ddlCurrency" class="form-control" style="width: 300px;">
+                                        <option value="">-Select Currency-</option>
+                                    </select>
+                                </td>
+                                <td>Payment Terms</td>
+                                <td>
+                                    <select id="ddlPaymentTerms" name="ddlPaymentTerms" class="form-control" style="width: 300px;">
+                                        <option value="">-Select Payment Terms-</option>
+                                        <option value="Immediate Payment">Immediate Payment</option>
+                                        <option value="15 Days">15 Days</option>
+                                        <option value="21 Days">21 Days</option>
+                                        <option value="30 Days">30 Days</option>
+                                        <option value="45 Days">45 Days</option>
+                                        <option value="2 Months">2 Months</option>
+                                        <option value="End of Following Month">End of Following Month</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>Department *</td>
+                                <td>
+                                    <select id="ddlDept" name="ddlDept" class="form-control">
+                                        <option class="txt-center" value="">-Select Department-</option>
+                                    </select>
+                                </td>
+                                <td>Branch *</td>
+                                <td>
+                                    <select id="ddlBranch" name="ddlBranch" class="form-control" style="width: 300px;">
+                                        <option value="">-Select Branch-</option>
+                                    </select>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Terms & Conditions</td>
+                                <td>
+                                    <input type="text" class="form-control" id="txtTermsConditions" name="txtTermsConditions" />
+                                </td>
+                                <td>Total Amount</td>
+                                <td>
+                                    <input type="text" class="form-control" id="txtTotalAmount" name="txtTotalAmount" readonly="readonly" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Sale Order Id</td>
+                                <td>
+                                    <input type="text" class="form-control" id="txtSaleOrderId" name="txtSaleOrderId" readonly="readonly" />
+                                </td>
+                                <td></td>
+                                <td>
+                                </td>
+                            </tr>
+                           </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="divSalesOrderDetails" style="margin-top: 10px; overflow: auto; display: none;">
+        <div class="card">
+            <div class="card-header">
+                Sales Order Lines
+            </div>
+            <div class="card-body">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table id="tblSalesOrderBOMDetails" class="display no-footer dataTable" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="display: none;">Material Master Id</th>
+                                    <th>Material Name</th>
+                                    <th>Qty</th>
+                                    <th>Unit Measeure</th>
+                                    <th>Package</th>
+                                    <th style="display: none;">Package Id</th>
+                                    <th>Unit Price</th>
+                                    <th>Tax (%)</th>
+                                    <th>Total Amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+
+
+                            <tbody id="tbody_SalesOrderDetails">
+                                <tr id="tr_SalesOrderDetailEntry">
+                                    <td style="display: none;"></td>
+                                    <td>
+                                        <select id="ddlMaterialName" name="ddlMaterialName" class="form-control" onchange="FetchMaterialDetails();">
+                                            <option value="">-Select Material Name-</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialUnitMeasure" name="txtMaterialUnitMeasure" readonly="readonly" />
+                                    </td>
+                                    <td>
+                                        <select id="ddlPackage" name="ddlPackage" class="form-control">
+                                            <option value="">-Select Package-</option>
+                                        </select>
+                                    </td>
+                                    <td style="display: none;"></td>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" readonly="readonly" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialTax" name="txtMaterialTax" readonly="readonly" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialTotalAmount" name="txtMaterialTotalAmount" readonly="readonly" />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" onclick="SaveSalesOrderDetails();">Add</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+    <!-- Modal -->
+    <div class="modal fade" id="CustomerAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Customer</h5>
+
+                </div>
+                <div class="modal-body">
+                    <table class="tbl">
+                        <tr>
+                            <td>Customer Name *</td>
+                            <td><input type="text" class="form-control" id="txtCustomerName" name="txtCustomerName" /></td>
+                            <td>Customer Type *</td>
+                            <td><select id="ddlCustomerType" name="ddlCustomerType" class="form-control">
+                                        <option value="">-Select Customer Type-</option>
+                                    </select><a href="#" onclick="AddCustomerType();">Add</a></td>
+
+                        </tr>
+                        <tr>
+                            <td>Company Name *</td>
+                            <td><input type="text" class="form-control" id="txtCompanyName" name="txtCompanyName" /></td>
+                            <td>State *</td>
+                            <td><select id="ddlState" name="ddlState" class="form-control" onchange="BindCityDropdown();">
+                                        <option value="">-Select State-</option>
+                                    </select></td>
+                            
+
+                        </tr>
+                        <tr>
+                            <td>City *</td>
+                            <td><select id="ddlCity" name="ddlCity" class="form-control">
+                                        <option value="">-Select City-</option>
+                                    </select></td>
+                            <td>Email *</td>
+                            <td><input type="text" class="form-control" id="txtEmail" name="txtEmail" /></td>
+
+                        </tr>
+                        <tr>
+                            <td>Mobile No. *</td>
+                            <td><input type="text" class="form-control" id="txtMobile" name="txtMobile" /></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+                    </table>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="CloseModal();">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="AddCustomerDetails();">Add Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Modal -->
+    <div class="modal fade" id="CustomerTypeAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Add Customer Type</h5>
+
+                </div>
+                <div class="modal-body">
+                    <table class="tbl">
+                        <tr>
+                            <td>Customer Type *</td>
+                            <td><input type="text" class="form-control" id="txtCustomerType" name="txtCustomerType" /></td>
+
+                        </tr>
+                       
+                    </table>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="CloseCustomerTypeModal();">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="AddNewCustomerType();">Add Customer Type</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>
+
+

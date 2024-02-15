@@ -152,7 +152,7 @@ function BindVendorDropdown() {
 
 }
 
-
+ /*
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",
@@ -179,8 +179,38 @@ function BindBranchDropdown() {
 
         }
     });
-
 }
+*/
+function BindBranchDropdown() {
+    $.ajax({
+        type: "POST",
+        url: 'wfMmMaterialMaster.aspx/BranchMasterList',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+            $('#ddlBranch').html('');
+            var data = JSON.parse(response.d);
+            var branch = "<option value=''>-Select Branch-</option>";
+            for (var i = 0; i < JSON.parse(response.d).length; i++) {
+                branch = branch + "<option value='" + JSON.parse(response.d)[i].BranchCode + "'>" + JSON.parse(response.d)[i].BranchName + "</option>";
+            }
+            $('#ddlBranch').append(branch);
+        },
+        complete: function () {
+
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+}
+
+
+
 
 function BindMaterialCategoryNameDropdown() {
     $.ajax({

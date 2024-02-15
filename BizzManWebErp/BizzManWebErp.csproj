@@ -44,8 +44,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\..\Developer\Tashneem\TaskSaleQuotation (1)_13012024\TaskSaleQuotation\CodeChanges\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="ClosedXML, Version=0.95.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.0.95.4\lib\net46\ClosedXML.dll</HintPath>
@@ -56,14 +56,13 @@
     <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+    <Reference Include="itextsharp">
+      <HintPath>..\..\Developer\Tashneem\TaskSaleQuotation (1)_13012024\TaskSaleQuotation\CodeChanges\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
@@ -76,14 +75,16 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +96,7 @@
     <Content Include="css\alertify.css" />
     <Content Include="css\all.min.css" />
     <Content Include="css\bootstrap-datepicker.min.css" />
+    <Content Include="css\bootstrap-datepicker3.css" />
     <Content Include="css\bootstrap-timepicker.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\bt.min.css" />
@@ -126,6 +128,7 @@
     <Content Include="Images\Remove1.jpg" />
     <Content Include="Images\Remove2.jpg" />
     <Content Include="Images\RemoveRow.png" />
+    <Content Include="Scripts\AdminCompanyMaster.js" />
     <Content Include="Scripts\AdminModuleMaster.js" />
     <Content Include="Scripts\AdminRoleMaster.js" />
     <Content Include="Scripts\AdminUserMaster.js" />
@@ -144,6 +147,7 @@
     <Content Include="Scripts\HrBranchMasterNew.js" />
     <Content Include="Images\CompanyLogo.png" />
     <Content Include="Images\images.jpg" />
+    <Content Include="Scripts\HrDepartmentMasterNew.js" />
     <Content Include="Scripts\HrEmpForm16.js" />
     <Content Include="Scripts\HrEmpJobAssign.js" />
     <Content Include="Scripts\HrEmpJobCategoryMaster.js" />
@@ -155,6 +159,7 @@
     <Content Include="Scripts\HrEmpKpiSelfAsseesmentEntry.js" />
     <Content Include="Scripts\HrEmpKpiSubGroup.js" />
     <Content Include="Scripts\HrEmpLoan.js" />
+    <Content Include="Scripts\HrEmpLoanApplicationMaster.js" />
     <Content Include="Scripts\InventLocationMaster.js" />
     <Content Include="Scripts\InventPutwayPule.js" />
     <Content Include="Scripts\InventStockReportPutwayRule.js" />
@@ -214,6 +219,7 @@
     <Content Include="css\SidebarMenu.css" />
     <Content Include="Scripts\tableHTMLExport.js" />
     <Content Include="Web.config" />
+    <Content Include="wfAdminCompanyMaster.aspx" />
     <Content Include="wfAdminMain.aspx" />
     <Content Include="wfAdminModuleMaster.aspx" />
     <Content Include="wfAdminRoleMaster.aspx" />
@@ -221,15 +227,28 @@
     <Content Include="wfAdminUserMaster.aspx" />
     <Content Include="wfCrmCustomerMaster.aspx" />
     <Content Include="wfCrmMain.aspx" />
+    <Content Include="wfHrDeptMasterNew.aspx" />
     <Content Include="wfHrEmpForm16.aspx" />
+    <Content Include="wfHrEmpJobCategoryMaster.aspx" />
+    <Content Include="wfHrEmpJobMaster.aspx" />
+    <Content Include="wfHrEmpKpi.aspx" />
     <Content Include="wfHrEmpKpiGroup.aspx" />
+    <Content Include="wfHrEmpKpiMaster.aspx" />
     <Content Include="wfHrEmpKpiReport.aspx" />
     <Content Include="wfHrEmpKpiSelfAsseesmentEntry.aspx" />
     <Content Include="wfHrEmpKpiSubGroup.aspx" />
+    <Content Include="wfHrEmpLoan.aspx" />
     <Content Include="wfInventLocationMaster.aspx" />
     <Content Include="wfInventoryMain.aspx" />
+    <Content Include="wfInventPutwayRule.aspx" />
+    <Content Include="wfInventStockReportPutwayRule.aspx" />
     <Content Include="wfInventWarehouseMaster.aspx" />
     <Content Include="wfManufactureMain.aspx" />
+    <Content Include="wfMmBomEntry.aspx" />
+    <Content Include="wfMmMaterialPurchaseGateInword.aspx" />
+    <Content Include="wfMmMaterialPurchaseGrnEntry.aspx" />
+    <Content Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx" />
+    <Content Include="wfMmMaterialStockMaster.aspx" />
     <Content Include="wfMmVendorMaster.aspx" />
     <Content Include="wfMnfManufactureOperationsMaster.aspx" />
     <Content Include="wfMnfManufactureWorkCentersMaster.aspx" />
@@ -244,15 +263,26 @@
     <Content Include="wfFaWarehouseMaster.aspx" />
     <Content Include="wfHrBranchMaster.aspx" />
     <Content Include="wfHrBranchMasterNew.aspx" />
+    <Content Include="wfHrEmpSalaryGrnerate.aspx" />
     <Content Include="wfFaMainMenu.aspx" />
     <Content Include="wfHrDesignationMaster.aspx" />
     <Content Include="wfHrDeptMaster.aspx" />
     <Content Include="wfHrEsiMaster.aspx" />
     <Content Include="wfHrPfMaster.aspx" />
+    <Content Include="wfHrEmpMaster.aspx" />
     <Content Include="wfHrHrmsMain.aspx" />
     <Content Include="wfAdminLogin.aspx" />
+    <Content Include="wfMmCategoryMaster.aspx" />
     <Content Include="wfMmMainMenu.aspx" />
+    <Content Include="wfMmMaterialIndentMaster.aspx" />
+    <Content Include="wfMmMaterialMaster.aspx" />
+    <Content Include="wfMmMaterialPurchaseOrderEntry.aspx" />
+    <Content Include="wfMmPurchaseQuotationEntry.aspx" />
+    <Content Include="wfMmRequisitionNote.aspx" />
+    <Content Include="wfSdManufactureOrder.aspx" />
     <Content Include="wfSdSalesMisReport.aspx" />
+    <Content Include="wfSdSalesOrder.aspx" />
+    <Content Include="wfSdSalesOrderDelivery.aspx" />
     <Content Include="wSdSalesQuotationMaster.aspx" />
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +358,13 @@
     <Compile Include="Site1.Master.designer.cs">
       <DependentUpon>Site1.Master</DependentUpon>
     </Compile>
+    <Compile Include="wfAdminCompanyMaster.aspx.cs">
+      <DependentUpon>wfAdminCompanyMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfAdminCompanyMaster.aspx.designer.cs">
+      <DependentUpon>wfAdminCompanyMaster.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfAdminMain.aspx.cs">
       <DependentUpon>wfAdminMain.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -377,6 +414,13 @@
     <Compile Include="wfCrmMain.aspx.designer.cs">
       <DependentUpon>wfCrmMain.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfHrDeptMasterNew.aspx.cs">
+      <DependentUpon>wfHrDeptMasterNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrDeptMasterNew.aspx.designer.cs">
+      <DependentUpon>wfHrDeptMasterNew.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfHrEmpForm16.aspx.cs">
       <DependentUpon>wfHrEmpForm16.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -384,12 +428,40 @@
     <Compile Include="wfHrEmpForm16.aspx.designer.cs">
       <DependentUpon>wfHrEmpForm16.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfHrEmpJobCategoryMaster.aspx.cs">
+      <DependentUpon>wfHrEmpJobCategoryMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpJobCategoryMaster.aspx.designer.cs">
+      <DependentUpon>wfHrEmpJobCategoryMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfHrEmpJobMaster.aspx.cs">
+      <DependentUpon>wfHrEmpJobMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpJobMaster.aspx.designer.cs">
+      <DependentUpon>wfHrEmpJobMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfHrEmpKpi.aspx.cs">
+      <DependentUpon>wfHrEmpKpi.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpKpi.aspx.designer.cs">
+      <DependentUpon>wfHrEmpKpi.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfHrEmpKpiGroup.aspx.cs">
       <DependentUpon>wfHrEmpKpiGroup.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpKpiGroup.aspx.designer.cs">
       <DependentUpon>wfHrEmpKpiGroup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfHrEmpKpiMaster.aspx.cs">
+      <DependentUpon>wfHrEmpKpiMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpKpiMaster.aspx.designer.cs">
+      <DependentUpon>wfHrEmpKpiMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEmpKpiReport.aspx.cs">
       <DependentUpon>wfHrEmpKpiReport.aspx</DependentUpon>
@@ -412,6 +484,13 @@
     <Compile Include="wfHrEmpKpiSubGroup.aspx.designer.cs">
       <DependentUpon>wfHrEmpKpiSubGroup.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfHrEmpLoan.aspx.cs">
+      <DependentUpon>wfHrEmpLoan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpLoan.aspx.designer.cs">
+      <DependentUpon>wfHrEmpLoan.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfInventLocationMaster.aspx.cs">
       <DependentUpon>wfInventLocationMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -426,6 +505,20 @@
     <Compile Include="wfInventoryMain.aspx.designer.cs">
       <DependentUpon>wfInventoryMain.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfInventPutwayRule.aspx.cs">
+      <DependentUpon>wfInventPutwayRule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfInventPutwayRule.aspx.designer.cs">
+      <DependentUpon>wfInventPutwayRule.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfInventStockReportPutwayRule.aspx.cs">
+      <DependentUpon>wfInventStockReportPutwayRule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfInventStockReportPutwayRule.aspx.designer.cs">
+      <DependentUpon>wfInventStockReportPutwayRule.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfInventWarehouseMaster.aspx.cs">
       <DependentUpon>wfInventWarehouseMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -439,6 +532,41 @@
     </Compile>
     <Compile Include="wfManufactureMain.aspx.designer.cs">
       <DependentUpon>wfManufactureMain.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmBomEntry.aspx.cs">
+      <DependentUpon>wfMmBomEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmBomEntry.aspx.designer.cs">
+      <DependentUpon>wfMmBomEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGateInword.aspx.cs">
+      <DependentUpon>wfMmMaterialPurchaseGateInword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGateInword.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialPurchaseGateInword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGrnEntry.aspx.cs">
+      <DependentUpon>wfMmMaterialPurchaseGrnEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGrnEntry.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialPurchaseGrnEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx.cs">
+      <DependentUpon>wfMmMaterialPurchaseGrnInvoiceEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialPurchaseGrnInvoiceEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialStockMaster.aspx.cs">
+      <DependentUpon>wfMmMaterialStockMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialStockMaster.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialStockMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfMmVendorMaster.aspx.cs">
       <DependentUpon>wfMmVendorMaster.aspx</DependentUpon>
@@ -538,6 +666,13 @@
     <Compile Include="wfHrBranchMasterNew.aspx.designer.cs">
       <DependentUpon>wfHrBranchMasterNew.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfHrEmpSalaryGrnerate.aspx.cs">
+      <DependentUpon>wfHrEmpSalaryGrnerate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpSalaryGrnerate.aspx.designer.cs">
+      <DependentUpon>wfHrEmpSalaryGrnerate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfFaMainMenu.aspx.cs">
       <DependentUpon>wfFaMainMenu.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -573,6 +708,13 @@
     <Compile Include="wfHrPfMaster.aspx.designer.cs">
       <DependentUpon>wfHrPfMaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfHrEmpMaster.aspx.cs">
+      <DependentUpon>wfHrEmpMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpMaster.aspx.designer.cs">
+      <DependentUpon>wfHrEmpMaster.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfHrHrmsMain.aspx.cs">
       <DependentUpon>wfHrHrmsMain.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -587,6 +729,13 @@
     <Compile Include="wfAdminLogin.aspx.designer.cs">
       <DependentUpon>wfAdminLogin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfMmCategoryMaster.aspx.cs">
+      <DependentUpon>wfMmCategoryMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmCategoryMaster.aspx.designer.cs">
+      <DependentUpon>wfMmCategoryMaster.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfMmMainMenu.aspx.cs">
       <DependentUpon>wfMmMainMenu.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -594,12 +743,68 @@
     <Compile Include="wfMmMainMenu.aspx.designer.cs">
       <DependentUpon>wfMmMainMenu.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfMmMaterialIndentMaster.aspx.cs">
+      <DependentUpon>wfMmMaterialIndentMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialIndentMaster.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialIndentMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialMaster.aspx.cs">
+      <DependentUpon>wfMmMaterialMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialMaster.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseOrderEntry.aspx.cs">
+      <DependentUpon>wfMmMaterialPurchaseOrderEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseOrderEntry.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialPurchaseOrderEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmPurchaseQuotationEntry.aspx.cs">
+      <DependentUpon>wfMmPurchaseQuotationEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmPurchaseQuotationEntry.aspx.designer.cs">
+      <DependentUpon>wfMmPurchaseQuotationEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmRequisitionNote.aspx.cs">
+      <DependentUpon>wfMmRequisitionNote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmRequisitionNote.aspx.designer.cs">
+      <DependentUpon>wfMmRequisitionNote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfSdManufactureOrder.aspx.cs">
+      <DependentUpon>wfSdManufactureOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfSdManufactureOrder.aspx.designer.cs">
+      <DependentUpon>wfSdManufactureOrder.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfSdSalesMisReport.aspx.cs">
       <DependentUpon>wfSdSalesMisReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfSdSalesMisReport.aspx.designer.cs">
       <DependentUpon>wfSdSalesMisReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfSdSalesOrder.aspx.cs">
+      <DependentUpon>wfSdSalesOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfSdSalesOrder.aspx.designer.cs">
+      <DependentUpon>wfSdSalesOrder.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfSdSalesOrderDelivery.aspx.cs">
+      <DependentUpon>wfSdSalesOrderDelivery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfSdSalesOrderDelivery.aspx.designer.cs">
+      <DependentUpon>wfSdSalesOrderDelivery.aspx</DependentUpon>
     </Compile>
     <Compile Include="wSdSalesQuotationMaster.aspx.cs">
       <DependentUpon>wSdSalesQuotationMaster.aspx</DependentUpon>
@@ -634,6 +839,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

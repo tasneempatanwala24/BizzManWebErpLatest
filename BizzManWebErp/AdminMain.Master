@@ -124,6 +124,9 @@
 
               <li><a class="dropdown-item" href="wfAdminModuleMaster.aspx">Module Master</a></li>
               <li><a class="dropdown-item" href="wfAdminRoleModuleMaster.aspx">Role Module Assign</a></li>
+
+              <li><a class="dropdown-item" href="wfAdminCompanyMaster.aspx">Company Master</a></li>
+
           </ul>
              
         </li>

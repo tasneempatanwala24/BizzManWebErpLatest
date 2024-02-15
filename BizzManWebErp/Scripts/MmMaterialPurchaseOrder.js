@@ -19,12 +19,12 @@ $(document).ready(function () {
     }).trigger("change");
 });
 
-
-
+//=======================================
+//=======================================
 function BindDepartmentDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpMaster.aspx/DepartmentMasterList',
+        url: 'wfMmMaterialPurchaseOrderEntry.aspx/DepartmentMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -47,12 +47,16 @@ function BindDepartmentDropdown() {
         }
     });
 }
+//===========================
+//============================
 
 
+//===========================
+//=============================
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpAttendance.aspx/BranchMasterList',
+        url: 'wfMmMaterialPurchaseOrderEntry.aspx/BranchMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -77,6 +81,12 @@ function BindBranchDropdown() {
     });
 
 }
+
+
+
+
+//================================
+//==================================
 
 
 function BindVendorDropdown() {

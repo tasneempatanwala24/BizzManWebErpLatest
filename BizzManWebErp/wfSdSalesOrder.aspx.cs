@@ -20,26 +20,29 @@ namespace BizzManWebErp
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Id"] != null)
+            if (!IsPostBack)
             {
-                loginuser.Value = Session["Id"].ToString();
-
-                //added on 12 Dec 2023
-                //############START###############
-                if (Session["objMain_Session"] != null)
+                if (Session["Id"] != null)
                 {
-                    objMain = (clsMain)Session["objMain_Session"];
+                    loginuser.Value = Session["Id"].ToString();
+
+                    //added on 12 Dec 2023
+                    //############START###############
+                    if (Session["objMain_Session"] != null)
+                    {
+                        objMain = (clsMain)Session["objMain_Session"];
+                    }
+                    else
+                    {
+                        Response.Redirect("wfAdminLogin.aspx");
+                    }
+                    //############END###############
+
                 }
                 else
                 {
                     Response.Redirect("wfAdminLogin.aspx");
                 }
-                //############END###############
-
-            }
-            else
-            {
-                Response.Redirect("wfAdminLogin.aspx");
             }
         }
 

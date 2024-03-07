@@ -62,15 +62,17 @@
 
                                 <td>Customer *</td>
                                 <td>
-                                    <select id="ddlCustomer" name="ddlCustomer" class="form-control" style="width: 300px;">
+                                    <select id="ddlCustomer" name="ddlCustomer"  class="rounded border-dark" style="width: 300px;">
                                         <option value="">-Select Customer-</option>
                                     </select>
-                                    <a href="#" onclick="AddNewCustomer();">Add</a>
+
+                                 <a href="#" onclick="AddNewCustomer();">Add</a>
                                 </td>
-                                <td>Expiration Date *</td>
-                                <td>
-                                    <input type="date" class="form-control" id="txtExpirationDate" name="txtExpirationDate" />
-                                </td>
+                                <td style="width: 10%;">Order Date</td>
+                                <td>  
+                                <input type="date" class="form-control" id="txtorderDate" name="txtorderDate" onchange="GenerateOrderID()"/>
+                                    </td>
+                               
 
                             </tr>
                             <tr>
@@ -89,11 +91,14 @@
                                     </select>
                                     
                                 </td>
-                                <td>Quotation Date *</td>
+                               <%-- <td>Quotation Date *</td>
                                 <td>
                                     <input type="date" class="form-control" id="txtQuotationDate" name="txtQuotationDate" />
-                                </td>
-
+                                </td>--%>
+                                 <td style="width: 10%;">Delivery Date & Time</td>
+                                <td>  
+                                <input type="datetime-local"  class="form-control" id="txtDeliveryDate" name="txtDeliveryDate" />
+                                    </td>
                             </tr>
                             <tr>
                                 <td>Currency *</td>
@@ -102,7 +107,37 @@
                                         <option value="">-Select Currency-</option>
                                     </select>
                                 </td>
-                                <td>Payment Terms</td>
+
+                                <td style="width: 10%;">Quotation Id</td>
+                                <td>  
+                                <input type="text" class="form-control" id="txtQuotationId" name="txtQuotationId" disabled/>
+                                    </td>
+
+                              
+                            </tr>
+                            <tr>
+
+                                <td>Department *</td>
+                                <td>
+                                    <select id="ddlDept" name="ddlDept" class="form-control">
+                                        <option class="txt-center" value="">-Select Department-</option>
+                                    </select>
+                                </td>
+                                 <td>Expiration Date *</td>
+                                <td>
+                                    <input type="date" class="form-control" id="txtExpirationDate" name="txtExpirationDate" />
+                                </td>
+
+                               
+
+                            </tr>
+                            <tr>
+                                <td>Terms & Conditions</td>
+                                <td>
+                                    <input type="text" class="form-control" id="txtTermsConditions" name="txtTermsConditions" />
+                                </td>
+
+                                  <td>Payment Terms</td>
                                 <td>
                                     <select id="ddlPaymentTerms" name="ddlPaymentTerms" class="form-control" style="width: 300px;">
                                         <option value="">-Select Payment Terms-</option>
@@ -115,14 +150,12 @@
                                         <option value="End of Following Month">End of Following Month</option>
                                     </select>
                                 </td>
+
                             </tr>
                             <tr>
-
-                                <td>Department *</td>
+                                <td>Sale Order Id</td>
                                 <td>
-                                    <select id="ddlDept" name="ddlDept" class="form-control">
-                                        <option class="txt-center" value="">-Select Department-</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="txtSaleOrderId" name="txtSaleOrderId" readonly="readonly" />
                                 </td>
                                 <td>Branch *</td>
                                 <td>
@@ -130,26 +163,27 @@
                                         <option value="">-Select Branch-</option>
                                     </select>
                                 </td>
-
                             </tr>
                             <tr>
-                                <td>Terms & Conditions</td>
+<td>Manual Order Id*</td>
                                 <td>
-                                    <input type="text" class="form-control" id="txtTermsConditions" name="txtTermsConditions" />
+                                    <input type="text" class="form-control" id="txtManualOrderId" name="txtManualOrderId"  onchange="CheckManualOrderId()" />
                                 </td>
+                                <td>Delivery Charges</td>
+                                <td>
+                                    <input type="number" class="form-control" id="txtDeliveryCharges" name="txtDeliveryCharges" value="0" oninput="handleNumericInput(event)" onchange="calculateGrandTotal()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                
                                 <td>Total Amount</td>
                                 <td>
                                     <input type="text" class="form-control" id="txtTotalAmount" name="txtTotalAmount" readonly="readonly" />
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>Sale Order Id</td>
+
                                 <td>
-                                    <input type="text" class="form-control" id="txtSaleOrderId" name="txtSaleOrderId" readonly="readonly" />
-                                </td>
-                                <td></td>
-                                <td>
-                                </td>
+
+                                </td><td></td>
                             </tr>
                            </table>
                     </div>
@@ -171,11 +205,13 @@
                                 <tr>
                                     <th style="display: none;">Material Master Id</th>
                                     <th>Material Name</th>
+                                       <th>Stock</th>
                                     <th>Qty</th>
                                     <th>Unit Measeure</th>
                                     <th>Package</th>
                                     <th style="display: none;">Package Id</th>
                                     <th>Unit Price</th>
+                                     <th>Discount (%)</th>
                                     <th>Tax (%)</th>
                                     <th>Total Amount</th>
                                     <th></th>
@@ -192,8 +228,11 @@
                                             <option value="">-Select Material Name-</option>
                                         </select>
                                     </td>
+                                      <td>
+                                        <input type="text" class="form-control" id="txtMaterialStock" name="txtMaterialStock" readonly="readonly" />
+                                    </td>
                                     <td>
-                                        <input type="number" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" />
+                                        <input type="number" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" value="0" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" id="txtMaterialUnitMeasure" name="txtMaterialUnitMeasure" readonly="readonly" />
@@ -206,6 +245,9 @@
                                     <td style="display: none;"></td>
                                     <td>
                                         <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" readonly="readonly" />
+                                    </td>
+                                        <td>
+                                        <input type="number" class="form-control" id="txtMaterialDiscount" name="txtMaterialDiscount" onchange="UpdateTotalAmount();" value="0" oninput="handleNumericInput(event)" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" id="txtMaterialTax" name="txtMaterialTax" readonly="readonly" />

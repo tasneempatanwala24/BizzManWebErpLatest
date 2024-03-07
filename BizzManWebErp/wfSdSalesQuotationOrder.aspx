@@ -212,6 +212,7 @@
                                     <%--<th>Package</th>
                                     <th style="display: none;">Package Id</th>--%>
                                     <th>Unit Price</th>
+                                     <th>Discount (%)</th>
                                     <th>Tax (%)</th>
                                     <th>Total Amount</th>
                                    

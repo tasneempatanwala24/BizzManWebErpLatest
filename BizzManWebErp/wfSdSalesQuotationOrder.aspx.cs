@@ -248,7 +248,7 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
                     strBuild.Append("<Rate>" + item.Rate + "</Rate>");
                     strBuild.Append("<SalesQuotationDetailId>" + item.SalesQuotationDetailId + "</SalesQuotationDetailId>");
                     strBuild.Append("<GST>" + item.GST + "</GST>");
-
+                    strBuild.Append("<Discount>" + item.Discount + "</Discount>");
                     //strBuild.Append("<CentralTaxPercent>" + item.CentralTaxPercent + "</CentralTaxPercent>");
                     //strBuild.Append("<StateTaxPercent>" + item.StateTaxPercent + "</StateTaxPercent>");
                     //strBuild.Append("<CessPercent>" + item.CessPercent + "</CessPercent>");
@@ -327,7 +327,7 @@ from tblSdSalesOrder SO
                     inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=SO.BranchCode
                     inner join tblHrDeptMaster on tblHrDeptMaster.Id=SO.DepartmentID
                     inner join tblMmCurrencyMaster on tblMmCurrencyMaster.Id=SO.CurrencyId
-                    inner join tblSdSalesQuotationMaster as Quot on Quot.QuotationId=SO.SalesQuotationMasterId
+                    left join tblSdSalesQuotationMaster as Quot on Quot.QuotationId=SO.SalesQuotationMasterId
                     where SalesOrderId='" + SalesOrderId + "'");
 
                 dtSalesOrderDetailsList = objMain.dtFetchData(@"select o.MaterialId,m.MaterialName,o.Qty,m.UnitMesure,p.Packaging,

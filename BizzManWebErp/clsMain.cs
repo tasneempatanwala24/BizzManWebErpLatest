@@ -44,7 +44,7 @@ namespace BizzManWebErp
                 //BizzzManERP_New
                 // MY LAPTOP  current database
                 // conHo = new System.Data.SqlClient.SqlConnection("Data Source=DESKTOP-S053FQR;Initial Catalog=BizzzManERP_New;User ID=sa;Password=123;Persist Security Info=True");
-                conHo = new System.Data.SqlClient.SqlConnection("Server=IN01TPATANWALA7\\SQLEXPRESS;Integrated Security=True;Database=BizzManWebErp;");
+                conHo = new System.Data.SqlClient.SqlConnection("Server=IN01TPATANWALA7\\SQLEXPRESS;Integrated Security=True;Database=BizzzManERP_New;");
 
                 // *****************************************
                 conHo.Open();

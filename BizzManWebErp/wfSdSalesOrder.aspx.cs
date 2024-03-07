@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using BizzManWebErp.Model;
 using ClosedXML.Excel;
 using Newtonsoft.Json;
  
@@ -171,9 +174,13 @@ namespace BizzManWebErp
             try
             {
 
-                dtSalesOrderDetailsList = objMain.dtFetchData(@"select o.MaterialId,m.MaterialName,o.Qty,m.UnitMesure,p.Packaging,
-                                                          o.PackageId,o.UnitPrice,o.Tax,o.SubTotal
+                dtSalesOrderDetailsList = objMain.dtFetchData(@"select o.*,m.MaterialName,m.UnitMesure,p.Packaging,SO.Deliveycharges,SO.CustomerId,SO.OrderDate,
+(select isnull(Sum(QtyBalance),0) from tblMmMaterialStockMaster
+inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId
+inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode
+where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.MaterialId) as Stock
                                                           from tblSdSalesOrderProductDetails o
+														  inner join tblSdSalesOrder SO on SO.SalesOrderId=o.SalesOrderId
                                                           left join tblMmMaterialMaster m on m.Id=o.MaterialId
                                                           left join tblMmMaterialPackagingDetails p on p.id=o.PackageId
                                                           where o.SalesOrderId='" + salesorderid + "'");
@@ -187,95 +194,167 @@ namespace BizzManWebErp
         }
 
 
-        [WebMethod]
-        public static string AddSalesOrder(string SalesOrderId = "", string CustomerId = "", string ExpirationDate = "", string GSTTreatment = "",
-                                           string SalesOrder_details = "", string QuotationDate = "", string Currency = "", 
-                                           string PaymentTerms="",string TermsConditions="",string TotalAmount="",string OrderSource="", string LoginUser = "",
-                                           string BranchCode = "", string DepartmentID = "")
-        {
+ //       [WebMethod]
+ //       public static string AddSalesOrder(string SalesOrderId = "", string CustomerId = "", string ExpirationDate = "", string GSTTreatment = "",
+ //                                          string SalesOrder_details = "", string QuotationDate = "", string Currency = "", 
+ //                                          string PaymentTerms="",string TermsConditions="",string TotalAmount="",string OrderSource="", string LoginUser = "",
+ //                                          string BranchCode = "", string DepartmentID = "")
+ //       {
 
-           // clsMain objMain = new clsMain();
- //   have some error for class declaration
-  //==========================================          
- //========================================
- ////============data not save===========================
+ //          // clsMain objMain = new clsMain();
+ ////   have some error for class declaration
+ // //==========================================          
+ ////========================================
+ //////============data not save===========================
             
-            SqlParameter[] objParam = new SqlParameter[14];
+ //           SqlParameter[] objParam = new SqlParameter[14];
 
 
-            objParam[0] = new SqlParameter("@SalesOrderId", SqlDbType.NVarChar);
-            objParam[0].Direction = ParameterDirection.Input;
-            objParam[0].Value = SalesOrderId;
+ //           objParam[0] = new SqlParameter("@SalesOrderId", SqlDbType.NVarChar);
+ //           objParam[0].Direction = ParameterDirection.Input;
+ //           objParam[0].Value = SalesOrderId;
 
 
-            objParam[1] = new SqlParameter("@CustomerId", SqlDbType.Int);
-            objParam[1].Direction = ParameterDirection.Input;
-            objParam[1].Value = Convert.ToInt32(CustomerId);
+ //           objParam[1] = new SqlParameter("@CustomerId", SqlDbType.Int);
+ //           objParam[1].Direction = ParameterDirection.Input;
+ //           objParam[1].Value = Convert.ToInt32(CustomerId);
 
 
-            objParam[2] = new SqlParameter("@ExpirationDate", SqlDbType.DateTime);
-            objParam[2].Direction = ParameterDirection.Input;
-            objParam[2].Value = Convert.ToDateTime(ExpirationDate);
+ //           objParam[2] = new SqlParameter("@ExpirationDate", SqlDbType.DateTime);
+ //           objParam[2].Direction = ParameterDirection.Input;
+ //           objParam[2].Value = Convert.ToDateTime(ExpirationDate);
 
 
-            objParam[3] = new SqlParameter("@GSTTreatment", SqlDbType.NVarChar);
-            objParam[3].Direction = ParameterDirection.Input;
-            objParam[3].Value = GSTTreatment;
+ //           objParam[3] = new SqlParameter("@GSTTreatment", SqlDbType.NVarChar);
+ //           objParam[3].Direction = ParameterDirection.Input;
+ //           objParam[3].Value = GSTTreatment;
 
-            objParam[4] = new SqlParameter("@SalesOrder_details", SqlDbType.NVarChar);
-            objParam[4].Direction = ParameterDirection.Input;
-            objParam[4].Value = SalesOrder_details;
+ //           objParam[4] = new SqlParameter("@SalesOrder_details", SqlDbType.NVarChar);
+ //           objParam[4].Direction = ParameterDirection.Input;
+ //           objParam[4].Value = SalesOrder_details;
 
-            objParam[5] = new SqlParameter("@QuotationDate", SqlDbType.DateTime);
-            objParam[5].Direction = ParameterDirection.Input;
-            objParam[5].Value = Convert.ToDateTime(QuotationDate);
+ //           objParam[5] = new SqlParameter("@QuotationDate", SqlDbType.DateTime);
+ //           objParam[5].Direction = ParameterDirection.Input;
+ //           objParam[5].Value = Convert.ToDateTime(QuotationDate);
 
-            objParam[6] = new SqlParameter("@Currency", SqlDbType.Int);
-            objParam[6].Direction = ParameterDirection.Input;
-            objParam[6].Value = Convert.ToInt32(Currency);
+ //           objParam[6] = new SqlParameter("@Currency", SqlDbType.Int);
+ //           objParam[6].Direction = ParameterDirection.Input;
+ //           objParam[6].Value = Convert.ToInt32(Currency);
 
-            objParam[7] = new SqlParameter("@PaymentTerms", SqlDbType.NVarChar);
-            objParam[7].Direction = ParameterDirection.Input;
-            objParam[7].Value = PaymentTerms;
+ //           objParam[7] = new SqlParameter("@PaymentTerms", SqlDbType.NVarChar);
+ //           objParam[7].Direction = ParameterDirection.Input;
+ //           objParam[7].Value = PaymentTerms;
 
-            objParam[8] = new SqlParameter("@TermsConditions", SqlDbType.NVarChar);
-            objParam[8].Direction = ParameterDirection.Input;
-            objParam[8].Value = TermsConditions;
+ //           objParam[8] = new SqlParameter("@TermsConditions", SqlDbType.NVarChar);
+ //           objParam[8].Direction = ParameterDirection.Input;
+ //           objParam[8].Value = TermsConditions;
 
-            objParam[9] = new SqlParameter("@TotalAmount", SqlDbType.Decimal);
-            objParam[9].Direction = ParameterDirection.Input;
-            objParam[9].Value = Convert.ToDecimal(TotalAmount);
+ //           objParam[9] = new SqlParameter("@TotalAmount", SqlDbType.Decimal);
+ //           objParam[9].Direction = ParameterDirection.Input;
+ //           objParam[9].Value = Convert.ToDecimal(TotalAmount);
 
-            objParam[10] = new SqlParameter("@OrderSource", SqlDbType.NVarChar);
-            objParam[10].Direction = ParameterDirection.Input;
-            objParam[10].Value = OrderSource;
+ //           objParam[10] = new SqlParameter("@OrderSource", SqlDbType.NVarChar);
+ //           objParam[10].Direction = ParameterDirection.Input;
+ //           objParam[10].Value = OrderSource;
 
-            objParam[11] = new SqlParameter("@CreateUser", SqlDbType.NVarChar);
-            objParam[11].Direction = ParameterDirection.Input;
-            objParam[11].Value = LoginUser;
+ //           objParam[11] = new SqlParameter("@CreateUser", SqlDbType.NVarChar);
+ //           objParam[11].Direction = ParameterDirection.Input;
+ //           objParam[11].Value = LoginUser;
 
-            objParam[12] = new SqlParameter("@BranchCode", SqlDbType.NVarChar);
-            objParam[12].Direction = ParameterDirection.Input;
-            objParam[12].Value = BranchCode;
+ //           objParam[12] = new SqlParameter("@BranchCode", SqlDbType.NVarChar);
+ //           objParam[12].Direction = ParameterDirection.Input;
+ //           objParam[12].Value = BranchCode;
 
-            objParam[13] = new SqlParameter("@DepartmentID", SqlDbType.Int);
-            objParam[13].Direction = ParameterDirection.Input;
-            objParam[13].Value = Convert.ToInt32(DepartmentID);
+ //           objParam[13] = new SqlParameter("@DepartmentID", SqlDbType.Int);
+ //           objParam[13].Direction = ParameterDirection.Input;
+ //           objParam[13].Value = Convert.ToInt32(DepartmentID);
 
-            var result = objMain.ExecuteStoreProcedure("procSdSalesOrderInsert", objParam);
+ //           var result = objMain.ExecuteStoreProcedure("procSdSalesOrderInsert", objParam);
 
-            string json = "";
-            if (result != null)
+ //           string json = "";
+ //           if (result != null)
+ //           {
+ //               if (result.Rows.Count > 0)
+ //               {
+ //                   json = result.Rows[0][0].ToString();
+ //               }
+ //           }
+
+
+ //           return json;
+ //       }
+
+
+
+        [WebMethod]
+        public static string AddSalesOrder(List<SalesQuotationDetail> data, string SalesOrderId = "", string CustomerId = "", string ExpirationDate = "", string GSTTreatment = "", string DeliveryDateTime = "", string Currency = "",
+                                         string PaymentTerms = "", string TermsConditions = "", string TotalAmount = "", string OrderSource = "", string LoginUser = "",
+                                         string BranchCode = "", string DepartmentID = "", string OrderDate = "", string ManualOrderId = "",string DeliveryCharges="")
+        {
+            StringBuilder strBuild = new StringBuilder();
+            strBuild.Append("<XMLData>");
+            strBuild.Append("<SalesOrderId>" + SalesOrderId + "</SalesOrderId>");
+            strBuild.Append("<ManualOrderId>" + ManualOrderId + "</ManualOrderId>");
+            strBuild.Append("<CustomerId>" + CustomerId + "</CustomerId>");
+            strBuild.Append("<ExpirationDate>" + DateTime.ParseExact(ExpirationDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</ExpirationDate>");
+            strBuild.Append("<OrderDate>" + DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</OrderDate>");
+            strBuild.Append("<GSTTreatment>" + GSTTreatment + "</GSTTreatment>");
+            strBuild.Append("<DeliveryDateTime>" + DeliveryDateTime.Replace("T"," ") + "</DeliveryDateTime>");
+            strBuild.Append("<Currency>" + Currency + "</Currency>");
+            strBuild.Append("<TermsConditions>" + TermsConditions + "</TermsConditions>");
+            strBuild.Append("<PaymentTerms>" + PaymentTerms + "</PaymentTerms>");
+            strBuild.Append("<TotalAmount>" + TotalAmount + "</TotalAmount>");
+            strBuild.Append("<DeliveryCharges>" + DeliveryCharges + "</DeliveryCharges>");
+            strBuild.Append("<OrderSource>" + OrderSource + "</OrderSource>");
+            strBuild.Append("<CreateUser>" + LoginUser + "</CreateUser>");
+            strBuild.Append("<BranchCode>" + BranchCode + "</BranchCode>");
+            strBuild.Append("<DepartmentID>" + DepartmentID + "</DepartmentID>");
+
+
+            strBuild.Append("<SalesQuotationDetails>");
+            if (data.Count > 0)
             {
-                if (result.Rows.Count > 0)
+                foreach (var item in data)
                 {
-                    json = result.Rows[0][0].ToString();
+                    strBuild.Append("<SalesQuotationDetail>");
+                    strBuild.Append("<ItemId>" + Convert.ToInt32(item.ItemID) + "</ItemId>");
+                    strBuild.Append("<Qty>" + item.Quantity + "</Qty>");
+                    strBuild.Append("<Rate>" + item.Rate + "</Rate>");
+                    if(item.PackageId!="")
+                    {
+                        strBuild.Append("<PackageId>" + item.PackageId + "</PackageId>");
+                    }
+                    
+                    strBuild.Append("<GST>" + item.GST + "</GST>");
+                    strBuild.Append("<Discount>" + item.Discount + "</Discount>");
+                    //strBuild.Append("<CentralTaxPercent>" + item.CentralTaxPercent + "</CentralTaxPercent>");
+                    //strBuild.Append("<StateTaxPercent>" + item.StateTaxPercent + "</StateTaxPercent>");
+                    //strBuild.Append("<CessPercent>" + item.CessPercent + "</CessPercent>");
+
+                    strBuild.Append("<Amount>" + item.Amount + "</Amount>");
+                    strBuild.Append("</SalesQuotationDetail>");
                 }
             }
+            strBuild.Append("</SalesQuotationDetails>");
+
+            strBuild.Append("</XMLData>");
 
 
-            return json;
+
+            //  clsMain objMain = new clsMain();
+            SqlParameter[] objParam = new SqlParameter[1];
+
+
+            objParam[0] = new SqlParameter("@XMLData", SqlDbType.Xml);
+            objParam[0].Direction = ParameterDirection.Input;
+            objParam[0].Value = strBuild.ToString();
+
+            var result = objMain.ExecuteProcedure("procSdSalesOrderInsertNew", objParam);
+
+
+            return "";
         }
+
 
         [WebMethod]
         public static string UpdateSalesOrderStatus(string SalesOrderId = "", string OrderStatus = "",string LoginUser="")
@@ -337,7 +416,7 @@ namespace BizzManWebErp
         //===============================
         //==========================
         [WebMethod]
-        public static string FetchMaterialDetails(string MaterialId)
+        public static string FetchMaterialDetails(string MaterialId,string BranchCode)
         {
             //  clsMain objMain = new clsMain();
             DataTable dtMaterialDetails = new DataTable();
@@ -345,7 +424,7 @@ namespace BizzManWebErp
             try
             {
 
-                dtMaterialDetails = objMain.dtFetchData("select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent from tblMmMaterialMaster where Id=" + MaterialId + "");
+                dtMaterialDetails = objMain.dtFetchData(@"select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,(select isnull(Sum(QtyBalance),0) from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode where tblFaWarehouseMaster.BranchCode='"+BranchCode+"' and MaterialMasterId=MM.Id) as Stock from tblMmMaterialMaster MM where Id=" + MaterialId + "");
             }
             catch (Exception ex)
             {
@@ -613,5 +692,45 @@ namespace BizzManWebErp
             return JsonConvert.SerializeObject(dtMaterialMasterList);
         }
 
+
+        [WebMethod]
+        public static string GenerateOrderID(string OrderDate)
+        {
+            DataTable dtNewQuotationID = new DataTable();
+
+            try
+            {
+                string formattedOrderDate = DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+              //  dtNewQuotationID = objMain.dtFetchData(@"select 'SORD' + CONVERT(NVARCHAR(10), '" + formattedOrderDate + "', 120)   +'/'+                       RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(SalesOrderId, LEN(SalesOrderId) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4) as SalesOrderId    FROM tblSdSalesOrder    WHERE OrderDate ='" + formattedOrderDate + "'");
+
+                dtNewQuotationID = objMain.dtFetchData("select 'SORD' + CONVERT(NVARCHAR(10), '" + formattedOrderDate + "', 120) + '/' +\r\n                             RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(SalesOrderId, LEN(SalesOrderId) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4)\r\n as SalesOrderId    FROM tblSdSalesOrder\r\n    WHERE OrderDate ='" + formattedOrderDate + "'");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtNewQuotationID);
+        }
+
+
+        [WebMethod]
+        public static string CheckManualOrderId(string ManualOrderId)
+        {
+            DataTable dtNewQuotationID = new DataTable();
+
+            try
+            {
+               
+                dtNewQuotationID = objMain.dtFetchData(@"select *    FROM tblSdSalesOrder    WHERE ManualOrderId ='" + ManualOrderId + "'");
+                return JsonConvert.SerializeObject(dtNewQuotationID.Rows.Count > 0 ? "false" : "true");
+            }
+            catch (Exception ex)
+            {
+                return "false";
+            }
+
+           
+        }
     }
 }

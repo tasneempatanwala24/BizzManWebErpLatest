@@ -254,6 +254,7 @@ function GetQuotationIdDetails() {
                         + '<td class="Qty">' + data.SalesItems[0].Table[i].Qty + '</td>'
                         + '<td class="UnitMeasure">' + data.SalesItems[0].Table[i].UnitMeasure + '</td>'
                         + '<td class="Rate">' + data.SalesItems[0].Table[i].Rate + '</td>'
+                        + '<td class="Discount">' + data.SalesItems[0].Table[i].Discount + '</td>'
                         + '<td class="GST">' + data.SalesItems[0].Table[i].GST + '</td>'
                         + '<td class="amount">' + data.SalesItems[0].Table[i].Amount + '</td></tr>';
 
@@ -333,11 +334,11 @@ function AddSalesOrder() {
             var UnitMeasure = $(this).find('.UnitMeasure').text();
             var Rate = $(this).find('.Rate').text();
             var GST = $(this).find('.GST').text();
-
+            var Discount = $(this).find('.Discount').text();
             var amount = $(this).find('.amount').text();
 
 
-            data.push({ ItemID: materialID, Quantity: Qty, Rate: Rate, GST: GST, UnitMeasure: UnitMeasure, Amount: amount, SalesQuotationDetailId: SalesQuotationDetailId });
+            data.push({ ItemID: materialID, Quantity: Qty, Rate: Rate, GST: GST, UnitMeasure: UnitMeasure, Amount: amount, SalesQuotationDetailId: SalesQuotationDetailId, Discount: Discount });
         }
 
         
@@ -462,73 +463,73 @@ function CreateData() {
     ClearAll();
 }
 function FetchSalesOrderMasterDetails(id, OrderStatus) {
+   
+
+
+        $.ajax({
+            type: "POST",
+            url: 'wfSdSalesQuotationOrder.aspx/FetchSalesOrderMasterDetails',
+            data: JSON.stringify({
+                "SalesOrderId": id
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+
+                var data = JSON.parse(response.d);
+                $('#dispQuotationDate').val(data.SalesQuotationOrderMastertInfo.formattedQuotationDate);
+                $('#dispCustomer').val(data.SalesQuotationOrderMastertInfo.CustomerName + " " + data.SalesQuotationOrderMastertInfo.Mobile)
+                $('#dispQuotationId').val(data.SalesQuotationOrderMastertInfo.QuotationId);
+                $('#disporderDate').val(data.SalesQuotationOrderMastertInfo.formattedOrderDate);
+                $('#dispSalesOrderId').val(data.SalesQuotationOrderMastertInfo.SalesOrderId);
+                $('#dispGSTTreatment').val(data.SalesQuotationOrderMastertInfo.GSTTreatment);
+                $('#dispPaymentTerms').val(data.SalesQuotationOrderMastertInfo.PaymentTerms);
+                $('#dispCurrency').val(data.SalesQuotationOrderMastertInfo.Currency);
+                $('#dispBranch').val(data.SalesQuotationOrderMastertInfo.BranchName);
+                $('#dispDept').val(data.SalesQuotationOrderMastertInfo.DeptName);
+                $('#dispTotalAmount').val(data.SalesQuotationOrderMastertInfo.TotalAmount);
+                $('#dispTermsConditions').val(data.SalesQuotationOrderMastertInfo.TermCondition);
+
+
+                $('#dispExpirationDate').val(data.SalesQuotationOrderMastertInfo.formattedExpirationDate);
+               
+             
+                var html = '';
+                for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
+                    html = html + '<tr>'
+                        + '<td class="materialID" style="display:none">' + data.SalesItems[0].Table[i].MaterialId + '</td>'
+                      
+                        + '<td class="materialName">' + data.SalesItems[0].Table[i].MaterialName + '</td>'
+                        + '<td class="Qty">' + data.SalesItems[0].Table[i].Qty + '</td>'
+                        + '<td class="UnitMeasure">' + data.SalesItems[0].Table[i].UnitMesure + '</td>'
+                        + '<td class="Rate">' + data.SalesItems[0].Table[i].UnitPrice + '</td>'
+                        + '<td class="GST">' + data.SalesItems[0].Table[i].Tax + '</td>'
+                        + '<td class="amount">' + data.SalesItems[0].Table[i].SubTotal + '</td></tr>';
+
+
+                }
 
 
 
-    $.ajax({
-        type: "POST",
-        url: 'wfSdSalesOrderInvoice.aspx/FetchSalesOrderMasterDetails',
-        data: JSON.stringify({
-            "SalesOrderId": id
-        }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        beforeSend: function () {
-
-        },
-        success: function (response) {
-
-            var data = JSON.parse(response.d);
-            $('#dispQuotationDate').val(data.SalesQuotationOrderMastertInfo.formattedQuotationDate);
-            $('#dispCustomer').val(data.SalesQuotationOrderMastertInfo.CustomerName + " " + data.SalesQuotationOrderMastertInfo.Mobile)
-            $('#dispQuotationId').val(data.SalesQuotationOrderMastertInfo.QuotationId);
-            $('#disporderDate').val(data.SalesQuotationOrderMastertInfo.formattedOrderDate);
-            $('#dispSalesOrderId').val(data.SalesQuotationOrderMastertInfo.SalesOrderId);
-            $('#dispGSTTreatment').val(data.SalesQuotationOrderMastertInfo.GSTTreatment);
-            $('#dispPaymentTerms').val(data.SalesQuotationOrderMastertInfo.PaymentTerms);
-            $('#dispCurrency').val(data.SalesQuotationOrderMastertInfo.Currency);
-            $('#dispBranch').val(data.SalesQuotationOrderMastertInfo.BranchName);
-            $('#dispDept').val(data.SalesQuotationOrderMastertInfo.DeptName);
-            $('#dispTotalAmount').val(data.SalesQuotationOrderMastertInfo.TotalAmount);
-            $('#dispTermsConditions').val(data.SalesQuotationOrderMastertInfo.TermCondition);
 
 
-            $('#dispExpirationDate').val(data.SalesQuotationOrderMastertInfo.formattedExpirationDate);
+                $('#disptbody_SalesOrderDetails').html(html);
+                $('#divDataList').hide();
+                $('#divDataEntry').hide();
+                $('#saveDataBtn').hide();
+                $('#divDataEntryDetails').show();
+                
+              
+            },
+            complete: function () {
 
-
-            var html = '';
-            for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
-                html = html + '<tr>'
-                    + '<td class="materialID" style="display:none">' + data.SalesItems[0].Table[i].MaterialId + '</td>'
-
-                    + '<td class="materialName">' + data.SalesItems[0].Table[i].MaterialName + '</td>'
-                    + '<td class="Qty">' + data.SalesItems[0].Table[i].Qty + '</td>'
-                    + '<td class="UnitMeasure">' + data.SalesItems[0].Table[i].UnitMesure + '</td>'
-                    + '<td class="Rate">' + data.SalesItems[0].Table[i].UnitPrice + '</td>'
-                    + '<td class="GST">' + data.SalesItems[0].Table[i].Tax + '</td>'
-                    + '<td class="amount">' + data.SalesItems[0].Table[i].SubTotal + '</td></tr>';
-
+            },
+            failure: function (jqXHR, textStatus, errorThrown) {
 
             }
-
-
-
-
-
-            $('#disptbody_SalesOrderDetails').html(html);
-            $('#divDataList').hide();
-            $('#divDataEntry').hide();
-            $('#saveDataBtn').hide();
-            $('#divDataEntryDetails').show();
-
-
-        },
-        complete: function () {
-
-        },
-        failure: function (jqXHR, textStatus, errorThrown) {
-
-        }
-    });
-
+        });
+    
 }

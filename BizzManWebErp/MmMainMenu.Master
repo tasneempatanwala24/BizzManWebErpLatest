@@ -26,14 +26,61 @@
     <script src="Scripts/buttons.html5.min.js"></script>
     <link href="css/select2.min.css" rel="stylesheet" />
     <script src="Scripts/select2.min.js"></script>
-    
+     <style>
+        /* Loader styles */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Ensure loader is on top of other content */
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hide loader by default */
+        .loader-container.hidden {
+            display: none;
+        }
+    </style>
+     <script>
+         function showLoader() {
+             document.getElementById('loaderContainer').classList.remove('hidden');
+         }
+
+         function hideLoader() {
+             document.getElementById('loaderContainer').classList.add('hidden');
+         }
+
+        
+     </script>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 
 
 <body>
-    
+     <!-- Loader container with the fade background effect -->
+    <div class="loader-container hidden" id="loaderContainer">
+        <div class="loader"></div>
+    </div>
     <form id="form1" runat="server">
 
 

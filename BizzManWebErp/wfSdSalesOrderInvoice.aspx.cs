@@ -21,9 +21,10 @@ using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Vml;
 using System.Security;
 using DocumentFormat.OpenXml.Office.CoverPageProps;
+
 namespace BizzManWebErp
 {
-    public partial class wfSdSalesQuotationOrder : System.Web.UI.Page
+    public partial class wfSdSalesOrderInvoice : System.Web.UI.Page
     {
         static clsMain objMain;
         protected void Page_Load(object sender, EventArgs e)
@@ -46,7 +47,7 @@ namespace BizzManWebErp
         }
 
         [WebMethod]
-        public static string GetQuotationList()
+        public static string GetSalesOrderList()
         {
             //  clsMain objMain = new clsMain();
             DataTable dtQuotationlist = new DataTable();
@@ -54,11 +55,11 @@ namespace BizzManWebErp
             try
             {
 
-                dtQuotationlist = objMain.dtFetchData(@"select Quot.* ,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile
-from tblSdSalesQuotationMaster as Quot
-INNER JOIN   tblCrmCustomers on tblCrmCustomers.CustomerId=Quot.CustomerId
+                dtQuotationlist = objMain.dtFetchData(@"select SO.* ,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile
+from tblSdSalesOrder as SO
+INNER JOIN   tblCrmCustomers on tblCrmCustomers.CustomerId=SO.CustomerId
 inner join tblCrmCustomerContacts on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId
-where QuotationStatus='Approve' and Quot.SalesOrderComplete != 'y'
+where SO.SalesInvoiceComplete != 'y'
 ");
             }
             catch (Exception ex)
@@ -78,7 +79,7 @@ where QuotationStatus='Approve' and Quot.SalesOrderComplete != 'y'
         }
 
         [WebMethod]
-        public static string GetQuotationIdDetailsById(string QuotationId)
+        public static string GetSalesOrderIdDetailsById(string SalesOrderId)
         {
             //  clsMain objMain = new clsMain();
             DataTable dtQuotationDetails = new DataTable();
@@ -87,16 +88,19 @@ where QuotationStatus='Approve' and Quot.SalesOrderComplete != 'y'
             try
             {
 
-                dtQuotationDetails = objMain.dtFetchData(@"select Quot.* ,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,convert(varchar(10), cast(QuotationDate as date), 101) as formattedQuotationDate
-from tblSdSalesQuotationMaster as Quot
-INNER JOIN   tblCrmCustomers on tblCrmCustomers.CustomerId=Quot.CustomerId
+                dtQuotationDetails = objMain.dtFetchData(@"select SO.* ,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile
+from tblSdSalesOrder as SO
+INNER JOIN   tblCrmCustomers on tblCrmCustomers.CustomerId=SO.CustomerId
 inner join tblCrmCustomerContacts on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId
-where QuotationId='" + QuotationId + "'");
+where SalesOrderId='" + SalesOrderId + "'");
 
-                dtSalesQuotationDetail = objMain.dtFetchData(@" select QuotationId,SD.Id as SalesQuotationDetailId,ItemId,materialName,material.Id as MaterialId,material.UnitMesure as UnitMeasure,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,
-material.MRP as ActualRate from tblSdSalesQuotationMaster SM 
-inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId inner join 
-tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "' and SD.SalesOrderGenerate='n'");
+                dtSalesQuotationDetail = objMain.dtFetchData(@"select SM.SalesOrderId,SD.Id as SalesOrderProductDetailId,materialName,material.Id as MaterialId,material.UnitMesure as UnitMeasure,SD.Qty,UnitPrice as Rate
+,DiscountPercent as Discount,Tax as GST,SubTotal Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,isnull(SD.PackageId,0) as PackageId,isnull(P.Packaging,'') as Package,
+material.MRP as ActualRate from tblSdSalesOrder SM 
+inner join tblSdSalesOrderProductDetails SD on SM.SalesOrderId=SD.SalesOrderId inner join 
+tblMmMaterialMaster material on material.Id=SD.MaterialId 
+  left join tblMmMaterialPackagingDetails p on p.id=SD.PackageId
+where SM.SalesOrderId='" + SalesOrderId + "' and SD.SalesInvoiceGenerate='n'");
 
                 if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
                 {
@@ -104,25 +108,19 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
                     // Create an anonymous object containing SalesQuotationMasterinfo and sales items
                     var invoiceData = new
                     {
-                        SalesQuotationMastertInfo = new
+                        SalesOrderInvoiceMasterInfo = new
                         {
-                            QuotationId = dr["QuotationId"].ToString(),
-                            formattedQuotationDate = dr["formattedQuotationDate"].ToString(),
-                            //QuotationStatus = dr["QuotationStatus"].ToString(),
-                            NetTotal = dr["NetTotal"].ToString(),
-                            //NetGST = dr["NetGST"].ToString(),
-                            NetAmount = dr["NetAmount"].ToString(),
-                            DeliveryCharges = dr["ShippingCharges"].ToString() == "" ? "0" : dr["ShippingCharges"].ToString(),
-                            //Notes = dr["Notes"].ToString(),
-                            //TermsAndConditions = dr["TermsAndConditions"].ToString(),
+                            SalesOrderId = dr["SalesOrderId"].ToString(),
+                            Deliveycharges = dr["Deliveycharges"].ToString()==""?"0": dr["Deliveycharges"].ToString(),
+                            NetTotal = dr["TotalAmount"].ToString(),
                             CustomerId = dr["CustomerId"].ToString(),
                             CustomerName = dr["CustomerName"].ToString(),
-                            Mobile = dr["Mobile"].ToString()
-                            //Email = dr["Email"].ToString(),
-                            //Address = dr["Address"].ToString()
+                            Mobile = dr["Mobile"].ToString(),
+                            OutStandingamount= dr["OutStandingamount"].ToString()==""?"0": dr["OutStandingamount"].ToString(),
+                            Advance = dr["Advance"].ToString() == "" ? "0" : dr["Advance"].ToString()
 
                         },
-                        SalesItems = dtSalesQuotationDetail.AsEnumerable().ToList()
+                        SalesOrderInvoiceItems = dtSalesQuotationDetail.AsEnumerable().ToList()
 
                     };
                     return JsonConvert.SerializeObject(invoiceData);
@@ -137,14 +135,14 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
         }
 
         [WebMethod]
-        public static string GenerateOrderID(string OrderDate)
+        public static string GenerateOrderID(string SalesInvoiceDate)
         {
             DataTable dtNewQuotationID = new DataTable();
 
             try
             {
-                string formattedOrderDate = DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
-                dtNewQuotationID = objMain.dtFetchData(@"select 'SORD' + CONVERT(NVARCHAR(10), '" + formattedOrderDate + "', 120)   +'/'+                       RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(SalesOrderId, LEN(SalesOrderId) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4) as SalesOrderId    FROM tblSdSalesOrder    WHERE OrderDate ='" + formattedOrderDate + "'");
+                string formattedInvoiceDate = DateTime.ParseExact(SalesInvoiceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+                dtNewQuotationID = objMain.dtFetchData(@"select 'INVO' + CONVERT(NVARCHAR(10), '" + formattedInvoiceDate + "', 120)   +'/'+                       RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(SalesInvoiceId, LEN(SalesInvoiceId) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4) as SalesInvoiceId    FROM tblSalesInvoiceMaster    WHERE SalesInvoiceDate ='" + formattedInvoiceDate + "'");
             }
             catch (Exception ex)
             {
@@ -214,30 +212,22 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
 
 
         [WebMethod]
-        public static string AddSalesOrder(List<SalesQuotationDetail> data, string SalesOrderId = "", string CustomerId = "", string ExpirationDate = "", string GSTTreatment = "", string QuotationDate = "", string Currency = "",
-                                           string PaymentTerms = "", string TermsConditions = "", string TotalAmount = "", string OrderSource = "", string LoginUser = "",
-                                           string BranchCode = "", string DepartmentID = "", string OrderDate = "", string QuotationId = "",string DeliveryCharges = "", string OutstandingAmount = "", string Advance = "")
+        public static string AddSalesOrderInvoice(List<SalesQuotationDetail> data, string SalesOrderId = "", string CustomerId = "", string SalesInvoiceId = "", string OutstandingAmount = "",
+                                           string DeliveryCharges = "",  string TotalAmount = "", string LoginUser = ""
+                                          , string SalesinvoiceDate = "",string Advance="")
         {
             StringBuilder strBuild = new StringBuilder();
             strBuild.Append("<XMLData>");
             strBuild.Append("<SalesOrderId>" + SalesOrderId + "</SalesOrderId>");
-            strBuild.Append("<QuotationId>" + QuotationId + "</QuotationId>");
             strBuild.Append("<CustomerId>" + CustomerId + "</CustomerId>");
-            strBuild.Append("<ExpirationDate>" + DateTime.ParseExact(ExpirationDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</ExpirationDate>");
-            strBuild.Append("<OrderDate>" + DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</OrderDate>");
-            strBuild.Append("<GSTTreatment>" + GSTTreatment + "</GSTTreatment>");
-            strBuild.Append("<QuotationDate>" + QuotationDate + "</QuotationDate>");
-            strBuild.Append("<Currency>" + Currency + "</Currency>");
-            strBuild.Append("<TermsConditions>" + TermsConditions + "</TermsConditions>");
-            strBuild.Append("<PaymentTerms>" + PaymentTerms + "</PaymentTerms>");
-            strBuild.Append("<TotalAmount>" + TotalAmount + "</TotalAmount>");
-            strBuild.Append("<OrderSource>" + OrderSource + "</OrderSource>");
-            strBuild.Append("<CreateUser>" + LoginUser + "</CreateUser>");
-            strBuild.Append("<BranchCode>" + BranchCode + "</BranchCode>");
-            strBuild.Append("<DepartmentID>" + DepartmentID + "</DepartmentID>");
+            strBuild.Append("<SalesInvoiceId>" + SalesInvoiceId + "</SalesInvoiceId>");
+            strBuild.Append("<SalesinvoiceDate>" + DateTime.ParseExact(SalesinvoiceDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</SalesinvoiceDate>");
             strBuild.Append("<OutstandingAmount>" + OutstandingAmount + "</OutstandingAmount>");
             strBuild.Append("<Advance>" + Advance + "</Advance>");
             strBuild.Append("<DeliveryCharges>" + DeliveryCharges + "</DeliveryCharges>");
+            strBuild.Append("<TotalAmount>" + TotalAmount + "</TotalAmount>");
+            strBuild.Append("<CreateUser>" + LoginUser + "</CreateUser>");
+            
 
             strBuild.Append("<SalesQuotationDetails>");
             if (data.Count > 0)
@@ -248,13 +238,14 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
                     strBuild.Append("<ItemId>" + Convert.ToInt32(item.ItemID) + "</ItemId>");
                     strBuild.Append("<Qty>" + item.Quantity + "</Qty>");
                     strBuild.Append("<Rate>" + item.Rate + "</Rate>");
-                    strBuild.Append("<SalesQuotationDetailId>" + item.SalesQuotationDetailId + "</SalesQuotationDetailId>");
+                    strBuild.Append("<SalesOrderProductDetailId>" + item.SalesOrderProductDetailId + "</SalesOrderProductDetailId>");
                     strBuild.Append("<GST>" + item.GST + "</GST>");
                     strBuild.Append("<Discount>" + item.Discount + "</Discount>");
-                    //strBuild.Append("<CentralTaxPercent>" + item.CentralTaxPercent + "</CentralTaxPercent>");
-                    //strBuild.Append("<StateTaxPercent>" + item.StateTaxPercent + "</StateTaxPercent>");
-                    //strBuild.Append("<CessPercent>" + item.CessPercent + "</CessPercent>");
-
+                    if(item.PackageId!="" && item.PackageId!="0")
+                    {
+                        strBuild.Append("<PackageId>" + item.PackageId + "</PackageId>");
+                    }
+                    
                     strBuild.Append("<Amount>" + item.Amount + "</Amount>");
                     strBuild.Append("</SalesQuotationDetail>");
                 }
@@ -273,7 +264,7 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
             objParam[0].Direction = ParameterDirection.Input;
             objParam[0].Value = strBuild.ToString();
 
-            var result = objMain.ExecuteProcedure("procSdSalesQuotationOrder", objParam);
+            var result = objMain.ExecuteProcedure("procSdSalesInvoiceOrder", objParam);
 
 
             return "";
@@ -281,7 +272,7 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
 
 
         [WebMethod]
-        public static string FetchSalesOrderMasterList()
+        public static string FetchSalesOrderInvoiceMasterList()
         {
             //   clsMain objMain = new clsMain();
             DataTable dtMaterialBOMMasterList = new DataTable();
@@ -289,18 +280,10 @@ tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + 
             try
             {
 
-                dtMaterialBOMMasterList = objMain.dtFetchData(@"select so.SalesOrderId,so.SalesOrderSource,c.CustomerName,so.GST_Treatment,CONVERT(nvarchar,so.ExpirationDate,104) as ExpirationDate,
-                                                             CONVERT(nvarchar,so.QuotationDate,104) as QuotationDate,cm.Currency,
-		                                                     so.PaymentTerms,sm.OrderStatus as OrderStatus,so.OrderStatusId,
-		                                                      so.TotalAmount as TotalAmount,b.BranchName,d.DeptName,
-so.DeliveyCharges,so.OutstandingAmount,so.Advance,so.ManualOrderId
-                                                      from tblSdSalesOrder so 
-                                                      left join tblCrmCustomers c on c.CustomerId=so.CustomerId
-                                                      left join tblMmCurrencyMaster cm on cm.Id=so.CurrencyId
-                                                      left join tblSdSalesOrderStatusMaster sm on sm.id=so.OrderStatusId
-                                                      left join tblHrBranchMaster b on b.BranchCode=so.BranchCode
-                                                      left join tblHrDeptMaster d on d.Id=so.DepartmentID
-                                                              order by so.id desc");
+                dtMaterialBOMMasterList = objMain.dtFetchData(@"select so.*,c.CustomerName,convert(varchar(10), cast(SalesInvoiceDate as date), 101) as formattedsalesInvoiceDate ,ManualOrderId
+from tblSalesInvoiceMaster so  left join tblCrmCustomers c on c.CustomerId=so.CustomerId   
+inner join tblSdSalesOrder on tblSdSalesOrder.SalesOrderId=so.SalesOrderId
+order by so.id desc");
             }
             catch (Exception ex)
             {
@@ -312,7 +295,7 @@ so.DeliveyCharges,so.OutstandingAmount,so.Advance,so.ManualOrderId
 
 
         [WebMethod]
-        public static string FetchSalesOrderMasterDetails(string SalesOrderId)
+        public static string FetchSalesOrderInvoiceMasterDetails(string SalesInvoiceId)
         {
             //  clsMain objMain = new clsMain();
             DataTable dtSalesOrderasterDetails = new DataTable();
@@ -320,25 +303,19 @@ so.DeliveyCharges,so.OutstandingAmount,so.Advance,so.ManualOrderId
             try
             {
 
-                dtSalesOrderasterDetails = objMain.dtFetchData(@"select SO.*,CustomerName,Mobile,BranchName,DeptName,Currency,
-convert(varchar(10), cast(SO.QuotationDate as date), 101) as formattedQuotationDate,
-convert(varchar(10), cast(ExpirationDate as date), 101) as formattedExpirationDate,
-convert(varchar(10), cast(OrderDate as date), 101) as formattedOrderDate
-from tblSdSalesOrder SO
+                dtSalesOrderasterDetails = objMain.dtFetchData(@"select SO.*,CustomerName,Mobile,
+convert(varchar(10), cast(SalesInvoiceDate as date), 101) as formattedsalesInvoiceDate
+from tblSalesInvoiceMaster SO
                     inner join tblCrmCustomers Cust on Cust.CustomerId=SO.CustomerId
                     inner join tblCrmCustomerContacts on Cust.ContactId=tblCrmCustomerContacts.ContactId
-                    inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=SO.BranchCode
-                    inner join tblHrDeptMaster on tblHrDeptMaster.Id=SO.DepartmentID
-                    inner join tblMmCurrencyMaster on tblMmCurrencyMaster.Id=SO.CurrencyId
-                    left join tblSdSalesQuotationMaster as Quot on Quot.QuotationId=SO.SalesQuotationMasterId
-                    where SalesOrderId='" + SalesOrderId + "'");
+                       where SalesInvoiceId='" + SalesInvoiceId + "'");
 
                 dtSalesOrderDetailsList = objMain.dtFetchData(@"select o.MaterialId,m.MaterialName,o.Qty,m.UnitMesure,p.Packaging,
                                                                   o.PackageId,o.UnitPrice,o.Tax,o.SubTotal
-                                                                  from tblSdSalesOrderProductDetails o
+                                                                  from tblSalesInvoiceDetail o
                                                                   left join tblMmMaterialMaster m on m.Id=o.MaterialId
                                                                   left join tblMmMaterialPackagingDetails p on p.id=o.PackageId
-                                                                  where o.SalesOrderId='" + SalesOrderId + "'");
+                                                                  where o.SalesInvoiceId='" + SalesInvoiceId + "'");
 
                 if (dtSalesOrderasterDetails != null && dtSalesOrderasterDetails.Rows.Count > 0)
                 {
@@ -348,28 +325,20 @@ from tblSdSalesOrder SO
                     {
                         SalesQuotationOrderMastertInfo = new
                         {
-                            QuotationId = dr["SalesQuotationMasterId"].ToString(),
+                            SalesInvoiceId = dr["SalesInvoiceId"].ToString(),
                             SalesOrderId = dr["SalesOrderId"].ToString(),
-                            GSTTreatment = dr["GST_Treatment"].ToString(),
-                            PaymentTerms = dr["PaymentTerms"].ToString(),
-                            TermCondition = dr["TermCondition"].ToString(),
-                             formattedQuotationDate = dr["formattedQuotationDate"].ToString(),
-                            formattedExpirationDate = dr["formattedExpirationDate"].ToString(),
-                            formattedOrderDate = dr["formattedOrderDate"].ToString(),
-                            BranchName = dr["BranchName"].ToString(),
-                            DeptName = dr["DeptName"].ToString(),
-                            Currency = dr["Currency"].ToString(),
-                            TotalAmount = dr["TotalAmount"].ToString() == "" ? "0" : dr["TotalAmount"].ToString(),
+                            PaymentComplete = dr["PaymentComplete"].ToString(),
+                             formattedsalesInvoiceDate = dr["formattedsalesInvoiceDate"].ToString(),
+                            OutstandingAmount = dr["OutstandingAmount"].ToString(),
+                            DeliveryCharges = dr["DeliveyCharges"].ToString(),
+                            TotalAmount = dr["TotalAmount"].ToString(),
                             CustomerId = dr["CustomerId"].ToString(),
                             CustomerName = dr["CustomerName"].ToString(),
                             Mobile = dr["Mobile"].ToString(),
-                            DeliveryCharges= dr["Deliveycharges"].ToString() == "" ? "0" : dr["Deliveycharges"].ToString(),
-                            OutstandingAmount= dr["OutstandingAmount"].ToString()==""?"0": dr["OutstandingAmount"].ToString(),
-                            Advance= dr["Advance"].ToString() == "" ? "0" : dr["Advance"].ToString()
-
+                            Advance = dr["Advance"].ToString()
 
                         },
-                        SalesItems = dtSalesOrderDetailsList.AsEnumerable().ToList()
+                        SalesOrderInvoiceItems = dtSalesOrderDetailsList.AsEnumerable().ToList()
 
                     };
                     return JsonConvert.SerializeObject(invoiceData);
@@ -384,13 +353,12 @@ from tblSdSalesOrder SO
         }
 
 
-
         [WebMethod]
-        public static string GetPdfContent(string SalesOrderId)
+        public static string GetPdfContent(string SalesInvoiceId)
         {
 
             // Generate PDF content (replace this with your actual PDF generation logic)
-            byte[] pdfBytes = GeneratePdfBytes(SalesOrderId);
+            byte[] pdfBytes = GeneratePdfBytes(SalesInvoiceId);
 
             // Convert PDF content to base64 string
             string base64String = Convert.ToBase64String(pdfBytes);
@@ -398,7 +366,7 @@ from tblSdSalesOrder SO
             return base64String;
         }
 
-        private static byte[] GeneratePdfBytes(string SalesOrderId)
+        private static byte[] GeneratePdfBytes(string SalesInvoiceId)
         {
             // Example: Generate a simple PDF using iTextSharp library
             using (MemoryStream ms = new MemoryStream())
@@ -407,13 +375,13 @@ from tblSdSalesOrder SO
                 iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms);
                 document.Open();
                 //document.Add(new iTextSharp.text.Paragraph("Hello, World!"));
-                AddInvoiceContent(document, SalesOrderId);
+                AddInvoiceContent(document, SalesInvoiceId);
                 document.Close();
                 return ms.ToArray();
             }
         }
 
-        private static void AddInvoiceContent(Document document, string SalesOrderId)
+        private static void AddInvoiceContent(Document document, string SalesInvoiceId)
         {// Open the document before adding content
          // Your company information
          //string filePath = Server.MapPath("Images\\logo.jpg");
@@ -433,7 +401,7 @@ from tblSdSalesOrder SO
             PdfPTable QuotationHeadingTable = new PdfPTable(1);
             QuotationHeadingTable.WidthPercentage = 100;
 
-            PdfPCell QuotationHeadingCell = new PdfPCell(new Phrase("Sales Order", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)));
+            PdfPCell QuotationHeadingCell = new PdfPCell(new Phrase("Sales Order Invoice", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)));
             QuotationHeadingCell.BorderWidth = 0;
             QuotationHeadingCell.HorizontalAlignment = Element.ALIGN_CENTER; // Align to the center
             QuotationHeadingCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Align to the middle vertically
@@ -510,7 +478,7 @@ from tblSdSalesOrder SO
             PdfPCell clientInfoCell = new PdfPCell();
             DataTable dtClientDetails = objMain.dtFetchData(@"SELECT CustomerName as ContactName, Street1, Phone, Email from tblCrmCustomerContacts inner join 
 tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WHERE tblCrmCustomers.CustomerId =
-(SELECT CustomerId FROM tblSdSalesOrder WHERE SalesOrderId = '" + SalesOrderId + "')");
+(SELECT CustomerId FROM tblSalesInvoiceMaster WHERE SalesInvoiceId = '" + SalesInvoiceId + "')");
             if (dtClientDetails.Rows.Count > 0)
             {
                 string clientName = Convert.ToString(dtClientDetails.Rows[0]["ContactName"]);
@@ -526,21 +494,24 @@ tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WH
                 clientInfoCell.Padding = 0;
                 //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 billToTable.AddCell(clientInfoCell);
-                DataTable dtQuotationDetails = objMain.dtFetchData(@"select SM.SalesOrderId,FORMAT(OrderDate, 'dd/MM/yyyy') as OrderDate,(isnull(TotalAmount,0)-isnull(Deliveycharges,0)) as NetTotal,
-(Select cast (Sum(isnull(Qty*MM.MRP*(SP.Tax/100),0))as decimal(16,2)) from tblSdSalesOrderProductDetails SP 
-inner join tblSdSalesOrder on tblSdSalesOrder.SalesOrderId=SP.SalesOrderId
+                DataTable dtQuotationDetails = objMain.dtFetchData(@"select SM.SalesInvoiceId,FORMAT(SalesInvoiceDate, 'dd/MM/yyyy') as SalesInvoiceDate,(isnull(SM.TotalAmount,0)-isnull(SM.Deliveycharges,0)) as NetTotal,
+(Select cast (Sum(isnull(Qty*MM.MRP*(SP.Tax/100),0))as decimal(16,2)) from tblSalesInvoiceDetail SP 
+inner join tblSalesInvoiceMaster on tblSalesInvoiceMaster.SalesInvoiceId=SP.SalesInvoiceId
 inner join tblMmMaterialMaster MM on MM.Id=SP.MaterialId
-where SP.SalesOrderId=SM.SalesOrderId
+where SP.SalesInvoiceId=SM.SalesInvoiceId
 )NetGST
-,TotalAmount as NetAmount,
-isnull(Deliveycharges,0) as ShippingCharges,TermCondition as TermsAndConditions ,isnull(Description,'') as Notes,cust.CustomerId,
+,SM.TotalAmount as NetAmount,
+isnull(SM.Deliveycharges,0) as ShippingCharges,TermCondition as TermsAndConditions ,isnull(Description,'') as Notes,cust.CustomerId,
 isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email ,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+
-isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSdSalesOrder SM  inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  
-inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.SalesOrderId='" + SalesOrderId + "'");
+isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSalesInvoiceMaster SM  
+inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  
+inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId 
+inner join tblSdSalesOrder on tblSdSalesOrder.SalesOrderId=SM.SalesOrderId
+where SM.SalesInvoiceId='" + SalesInvoiceId + "'");
                 // Quotation details on the right
                 PdfPCell quotationDetailsCell = new PdfPCell();
-                quotationDetailsCell.AddElement(new Paragraph("SalesOrder ID: " + SalesOrderId, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-                quotationDetailsCell.AddElement(new Paragraph("Order Date: " + Convert.ToString(dtQuotationDetails.Rows[0]["OrderDate"]), FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+                quotationDetailsCell.AddElement(new Paragraph("SalesInvoice ID: " + SalesInvoiceId, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+                quotationDetailsCell.AddElement(new Paragraph("SalesInvoice Date: " + Convert.ToString(dtQuotationDetails.Rows[0]["SalesInvoiceDate"]), FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                 quotationDetailsCell.BorderWidth = 0;
                 quotationDetailsCell.Padding = 0;
                 quotationDetailsCell.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -571,8 +542,8 @@ inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId wh
                 itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 DataTable dtSalesQuotationDetail = objMain.dtFetchData(@" select SM.SalesOrderId,MaterialId as ItemId,materialName,Qty,UnitPrice as Rate,DiscountPercent Discount,Tax GST,SubTotal Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate
-from   tblSdSalesOrder SM  inner join tblSdSalesOrderProductDetails SD on SM.SalesOrderId=SD.SalesOrderId 
-inner join tblMmMaterialMaster material on material.Id=SD.MaterialId where SM.SalesOrderId='" + SalesOrderId + "'");
+from   tblSalesInvoiceMaster SM  inner join tblSalesInvoiceDetail SD on SM.SalesInvoiceId=SD.SalesInvoiceId 
+inner join tblMmMaterialMaster material on material.Id=SD.MaterialId where SM.SalesInvoiceId='" + SalesInvoiceId + "'");
                 // Add table rows with item details
                 // Replace the following with your actual data
 
@@ -675,6 +646,6 @@ inner join tblMmMaterialMaster material on material.Id=SD.MaterialId where SM.Sa
                 document.Add(new Paragraph("Terms and Conditions: " + terms, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
             }
         }
-    }
 
+    }
 }

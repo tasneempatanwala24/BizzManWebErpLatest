@@ -68,6 +68,9 @@
   <button id="saveDataBtn" onclick="saveData()"  class="preventDefault" style="display:none">Save</button>
  <%--<button id="PrintDataBtn" runat="server" OnClientClick="generatePDF()" OnClick="btnPrint_Click"  style="display:none">Print</button>--%>
     <asp:Button runat="server" ID="PrintDataBtn" style="display:none;background-color:#7952b3;color:#fff;padding:7px;border:none" OnClientClick="generatePDF()" OnClick="btnPrint_Click" Text="Print"/>
+    <button type="button" class="preventDefault" id="previewBtn" style="display:none" onclick="PrintPreview()">
+    Preview PDF
+</button>
    <button onclick="onEditButtonClick();" ID="EditDataBtn"  class="preventDefault" style="display:none">Edit</button>
     
     <input type="hidden" id="loginuser" runat="server" />
@@ -165,6 +168,7 @@
       <tr>
         <th>Item Name</th>
         <th  style="width:10%">Qty</th>
+            <th  style="width:10%">Unit Measure</th>
         <th style="width:10%">Rate</th>
            <th style="width:10%">Discount %</th>
             <th style="width:10%">GST %</th>
@@ -180,25 +184,25 @@
     </tbody>
       <tfoot class="no-rows-footer">
           <tr>
-              <th colspan="5" style="text-align:right"><b>Total</b></th>
+              <th colspan="6" style="text-align:right"><b>Total</b></th>
               <th>
                   <input type="text" id="grandTotal" value="0" class="form-control" disabled>
               </th>
           </tr>
            <tr>
-              <th colspan="5" style="text-align:right"><b>GST</b></th>
+              <th colspan="6" style="text-align:right"><b>GST</b></th>
               <th>
                   <input type="text" id="grandTotalGST"  value="0" class="form-control" disabled>
               </th>
           </tr>
            <tr>
-              <th colspan="5" style="text-align:right">Shipping Charges</th>
+              <th colspan="6" style="text-align:right">Shipping Charges</th>
               <th>
                   <input type="text" value="0" class="form-control" id="ShippingCharges" onchange="calculateGrandTotal()" oninput="handleNumericInput(event)">
               </th>
           </tr>
            <tr>
-              <th colspan="5" style="text-align:right"><b>Net Amount</b></th>
+              <th colspan="6" style="text-align:right"><b>Net Amount</b></th>
               <th>
                   <input type="text" value="0" id="netAmount"  class="form-control" disabled>
               </th>
@@ -295,6 +299,7 @@
       <tr>
         <th>Item Name</th>
         <th>Qty</th>
+          <th>Unit Measure</th>
         <th>Rate</th>
            <th>Discount %</th>
             <th>GST %</th>
@@ -307,41 +312,41 @@
     </tbody>
       <tfoot>
           <tr>
-              <th colspan="5" style="text-align:right"><b>Total Amount</b></th>
+              <th colspan="6" style="text-align:right"><b>Total Amount</b></th>
               <th>
                   <input type="text" id="dispgrandTotal" value="0" class="form-control" disabled>
               </th>
           </tr>
             <tr>
-              <th colspan="5" style="text-align:right"><b>Central Tax Value</b></th>
+              <th colspan="6" style="text-align:right"><b>Central Tax Value</b></th>
               <th>
                   <input type="text" id="dispgrandCentralTaxValue" value="0" class="form-control" disabled>
               </th>
           </tr>  <tr>
-              <th colspan="5" style="text-align:right"><b>State Tax Value</b></th>
+              <th colspan="6" style="text-align:right"><b>State Tax Value</b></th>
               <th>
                   <input type="text" id="disgrandStateTaxValue" value="0" class="form-control" disabled>
               </th>
           </tr>  <tr>
-              <th colspan="5" style="text-align:right"><b>Cess Value</b></th>
+              <th colspan="6" style="text-align:right"><b>Cess Value</b></th>
               <th>
                   <input type="text" id="dispgrandCessValue" value="0" class="form-control" disabled>
               </th>
           </tr>
            <tr>
-              <th colspan="5" style="text-align:right"><b>Net GST</b></th>
+              <th colspan="6" style="text-align:right"><b>Net GST</b></th>
               <th>
                   <input type="text" id="dispgrandTotalGST"  value="0" class="form-control" disabled>
               </th>
           </tr>
            <tr>
-              <th colspan="5" style="text-align:right">Shipping Charges</th>
+              <th colspan="6" style="text-align:right">Shipping Charges</th>
               <th>
                   <input type="text" value="0" class="form-control" id="dispShippingCharges" disabled>
               </th>
           </tr>
            <tr>
-              <th colspan="5" style="text-align:right"><b>Net Amount</b></th>
+              <th colspan="6" style="text-align:right"><b>Net Amount</b></th>
               <th>
                   <input type="text" value="0" id="dispnetAmount"  class="form-control" disabled>
               </th>
@@ -366,6 +371,25 @@
         </div>
 
 
+    <!-- Modal to display PDF -->
+<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
+                <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>--%>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfPreview" style="width: 100%; height: 900px;" frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"  onclick="CloseModal();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

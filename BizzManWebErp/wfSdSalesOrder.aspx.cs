@@ -12,6 +12,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using BizzManWebErp.Model;
 using ClosedXML.Excel;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 using Newtonsoft.Json;
  
 namespace BizzManWebErp
@@ -125,7 +127,8 @@ namespace BizzManWebErp
                 dtMaterialBOMMasterList = objMain.dtFetchData(@"select so.SalesOrderId,so.SalesOrderSource,c.CustomerName,so.GST_Treatment,CONVERT(nvarchar,so.ExpirationDate,104) as ExpirationDate,
                                                              CONVERT(nvarchar,so.QuotationDate,104) as QuotationDate,cm.Currency,
 		                                                     so.PaymentTerms,sm.OrderStatus as OrderStatus,so.OrderStatusId,
-		                                                      so.TotalAmount as TotalAmount,b.BranchName,d.DeptName
+		                                                      so.TotalAmount as TotalAmount,b.BranchName,d.DeptName,
+so.DeliveyCharges,so.OutstandingAmount,so.Advance,so.ManualOrderId
                                                       from tblSdSalesOrder so 
                                                       left join tblCrmCustomers c on c.CustomerId=so.CustomerId
                                                       left join tblMmCurrencyMaster cm on cm.Id=so.CurrencyId
@@ -289,7 +292,7 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
         [WebMethod]
         public static string AddSalesOrder(List<SalesQuotationDetail> data, string SalesOrderId = "", string CustomerId = "", string ExpirationDate = "", string GSTTreatment = "", string DeliveryDateTime = "", string Currency = "",
                                          string PaymentTerms = "", string TermsConditions = "", string TotalAmount = "", string OrderSource = "", string LoginUser = "",
-                                         string BranchCode = "", string DepartmentID = "", string OrderDate = "", string ManualOrderId = "",string DeliveryCharges="")
+                                         string BranchCode = "", string DepartmentID = "", string OrderDate = "", string ManualOrderId = "",string DeliveryCharges="",string OutstandingAmount="",string Advance="")
         {
             StringBuilder strBuild = new StringBuilder();
             strBuild.Append("<XMLData>");
@@ -304,6 +307,8 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
             strBuild.Append("<TermsConditions>" + TermsConditions + "</TermsConditions>");
             strBuild.Append("<PaymentTerms>" + PaymentTerms + "</PaymentTerms>");
             strBuild.Append("<TotalAmount>" + TotalAmount + "</TotalAmount>");
+            strBuild.Append("<OutstandingAmount>" + OutstandingAmount + "</OutstandingAmount>");
+            strBuild.Append("<Advance>" + Advance + "</Advance>");
             strBuild.Append("<DeliveryCharges>" + DeliveryCharges + "</DeliveryCharges>");
             strBuild.Append("<OrderSource>" + OrderSource + "</OrderSource>");
             strBuild.Append("<CreateUser>" + LoginUser + "</CreateUser>");
@@ -732,5 +737,299 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
 
            
         }
+    
+
+    [WebMethod]
+    public static string GetPdfContent(string SalesOrderId)
+    {
+
+        // Generate PDF content (replace this with your actual PDF generation logic)
+        byte[] pdfBytes = GeneratePdfBytes(SalesOrderId);
+
+        // Convert PDF content to base64 string
+        string base64String = Convert.ToBase64String(pdfBytes);
+
+        return base64String;
     }
+
+    private static byte[] GeneratePdfBytes(string SalesOrderId)
+    {
+        // Example: Generate a simple PDF using iTextSharp library
+        using (MemoryStream ms = new MemoryStream())
+        {
+            iTextSharp.text.Document document = new iTextSharp.text.Document();
+            iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms);
+            document.Open();
+            //document.Add(new iTextSharp.text.Paragraph("Hello, World!"));
+            AddInvoiceContent(document, SalesOrderId);
+            document.Close();
+            return ms.ToArray();
+        }
+    }
+
+    private static void AddInvoiceContent(Document document, string SalesOrderId)
+    {// Open the document before adding content
+     // Your company information
+     //string filePath = Server.MapPath("Images\\logo.jpg");
+     //filePath=Path.Combine(filePath, "Images\\logo.jpg");
+
+        //PdfPTable QuotationHeadingTable = new PdfPTable(1);
+        //QuotationHeadingTable.WidthPercentage = 100;
+        //QuotationHeadingTable.SetWidths(new float[] { 4f }); // Adjust the widths as needed
+        //PdfPCell QuotationHeadingCell = new PdfPCell();
+        //QuotationHeadingCell.AddElement(new Paragraph("QUOTATION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)));
+        //QuotationHeadingCell.BorderWidth = 0;
+        //QuotationHeadingCell.Colspan = 1;
+        //QuotationHeadingCell.HorizontalAlignment = Element.ALIGN_CENTER; // Align to the center
+        //QuotationHeadingTable.AddCell(QuotationHeadingCell);
+        //document.Add(QuotationHeadingTable);
+
+        PdfPTable QuotationHeadingTable = new PdfPTable(1);
+        QuotationHeadingTable.WidthPercentage = 100;
+
+        PdfPCell QuotationHeadingCell = new PdfPCell(new Phrase("Sales Order", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 14)));
+        QuotationHeadingCell.BorderWidth = 0;
+        QuotationHeadingCell.HorizontalAlignment = Element.ALIGN_CENTER; // Align to the center
+        QuotationHeadingCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Align to the middle vertically
+        QuotationHeadingCell.FixedHeight = 50f; // Adjust the height as needed
+
+        QuotationHeadingTable.AddCell(QuotationHeadingCell);
+        document.Add(QuotationHeadingTable);
+
+
+
+        PdfPTable companyInfoTable = new PdfPTable(2);
+        companyInfoTable.WidthPercentage = 100;
+        companyInfoTable.SetWidths(new float[] { 3f, 1f }); // Adjust the widths as needed
+        PdfPCell companyInfoCell = new PdfPCell();
+        DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1,PhoneNo,EmailAddress,WebSiteAddress,Logo from tblAdminCompanyMaster");
+
+
+        if (dtCompanyDetails != null && dtCompanyDetails.Rows.Count > 0)
+        {
+            string companyName = Convert.ToString(dtCompanyDetails.Rows[0]["CompanyName"]);
+            companyInfoCell.AddElement(new Paragraph("" + companyName, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
+
+
+
+
+
+            string companyAddress = Convert.ToString(dtCompanyDetails.Rows[0]["Address1"]);
+            companyInfoCell.AddElement(new Paragraph("" + companyAddress, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            string companyEmail = Convert.ToString(dtCompanyDetails.Rows[0]["EmailAddress"]);
+            companyInfoCell.AddElement(new Paragraph("Email: " + companyEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            string companyPhone = Convert.ToString(dtCompanyDetails.Rows[0]["PhoneNo"]);
+            companyInfoCell.AddElement(new Paragraph("Contact: " + companyPhone, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+
+            companyInfoCell.BorderWidth = 0;
+
+            companyInfoTable.AddCell(companyInfoCell);
+            // Company logo on the right
+            //adding company logo
+            PdfPCell companyLogoCell = new PdfPCell();
+            if (dtCompanyDetails.Rows[0]["Logo"] != System.DBNull.Value)
+            {
+                byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
+
+
+                // Replace "path/to/your/logo.png" with the actual path to your logo image
+                //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
+
+                // Attempt to create an iTextSharp Image instance from the byte array
+                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
+
+
+                logo.ScaleToFit(100, 100); // Adjust the width and height as needed
+                companyLogoCell.AddElement(logo);
+
+
+
+
+            }
+            companyLogoCell.BorderWidth = 0;
+            companyLogoCell.HorizontalAlignment = Element.ALIGN_RIGHT; // Align to the right
+            companyInfoTable.AddCell(companyLogoCell);
+            document.Add(companyInfoTable);
+
+        }
+
+
+
+        // Bill To section
+        PdfPTable billToTable = new PdfPTable(2);
+        billToTable.WidthPercentage = 100;
+        billToTable.SetWidths(new float[] { 3f, 1f });
+
+        // Client information on the left
+        PdfPCell clientInfoCell = new PdfPCell();
+        DataTable dtClientDetails = objMain.dtFetchData(@"SELECT CustomerName as ContactName, Street1, Phone, Email from tblCrmCustomerContacts inner join 
+tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WHERE tblCrmCustomers.CustomerId =
+(SELECT CustomerId FROM tblSdSalesOrder WHERE SalesOrderId = '" + SalesOrderId + "')");
+        if (dtClientDetails.Rows.Count > 0)
+        {
+            string clientName = Convert.ToString(dtClientDetails.Rows[0]["ContactName"]);
+            string clientAddress = Convert.ToString(dtClientDetails.Rows[0]["Street1"]);
+            string clientEmail = Convert.ToString(dtClientDetails.Rows[0]["Email"]);
+            string phone = Convert.ToString(dtClientDetails.Rows[0]["Phone"]);
+            clientInfoCell.AddElement(new Paragraph("Name : " + clientName, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            clientInfoCell.AddElement(new Paragraph("Address : " + clientAddress, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            clientInfoCell.AddElement(new Paragraph("Phone : " + phone, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            clientInfoCell.AddElement(new Paragraph("Email: " + clientEmail, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            // Set border width and padding to zero
+            clientInfoCell.BorderWidth = 0;
+            clientInfoCell.Padding = 0;
+            //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
+            billToTable.AddCell(clientInfoCell);
+            DataTable dtQuotationDetails = objMain.dtFetchData(@"select SM.SalesOrderId,FORMAT(OrderDate, 'dd/MM/yyyy') as OrderDate,(isnull(TotalAmount,0)-isnull(Deliveycharges,0)) as NetTotal,
+(Select cast (Sum(isnull(Qty*MM.MRP*(SP.Tax/100),0))as decimal(16,2)) from tblSdSalesOrderProductDetails SP 
+inner join tblSdSalesOrder on tblSdSalesOrder.SalesOrderId=SP.SalesOrderId
+inner join tblMmMaterialMaster MM on MM.Id=SP.MaterialId
+where SP.SalesOrderId=SM.SalesOrderId
+)NetGST
+,TotalAmount as NetAmount,
+isnull(Deliveycharges,0) as ShippingCharges,TermCondition as TermsAndConditions ,isnull(Description,'') as Notes,cust.CustomerId,
+isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email ,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+
+isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSdSalesOrder SM  inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  
+inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.SalesOrderId='" + SalesOrderId + "'");
+            // Quotation details on the right
+            PdfPCell quotationDetailsCell = new PdfPCell();
+            quotationDetailsCell.AddElement(new Paragraph("SalesOrder ID: " + SalesOrderId, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            quotationDetailsCell.AddElement(new Paragraph("Order Date: " + Convert.ToString(dtQuotationDetails.Rows[0]["OrderDate"]), FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+            quotationDetailsCell.BorderWidth = 0;
+            quotationDetailsCell.Padding = 0;
+            quotationDetailsCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            billToTable.AddCell(quotationDetailsCell);
+
+            document.Add(new Paragraph("Bill To", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
+            document.Add(billToTable);
+
+            // Add a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+
+
+            // Add your invoice content here
+
+            // Example: Adding a table
+            PdfPTable itemTable = new PdfPTable(6);
+            itemTable.WidthPercentage = 100;
+            itemTable.SetWidths(new float[] { 2f, 1f, 1f, 1f, 1f, 1f });
+
+            // Add table header
+            itemTable.AddCell(new PdfPCell(new Phrase("Item", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+            itemTable.AddCell(new PdfPCell(new Phrase("Qty", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+            itemTable.AddCell(new PdfPCell(new Phrase("Rate", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+            itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+            itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+            itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
+            DataTable dtSalesQuotationDetail = objMain.dtFetchData(@" select SM.SalesOrderId,MaterialId as ItemId,materialName,Qty,UnitPrice as Rate,DiscountPercent Discount,Tax GST,SubTotal Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate
+from   tblSdSalesOrder SM  inner join tblSdSalesOrderProductDetails SD on SM.SalesOrderId=SD.SalesOrderId 
+inner join tblMmMaterialMaster material on material.Id=SD.MaterialId where SM.SalesOrderId='" + SalesOrderId + "'");
+            // Add table rows with item details
+            // Replace the following with your actual data
+
+            decimal centralTaxValue = 0;
+            decimal stateTaxValue = 0;
+            decimal cessTaxValue = 0;
+
+            decimal centralTaxPercent = 0;
+            decimal stateTaxPercent = 0;
+            decimal cessTaxPercent = 0;
+            decimal qty = 0;
+            decimal actualRate = 0;
+
+
+            if (dtSalesQuotationDetail != null && dtSalesQuotationDetail.Rows.Count > 0)
+            {
+                foreach (DataRow row in dtSalesQuotationDetail.Rows)
+                {
+                    itemTable.AddCell(row["materialName"].ToString());
+                    itemTable.AddCell(row["Qty"].ToString());
+                    itemTable.AddCell(row["Rate"].ToString());
+                    itemTable.AddCell(row["Discount"].ToString());
+                    itemTable.AddCell(row["GST"].ToString());
+                    itemTable.AddCell(row["Amount"].ToString());
+
+                    centralTaxPercent = Convert.ToDecimal(row["CentralTaxPercent"].ToString());
+                    stateTaxPercent = Convert.ToDecimal(row["StateTaxPercent"].ToString());
+                    cessTaxPercent = Convert.ToDecimal(row["CessPercent"].ToString());
+                    qty = Convert.ToDecimal(row["Qty"].ToString());
+                    actualRate = Convert.ToDecimal(row["ActualRate"].ToString());
+
+                    centralTaxValue += (qty * actualRate) * (centralTaxPercent / 100);
+                    stateTaxValue += (qty * actualRate) * (stateTaxPercent / 100);
+                    cessTaxValue += (qty * actualRate) * (cessTaxPercent / 100);
+                }
+
+
+            }
+            // Add more rows as needed
+
+            // Add table footer
+            PdfPCell totalAmountCell = new PdfPCell(new Phrase("Total Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            totalAmountCell.Colspan = 5;
+            totalAmountCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(totalAmountCell);
+            string amt = Convert.ToString(dtQuotationDetails.Rows[0]["NetTotal"]);
+            itemTable.AddCell(amt);
+
+
+            PdfPCell CentralTaxValueCell = new PdfPCell(new Phrase("Central Tax Value", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            CentralTaxValueCell.Colspan = 5;
+            CentralTaxValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(CentralTaxValueCell);
+            itemTable.AddCell(centralTaxValue.ToString("0.00"));
+
+            PdfPCell StateTaxValueCell = new PdfPCell(new Phrase("State Tax Value", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            StateTaxValueCell.Colspan = 5;
+            StateTaxValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(StateTaxValueCell);
+            itemTable.AddCell(stateTaxValue.ToString("0.00"));
+
+            PdfPCell CessTaxValueCell = new PdfPCell(new Phrase("Cess Value", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            CessTaxValueCell.Colspan = 5;
+            CessTaxValueCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(CessTaxValueCell);
+            itemTable.AddCell(cessTaxValue.ToString("0.00"));
+
+
+            string gst = Convert.ToString(dtQuotationDetails.Rows[0]["NetGST"]);
+            PdfPCell netGSTCell = new PdfPCell(new Phrase("Net GST", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            netGSTCell.Colspan = 5;
+            netGSTCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(netGSTCell);
+            itemTable.AddCell(gst);
+            string ship = Convert.ToString(dtQuotationDetails.Rows[0]["ShippingCharges"]);
+            PdfPCell shippingChargesCell = new PdfPCell(new Phrase("Shipping Charges", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            shippingChargesCell.Colspan = 5;
+            shippingChargesCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(shippingChargesCell);
+            itemTable.AddCell(ship)
+    ;
+            string net = Convert.ToString(dtQuotationDetails.Rows[0]["NetAmount"]);
+            PdfPCell netAmountCell = new PdfPCell(new Phrase("Net Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD)));
+            netAmountCell.Colspan = 5;
+            netAmountCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+            itemTable.AddCell(netAmountCell);
+            itemTable.AddCell(net);
+
+            document.Add(itemTable);
+            // Add a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+            document.Add(new Paragraph(new Phrase(" ")));  // Add an empty phrase to force a line break
+                                                           // Example: Adding notes
+            string notes = Convert.ToString(dtQuotationDetails.Rows[0]["Notes"]);
+            document.Add(new Paragraph("Notes: " + notes, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+
+            // Example: Adding terms and conditions
+            string terms = Convert.ToString(dtQuotationDetails.Rows[0]["TermsAndConditions"]);
+            document.Add(new Paragraph("Terms and Conditions: " + terms, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
+        }
+    }
+
+}
+
 }

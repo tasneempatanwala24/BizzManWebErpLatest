@@ -208,7 +208,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
 
                 dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
 
-                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate,material.UnitMesure from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
 
                 if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
                 {
@@ -293,7 +293,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
 
 
 
-        private  void AddInvoiceContent(Document document, string QuotationId)
+        private static  void AddInvoiceContent(Document document, string QuotationId)
         {// Open the document before adding content
          // Your company information
          //string filePath = Server.MapPath("Images\\logo.jpg");
@@ -355,7 +355,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 PdfPCell companyLogoCell = new PdfPCell();
                 if (dtCompanyDetails.Rows[0]["Logo"]!= System.DBNull.Value)
                 {
-                    byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
+                    byte[] imageData = dtCompanyDetails.Rows[0]["Logo"] as byte[];
 
                    
                     // Replace "path/to/your/logo.png" with the actual path to your logo image
@@ -641,6 +641,35 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
             }
 
             return JsonConvert.SerializeObject(dtNewQuotationID);
+        }
+
+
+        [WebMethod]
+        public static string GetPdfContent(string QuotationId)
+        {
+          
+            // Generate PDF content (replace this with your actual PDF generation logic)
+            byte[] pdfBytes = GeneratePdfBytes(QuotationId);
+
+            // Convert PDF content to base64 string
+            string base64String = Convert.ToBase64String(pdfBytes);
+
+            return base64String;
+        }
+
+        private static byte[] GeneratePdfBytes(string QuotationId)
+        {
+            // Example: Generate a simple PDF using iTextSharp library
+            using (MemoryStream ms = new MemoryStream())
+            {
+                iTextSharp.text.Document document = new iTextSharp.text.Document();
+                iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms);
+                document.Open();
+                //document.Add(new iTextSharp.text.Paragraph("Hello, World!"));
+                AddInvoiceContent(document, QuotationId);
+                document.Close();
+                return ms.ToArray();
+            }
         }
     }
 }

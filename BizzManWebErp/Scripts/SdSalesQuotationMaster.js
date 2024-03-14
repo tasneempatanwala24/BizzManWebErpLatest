@@ -113,6 +113,10 @@ function addRow() {
     // Add Qty with input
     cols += '<td style="width:10%"><input class="txtQuantity form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0" oninput="handleNumericInput(event)" ></td>';
 
+   
+    // Add Amount
+    cols += '<td style="width:10%"><input class="txtUnitMeasure form-control" type="text" disabled></td>';
+
     // Add Rate with input
     cols += '<td style="width:10%"><input class="txtRate form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)"><input type="hidden" value="" class="hdnActualRate"></td>';
 
@@ -213,6 +217,7 @@ function FetchUnitMeasure(dropdown) {
                 const gst = parseFloat(data[0].IntegratedTaxPercent);
                 var inclRate=rate+(rate*gst/100)
                 row.find('.txtRate').val(inclRate);
+                row.find('.txtUnitMeasure').val(data[0].UnitMesure);
                 row.find('.txtGST').val(data[0].IntegratedTaxPercent);
                 row.find('.hdnActualRate').val(data[0].MRP);
                 row.find('.hdnCentralTaxPercent').val(data[0].CentralTaxPercent);
@@ -231,6 +236,7 @@ function FetchUnitMeasure(dropdown) {
     else {
         row.find('.txtRate').val('0');
         row.find('.txtGST').val('');
+        row.find('.txtUnitMeasure').val('');
     }
 }
 
@@ -383,6 +389,7 @@ function saveData() {
         alertify.error("Please Enter some items.");
         return;
     }
+    showLoader();
     var data = [];
     $("#dataTable tbody tr").each(function () {
        
@@ -418,8 +425,14 @@ function saveData() {
         data: JSON.stringify({ data: data, QuotationId: quotationId, CustomerId: customerId, QuotationDate: quotationDate, CreateBy: loginuser, NetTotal: NetTotal, NetGST: NetGST, ShippingCharges: ShippingCharges, NetAmount: NetAmount, Notes: Notes, TermsAndConditions: TermsAndConditions }),
         dataType: "json",
         success: function (response) {
-            alertify.success('Sales Quotation details added successfully');
-            ClearAll();
+            setTimeout(function () {
+                hideLoader();
+                alertify.success('Sales Quotation details added successfully');
+                ClearAll();
+               
+            }, 1000); // Hide loader after 3 seconds
+
+            
         },
         error: function (error) {
             console.log(error);
@@ -447,6 +460,7 @@ function CreateData() {
     $('#divDataList').hide();
     $('#divDataItemsView').hide();
     $('#ContentPlaceHolder1_PrintDataBtn').hide();
+    $('#previewBtn').hide();
     $('#EditDataBtn').hide();
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').show();
@@ -458,9 +472,11 @@ function CreateData() {
 
 function ViewDataList() {
     //  $('#divEmpJobList').hide();
+   
     $('#divDataList').show();
     $('#divDataItemsView').hide();
     $('#ContentPlaceHolder1_PrintDataBtn').hide();
+    $('#previewBtn').hide();
     $('#EditDataBtn').hide();
     //  $('#divEmpJobEntry').show();
     $('#divDataEntry').hide();
@@ -475,7 +491,7 @@ function ViewDataList() {
 }
 
 function fetchDataList() {
-   
+    showLoader();
     $.ajax({
         type: "POST",
         url: 'wSdSalesQuotationMaster.aspx/FetchMasterList',
@@ -485,10 +501,17 @@ function fetchDataList() {
         success: function (response) {
             var data = JSON.parse(response.d);
            
-            $('#tblEmpJobList').DataTable().clear();
-            $('#tblEmpJobList').DataTable().destroy();
-            displayDataList(data);
-            $('#tblEmpJobList').DataTable()
+            
+
+            setTimeout(function () {
+                $('#tblEmpJobList').DataTable().clear();
+                $('#tblEmpJobList').DataTable().destroy();
+                displayDataList(data);
+                $('#tblEmpJobList').DataTable();
+                hideLoader();
+
+
+            }, 1000); // Hide loader after 3 seconds
         },
         complete: function () {
             //SalesQuotTable.draw();
@@ -545,7 +568,7 @@ function formatDate(date) {
 }
 
 function GetSdSalesQuotationMasterById(QuoatId) {
-   
+    showLoader();
     $('#divDataList').hide();
     $('#divDataEntry').hide();
     $('#saveDataBtn').hide();
@@ -594,6 +617,7 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
                 html = html + '<tr"><td>' + data.SalesItems[0].Table[i].materialName + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].Qty + '</td>'
+                    + '<td>' + data.SalesItems[0].Table[i].UnitMesure + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].Rate + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].Discount + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].GST + '</td>'
@@ -619,7 +643,9 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             $('#salesItemBody').html(html);
             $('#divDataItemsView').show();   
             $('#ContentPlaceHolder1_PrintDataBtn').show();
+            $('#previewBtn').show();
             $('#EditDataBtn').show();
+            hideLoader();
         },
         complete: function () {
 
@@ -642,6 +668,7 @@ function onEditButtonClick() {
     } else {
         // Handle the update logic here
         // ...
+        showLoader();
         $.ajax({
             type: "POST",
             url: 'wSdSalesQuotationMaster.aspx/UpdateQuotationStatus',
@@ -660,7 +687,7 @@ function onEditButtonClick() {
                 alertify.success('Quotation Status updated successfully');
                 $('#EditDataBtn').text('Edit');
                 $('#dispddlQuotStatus').prop('disabled', true);
-
+                hideLoader();
             },
             complete: function () {
 
@@ -685,4 +712,38 @@ function generatePDF() {
 
     $('#ContentPlaceHolder1_printQuotationId').val($('#disptxtQuotation').val());
    
+}
+
+function PrintPreview() {
+    showLoader();
+    generatePDF();
+    // Call the server-side method to get the PDF content
+    $.ajax({
+        type: 'POST',
+        url: 'wSdSalesQuotationMaster.aspx/GetPdfContent',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+            "QuotationId": $('#disptxtQuotation').val()
+        }),
+        dataType: 'json',
+        success: function (response) {
+            setTimeout(function () {
+                hideLoader();
+
+
+                // Display the PDF content in the modal
+                $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
+                $('#pdfModal').modal('show');
+            }, 1000); // Hide loader after 3 seconds
+          
+        },
+        error: function (xhr, status, error) {
+            console.log('Error fetching PDF:', error);
+        }
+    });
+
+}
+
+function CloseModal() {
+    $('#pdfModal').modal('hide');
 }

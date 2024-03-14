@@ -9,6 +9,7 @@ namespace BizzManWebErp.Model
     {
         public int ItemID { get; set; }
         public int SalesQuotationDetailId { get; set; }
+        public int SalesOrderProductDetailId { get; set; }
         public string PackageId { get; set; }
         public decimal Rate { get; set; }
         public decimal Quantity { get; set; }

@@ -412,6 +412,7 @@ function ViewSalesOrderList() {
     $('#btnExport').show();
     $('#btnConfirm').hide();
     $('#btnCancel').hide();
+    $('#previewBtn').hide();
     BindSalesOrderMasterList();
 }
 
@@ -453,16 +454,20 @@ function ClearAll() {
     $('#txtDeliveryDate').val('');
     $('#txtManualOrderId').val('');
     $('#txtDeliveryCharges').val('0');
+    $('#txtOutstandingAmount').val('0');
+    $('#txtAdvance').val('0');
     $('#txtQuotationId').val('');
 
     $('#btnConfirm').hide();
     $('#btnCancel').hide();
+    $('#previewBtn').hide();
     $('#ddlCustomer').val('').trigger('change');;
 }
 
 
 
 function BindSalesOrderMasterList() {
+    showLoader();
     $.ajax({
         type: "POST",
         url: 'wfSdSalesOrder.aspx/FetchSalesOrderMasterList',
@@ -474,68 +479,83 @@ function BindSalesOrderMasterList() {
         },
         success: function (response) {
             var data = JSON.parse(response.d);
-            $('#tblSalesOrderList').DataTable().clear();
-            $('#tblSalesOrderList').DataTable().destroy();
-            $('#tbody_SalesOrder_List').html('');
+            setTimeout(function () {
 
-            var html = '';
-            for (var i = 0; i < data.length; i++) {
-                html = html + '<tr><td><input type="checkbox" class="editor-active"></td><td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + data[i].SalesOrderId + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].SalesOrderSource != undefined ? data[i].SalesOrderSource : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].CustomerName != undefined ? data[i].CustomerName : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].BranchName != undefined ? data[i].BranchName : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].DeptName != undefined ? data[i].DeptName : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].GST_Treatment != undefined ? data[i].GST_Treatment : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].ExpirationDate != undefined ? data[i].ExpirationDate : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].QuotationDate != undefined ? data[i].QuotationDate : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].Currency != undefined ? data[i].Currency : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].PaymentTerms != undefined ? data[i].PaymentTerms : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].OrderStatus != undefined ? data[i].OrderStatus : '') + '</td>'
-                    + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].TotalAmount != undefined ? data[i].TotalAmount : '') + '</td></tr>';
-            }
-            $('#tbody_SalesOrder_List').html(html);
-            var d = new Date();
-            var table = $('#tblSalesOrderList').DataTable({
-                'columnDefs': [
-                    {
-                        'targets': 0,
-                        'checkboxes': {
-                            'selectRow': true
+                $('#tblSalesOrderList').DataTable().clear();
+                $('#tblSalesOrderList').DataTable().destroy();
+                $('#tbody_SalesOrder_List').html('');
+
+                var html = '';
+                for (var i = 0; i < data.length; i++) {
+                    html = html + '<tr><td><input type="checkbox" class="editor-active"></td><td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + data[i].SalesOrderId + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].ManualOrderId != undefined ? data[i].ManualOrderId : '') + '</td>'
+
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].SalesOrderSource != undefined ? data[i].SalesOrderSource : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].CustomerName != undefined ? data[i].CustomerName : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].BranchName != undefined ? data[i].BranchName : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].DeptName != undefined ? data[i].DeptName : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].GST_Treatment != undefined ? data[i].GST_Treatment : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].ExpirationDate != undefined ? data[i].ExpirationDate : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].QuotationDate != undefined ? data[i].QuotationDate : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].Currency != undefined ? data[i].Currency : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].PaymentTerms != undefined ? data[i].PaymentTerms : '') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].OrderStatus != undefined ? data[i].OrderStatus : '') + '</td>'
+
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].DeliveyCharges != undefined ? data[i].DeliveyCharges : '0') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].OutstandingAmount != undefined ? data[i].OutstandingAmount : '0') + '</td>'
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].Advance != undefined ? data[i].Advance : '0') + '</td>'
+
+                        + '<td style="white-space: nowrap;" onclick="FetchSalesOrderMasterDetails(\'' + data[i].SalesOrderId + '\',\'' + data[i].OrderStatusId + '\');">' + (data[i].TotalAmount != undefined ? data[i].TotalAmount : '') + '</td></tr>';
+                }
+                $('#tbody_SalesOrder_List').html(html);
+                var d = new Date();
+                var table = $('#tblSalesOrderList').DataTable({
+                    'columnDefs': [
+                        {
+                            'targets': 0,
+                            'checkboxes': {
+                                'selectRow': true
+                            }
+                        }
+                    ],
+                    'select': {
+                        'style': 'multi'
+                    },
+                    fixedHeader: {
+                        header: true
+                    }
+                });
+
+                $('#example-select-all').on('click', function () {
+                    // Check/uncheck all checkboxes in the table
+                    var rows = table.rows({ 'search': 'applied' }).nodes();
+                    $('input[type="checkbox"]', rows).prop('checked', this.checked);
+
+
+                });
+
+                $('#tbody_SalesOrder_List tbody').on('change', 'input[type="checkbox"]', function () {
+                    // If checkbox is not checked
+
+                    if (!this.checked) {
+                        var el = $('#example-select-all').get(0);
+                        // If "Select all" control is checked and has 'indeterminate' property
+                        if (el && el.checked && ('indeterminate' in el)) {
+                            // Set visual state of "Select all" control 
+                            // as 'indeterminate'
+                            el.indeterminate = true;
                         }
                     }
-                ],
-                'select': {
-                    'style': 'multi'
-                },
-                fixedHeader: {
-                    header: true
-                }
-            });
-
-            $('#example-select-all').on('click', function () {
-                // Check/uncheck all checkboxes in the table
-                var rows = table.rows({ 'search': 'applied' }).nodes();
-                $('input[type="checkbox"]', rows).prop('checked', this.checked);
-
-
-            });
-
-            $('#tbody_SalesOrder_List tbody').on('change', 'input[type="checkbox"]', function () {
-                // If checkbox is not checked
-
-                if (!this.checked) {
-                    var el = $('#example-select-all').get(0);
-                    // If "Select all" control is checked and has 'indeterminate' property
-                    if (el && el.checked && ('indeterminate' in el)) {
-                        // Set visual state of "Select all" control 
-                        // as 'indeterminate'
-                        el.indeterminate = true;
-                    }
-                }
 
 
 
-            });
+                });
+                hideLoader();
+            }, 1000);
+
+
+
+           
 
         },
         complete: function () {
@@ -552,7 +572,7 @@ function BindSalesOrderMasterList() {
 
 function FetchSalesOrderMasterDetails(id, OrderStatus) {
     if (OrderStatus == '1' || OrderStatus == '2') {
-
+        showLoader();
 
         $.ajax({
             type: "POST",
@@ -582,6 +602,8 @@ function FetchSalesOrderMasterDetails(id, OrderStatus) {
                 $('#ddlPaymentTerms').val(data[0].PaymentTerms);
                 $('#txtTermsConditions').val(data[0].TermCondition);
                 $('#txtTotalAmount').val(data[0].TotalAmount);
+                $('#txtOutstandingAmount').val(data[0].OutstandingAmount);
+                $('#txtAdvance').val(data[0].Advance);
                 $('#ddlBranch').val(data[0].BranchCode);
                 $('#ddlDept').val(data[0].DepartmentID);
                 var dtExpirationDate = new Date(data[0].ExpirationDate);
@@ -609,7 +631,9 @@ function FetchSalesOrderMasterDetails(id, OrderStatus) {
                     $('#btnConfirm').show();
                     $('#btnCancel').show();
                 }
+                $('#previewBtn').show();
                 $('#ddlCustomer').val(data[0].CustomerId).trigger('change');
+                hideLoader();
             },
             complete: function () {
 
@@ -701,6 +725,7 @@ function DownloadFile() {
     });
 
     if (SalesOrderId != '') {
+        showLoader();
         $.ajax({
             type: "POST",
             url: "wfSdSalesOrder.aspx/FetchSalesOrderListDownload",
@@ -732,6 +757,7 @@ function DownloadFile() {
                     a[0].click();
                     $("body").remove(a);
                 }
+                hideLoader
             }
         });
     }
@@ -774,6 +800,7 @@ function FetchMaterialDetails() {
             $('#ddlMaterialName').val('');
             return;
         }
+        showLoader();
         $.ajax({
             type: "POST",
             url: 'wfSdSalesOrder.aspx/FetchMaterialDetails',
@@ -789,11 +816,18 @@ function FetchMaterialDetails() {
             success: function (response) {
 
                 var data = JSON.parse(response.d);
-                $('#txtMaterialUnitMeasure').val(data[0].UnitMesure);
-                $('#txtMaterialRate').val(data[0].MRP);
-                $('#txtMaterialTax').val(data[0].IntegratedTaxPercent);
-                $('#txtMaterialStock').val(data[0].Stock);
-                BindMaterialPackagingDropdown($('#ddlMaterialName').val());
+               
+
+
+                setTimeout(function () {
+                   
+                    $('#txtMaterialUnitMeasure').val(data[0].UnitMesure);
+                    $('#txtMaterialRate').val(data[0].MRP);
+                    $('#txtMaterialTax').val(data[0].IntegratedTaxPercent);
+                    $('#txtMaterialStock').val(data[0].Stock);
+                    BindMaterialPackagingDropdown($('#ddlMaterialName').val());
+                    hideLoader();
+                }, 1000); // Hide loader after 3 seconds
             },
             complete: function () {
 
@@ -823,6 +857,11 @@ function calculateGrandTotal() {
 
     grandTotal += shippingCharges
     $('#txtTotalAmount').val(grandTotal.toFixed(2));
+    var outstanding = 0;
+    var advance = 0;
+    advance = parseFloat($('#txtAdvance').val());
+    outstanding = grandTotal - advance;
+    $('#txtOutstandingAmount').val(outstanding.toFixed(2));
 }
 
 function SaveSalesOrderDetails() {
@@ -1064,6 +1103,7 @@ function AddSalesOrder() {
         alertify.error('Please add Sales Order Lines');
         return;
     }
+    showLoader();
     var data = [];
     $("#tbody_SalesOrderDetails tr").each(function (i) {
         if (i > 0) {
@@ -1107,12 +1147,21 @@ function AddSalesOrder() {
             "LoginUser": $('#ContentPlaceHolder1_loginuser').val(),
             "BranchCode": $('#ddlBranch').val(),
             "DepartmentID": $('#ddlDept').val(),
-            "OrderDate": $('#txtorderDate').val()
+            "OrderDate": $('#txtorderDate').val(),
+            "OutstandingAmount": $('#txtOutstandingAmount').val(),
+            "Advance": $('#txtAdvance').val()
         }),
         dataType: "json",
         success: function (response) {
-            alertify.success('Sales Order details added successfully');
-            ClearAll();
+           
+
+            setTimeout(function () {
+
+               
+                hideLoader();
+                alertify.success('Sales Order details added successfully');
+                ClearAll();
+            }, 1000); // Hide loader after 3 seconds
         },
         error: function (error) {
             console.log(error);
@@ -1310,4 +1359,40 @@ function AddNewCustomerType() {
         alertify.error('Please enter customer type');
     }
 
+}
+
+
+function PrintPreview() {
+    showLoader();
+  
+    // Call the server-side method to get the PDF content
+    $.ajax({
+        type: 'POST',
+        url: 'wfSdSalesOrder.aspx/GetPdfContent',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify({
+            "SalesOrderId": $('#hdnSalesOrderId').val()
+        }),
+        dataType: 'json',
+        success: function (response) {
+            setTimeout(function () {
+                hideLoader();
+
+
+                // Display the PDF content in the modal
+                $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
+                $('#pdfModal').modal('show');
+                $('.modal-backdrop').remove();
+            }, 1000); // Hide loader after 3 seconds
+
+        },
+        error: function (xhr, status, error) {
+            console.log('Error fetching PDF:', error);
+        }
+    });
+
+}
+
+function ClosePDFModal() {
+    $('#pdfModal').modal('hide');
 }

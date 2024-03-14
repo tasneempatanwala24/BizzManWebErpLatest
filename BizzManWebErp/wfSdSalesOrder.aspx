@@ -21,6 +21,10 @@
     <button onclick="AddSalesOrder();" style="display: none;" id="btnSave">Save</button>
     <button onclick="UpdateSalesOrderStatus('2');" style="display: none;" id="btnConfirm">Confirm</button>
     <button onclick="UpdateSalesOrderStatus('4');" style="display: none;" id="btnCancel">Cancel</button>
+      <button type="button" class="preventDefault" id="previewBtn" style="display:none" onclick="PrintPreview()">
+    Preview PDF
+</button>
+
 
     <div class="container" id="divSalesOrderList" style="margin-top: 10px; overflow: auto;">
         <table id="tblSalesOrderList" class="display">
@@ -29,6 +33,7 @@
                     <th>
                         <input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                     <th style="white-space: nowrap;">Sales Order Id</th>
+                    <th style="white-space: nowrap;">Manual Order Id</th>
                     <th style="white-space: nowrap;">Order Source</th>
                     <th style="white-space: nowrap;">Customer</th>
                     <th style="white-space: nowrap;">Branch</th>
@@ -39,6 +44,9 @@
                     <th style="white-space: nowrap;">Currency</th>
                     <th style="white-space: nowrap;">Payment Terms</th>
                     <th style="white-space: nowrap;">Order Status</th>
+                    <th style="white-space: nowrap;">Delivery Charges</th>
+                     <th style="white-space: nowrap;">Outstanding Amount</th>
+                     <th style="white-space: nowrap;">Advance</th>
                     <th style="white-space: nowrap;">Total Amount</th>
                 </tr>
             </thead>
@@ -181,9 +189,22 @@
                                     <input type="text" class="form-control" id="txtTotalAmount" name="txtTotalAmount" readonly="readonly" />
                                 </td>
 
+                                <td>Advance</td>
+                                <td>
+                                    <input type="number" class="form-control" id="txtAdvance" name="txtAdvance" value="0" oninput="handleNumericInput(event)" onchange="calculateGrandTotal()" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Outstanding Amount
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control" id="txtOutstandingAmount" name="txtOutstandingAmount" value="0" oninput="handleNumericInput(event)" onchange="calculateGrandTotal()" disabled />
+                                </td>
                                 <td>
 
-                                </td><td></td>
+                                </td>
+                                <td></td>
                             </tr>
                            </table>
                     </div>
@@ -270,8 +291,25 @@
         </div>
     </div>
 
-    
-    
+         <!-- Modal to display PDF -->
+      <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
+                <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>--%>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfPreview" style="width: 100%; height: 900px;" frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"  onclick="ClosePDFModal();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Modal -->
     <div class="modal fade" id="CustomerAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -355,6 +393,9 @@
             </div>
         </div>
     </div>
+
+
+
 </asp:Content>
 
 

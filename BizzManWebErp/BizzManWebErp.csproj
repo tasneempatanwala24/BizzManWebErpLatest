@@ -44,6 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=20.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AjaxControlToolkit.20.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\..\Developer\Tashneem\TaskSaleQuotation (1)_13012024\TaskSaleQuotation\CodeChanges\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -128,6 +131,7 @@
     <Content Include="Images\Remove2.jpg" />
     <Content Include="Images\RemoveRow.png" />
     <Content Include="Scripts\AdminCompanyMaster.js" />
+    <Content Include="Scripts\AdminCompanyMasterNew.js" />
     <Content Include="Scripts\AdminModuleMaster.js" />
     <Content Include="Scripts\AdminRoleMaster.js" />
     <Content Include="Scripts\AdminUserMaster.js" />
@@ -213,6 +217,7 @@
     <Content Include="Scripts\SalesOrder.js" />
     <Content Include="Scripts\SalesOrderDelivery.js" />
     <Content Include="Scripts\SdSalesMisReport.js" />
+    <Content Include="Scripts\SdSalesOrderInvoice.js" />
     <Content Include="Scripts\SdSalesQuotationMaster.js" />
     <Content Include="Scripts\select2.min.js" />
     <Content Include="css\SidebarMenu.css" />
@@ -220,6 +225,7 @@
     <Content Include="Scripts\SdSalesQuotationOrder.js" />
     <Content Include="Web.config" />
     <Content Include="wfAdminCompanyMaster.aspx" />
+    <Content Include="wfAdminCompanyMasterNew.aspx" />
     <Content Include="wfAdminMain.aspx" />
     <Content Include="wfAdminModuleMaster.aspx" />
     <Content Include="wfAdminRoleMaster.aspx" />
@@ -283,6 +289,7 @@
     <Content Include="wfSdSalesMisReport.aspx" />
     <Content Include="wfSdSalesOrder.aspx" />
     <Content Include="wfSdSalesOrderDelivery.aspx" />
+    <Content Include="wfSdSalesOrderInvoice.aspx" />
     <Content Include="wfSdSalesQuotationOrder.aspx" />
     <Content Include="wSdSalesQuotationMaster.aspx" />
   </ItemGroup>
@@ -365,6 +372,13 @@
     </Compile>
     <Compile Include="wfAdminCompanyMaster.aspx.designer.cs">
       <DependentUpon>wfAdminCompanyMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfAdminCompanyMasterNew.aspx.cs">
+      <DependentUpon>wfAdminCompanyMasterNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfAdminCompanyMasterNew.aspx.designer.cs">
+      <DependentUpon>wfAdminCompanyMasterNew.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfAdminMain.aspx.cs">
       <DependentUpon>wfAdminMain.aspx</DependentUpon>
@@ -806,6 +820,13 @@
     </Compile>
     <Compile Include="wfSdSalesOrderDelivery.aspx.designer.cs">
       <DependentUpon>wfSdSalesOrderDelivery.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfSdSalesOrderInvoice.aspx.cs">
+      <DependentUpon>wfSdSalesOrderInvoice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfSdSalesOrderInvoice.aspx.designer.cs">
+      <DependentUpon>wfSdSalesOrderInvoice.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfSdSalesQuotationOrder.aspx.cs">
       <DependentUpon>wfSdSalesQuotationOrder.aspx</DependentUpon>

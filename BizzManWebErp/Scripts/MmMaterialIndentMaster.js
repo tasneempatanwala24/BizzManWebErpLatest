@@ -163,6 +163,8 @@ function ClearAll() {
     $('#txtMaterialDescription').val('');
     $('#txtDepartment').val('');
     $('#txtBranch').val('');
+    $('#txtMaterialStock').val('');
+    $('#txtMaterialUnitMeasure').val('');
 }
 
 
@@ -186,6 +188,7 @@ function FetchRequisitionNote() {
                 $('#txtRequisitionNote').val(data[0].RequisitionNote);
                 $('#txtDepartment').val(data[0].DeptName);
                 $('#txtBranch').val(data[0].BranchName);
+                $('#hdnBranchCode').val(data[0].BranchCode);
             },
             complete: function () {
 
@@ -214,7 +217,9 @@ function SaveMaterialIndentDetails() {
            // $('#tblMaterialIndentDetails').DataTable().destroy();
         $('#tbody_MaterialIndentDetails').append('<tr><td style="display: none;">' + $('#ddlMaterialName').val() + '</td>'
             + '<td>' + $("#ddlMaterialName option:selected").text() + '</td>'
+            + '<td>' + $("#txtMaterialStock").val() + '</td>'
             + '<td>' + $("#txtQty").val() + '</td>'
+            + '<td>' + $("#txtMaterialUnitMeasure").val() + '</td>'
             + '<td>' + $("#txtMaterialDescription").val() + '</td>'
             + '<td><a onclick="DeleteMaterialIndentDetailEntry(this);" style="cursor:pointer;"><i class="fa fa-trash" aria-hidden="true"></i></a></td>'
             + '</tr>');
@@ -222,6 +227,8 @@ function SaveMaterialIndentDetails() {
             $('#ddlMaterialName').val('');
             $('#txtQty').val('');
             $('#txtMaterialDescription').val('');
+            $('#txtMaterialStock').val('');
+            $('#txtMaterialUnitMeasure').val('');
            // $('#MaterialIndentDetailsModal').modal('hide');
         }
         else {
@@ -380,6 +387,7 @@ function FetchMaterialIndentMasterDetails(id) {
             $('#txtCreatedBy').val(JSON.parse(response.d)[0].CreateUser);
             $('#txtDepartment').val(JSON.parse(response.d)[0].DeptName);
             $('#txtBranch').val(JSON.parse(response.d)[0].BranchName);
+            $('#hdnBranchCode').val(JSON.parse(response.d)[0].BranchCode);
             var dt = new Date(JSON.parse(response.d)[0].CreateDate);
             document.getElementById("txtEntryDate").valueAsDate = dt;
             // $('#txtEntryDate').val(dt);
@@ -421,7 +429,9 @@ function FetchMaterialIndentDetails(id) {
             for (var i = 0; i < data1.length; i++) {
                 html = html + '<tr><td style="display: none;">' + data1[i].MaterialMasterId + '</td>'
                     + '<td>' + data1[i].MaterialName + '</td>'
+                    + '<td>' + (data1[i].Stock != undefined ? data1[i].Stock : '') + '</td>'
                     + '<td>' + (data1[i].Qty != undefined ? data1[i].Qty : '') + '</td>'
+                    + '<td>' + (data1[i].UnitMesure != undefined ? data1[i].UnitMesure : '') + '</td>'
                     + '<td>' + (data1[i].Description != undefined ? data1[i].Description : '') + '</td>'
                     + '<td><a onclick="DeleteMaterialIndentDetailEntry(this);" style="cursor:pointer;"><i class="fa fa-trash" aria-hidden="true"></i></a></td></tr>';
             }
@@ -446,4 +456,64 @@ function FetchMaterialIndentDetails(id) {
 
 function CloseModal() {
     $('#MaterialIndentDetailsModal').modal('hide');
+}
+
+function FetchMaterialDetails() {
+    if ($('#hdnBranchCode').val() == '') {
+        alertify.error('Please Select Requisition Id');
+        $('#ddlMaterialName').val('');
+        return;
+    }
+
+    if ($('#ddlMaterialName').val() != '' && $('#hdnBranchCode').val() != '') {
+        var found = false;
+        $('#tbody_MaterialIndentDetails tr').each(function (i) {
+            if (i > 0) {
+                var materialid = parseFloat($(this)[0].cells[0].innerText)
+                if (materialid == $('#ddlMaterialName').val()) {
+                    found = true;
+
+                }
+            }
+
+        });
+        if (found) {
+            alertify.error('Material already added');
+            $('#ddlMaterialName').val('');
+            return;
+        }
+        showLoader();
+        $.ajax({
+            type: "POST",
+            url: 'wfMmMaterialIndentMaster.aspx/FetchMaterialDetails',
+            data: JSON.stringify({
+                "MaterialId": $('#ddlMaterialName').val(),
+                "BranchCode": $('#hdnBranchCode').val()
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+
+                var data = JSON.parse(response.d);
+
+
+
+                setTimeout(function () {
+
+                    $('#txtMaterialUnitMeasure').val(data[0].UnitMesure);
+                    $('#txtMaterialStock').val(data[0].Stock);
+                    hideLoader();
+                }, 1000); // Hide loader after 3 seconds
+            },
+            complete: function () {
+
+            },
+            failure: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
 }

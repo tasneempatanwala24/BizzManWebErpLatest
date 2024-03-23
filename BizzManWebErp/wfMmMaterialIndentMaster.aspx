@@ -87,6 +87,7 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" id="txtBranch" name="txtBranch" readonly="readonly" />
+                                    <input type="hidden" id="hdnBranchCode" value="" />
                                 </td>
 
                             </tr>
@@ -121,7 +122,9 @@
                                 <tr>
                                     <th style="display: none;">Material Master Id</th>
                                     <th>Material Name</th>
+                                  <th>Stock</th>
                                     <th>Qty</th>
+                                    <th>Unit Measeure</th>
                                     <th>Description</th>
                                     <th></th>
                                 </tr>
@@ -130,12 +133,18 @@
                                 <tr>
                                     <td style="display: none;"></td>
                                     <td>
-                                        <select id="ddlMaterialName" name="ddlMaterialName" class="form-control">
+                                        <select id="ddlMaterialName" name="ddlMaterialName" class="form-control" onchange="FetchMaterialDetails();">
                                             <option value="">-Select Material Name-</option>
                                         </select>
                                     </td>
+                                     <td>
+                                        <input type="text" class="form-control" id="txtMaterialStock" name="txtMaterialStock" readonly="readonly" />
+                                    </td>
                                     <td>
                                         <input type="number" class="form-control" id="txtQty" name="txtQty" />
+                                    </td>
+                                       <td>
+                                        <input type="text" class="form-control" id="txtMaterialUnitMeasure" name="txtMaterialUnitMeasure" readonly="readonly" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" id="txtMaterialDescription" name="txtMaterialDescription" maxlength="100" />

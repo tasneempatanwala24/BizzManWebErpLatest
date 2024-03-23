@@ -209,7 +209,7 @@ namespace BizzManWebErp
             {
 
                 dtMaterialIndentMasterList = objMain.dtFetchData(@"select im.Id,im.MaterialRequisitionNoteId,rn.RequisitionNote,im.Description,
-                                      CONVERT(nvarchar,im.CreateDate,101) as CreateDate,im.CreateUser,d.DeptName,b.BranchName from 
+                                      CONVERT(nvarchar,im.CreateDate,101) as CreateDate,im.CreateUser,d.DeptName,b.BranchName,b.BranchCode from 
                                       tblMmMaterialIndentMaster im join tblMmMaterialRequisitionNote rn on im.MaterialRequisitionNoteId=rn.RequisitionId
                                       left join tblHrDeptMaster d on d.Id=im.DepartmentId
                                       left join tblHrBranchMaster b on b.BranchCode=im.BranchCode
@@ -241,8 +241,13 @@ namespace BizzManWebErp
             try
             {
 
-                dtMaterialIndentMasterList = objMain.dtFetchData(@"select im.*,mm.MaterialName from 
-                                      tblMmMaterialIndentDetail im join tblMmMaterialMaster mm on im.MaterialMasterId=mm.Id
+                dtMaterialIndentMasterList = objMain.dtFetchData(@"select im.*,mm.MaterialName,mm.UnitMesure,(select isnull(Sum(QtyBalance),0) 
+from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId 
+inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode 
+where tblFaWarehouseMaster.BranchCode=Imaster.BranchCode and MaterialMasterId=im.MaterialMasterId) as Stock from 
+tblMmMaterialIndentDetail im join tblMmMaterialMaster mm on im.MaterialMasterId=mm.Id
+inner join tblMmMaterialIndentMaster Imaster on Imaster.Id=im.MaterialIndentMasterId
+
                                       where im.MaterialIndentMasterId=" + id + "");
             }
             catch (Exception ex)
@@ -261,5 +266,24 @@ namespace BizzManWebErp
         }
 
 
+
+        [WebMethod]
+        public static string FetchMaterialDetails(string MaterialId, string BranchCode)
+        {
+            //  clsMain objMain = new clsMain();
+            DataTable dtMaterialDetails = new DataTable();
+
+            try
+            {
+
+                dtMaterialDetails = objMain.dtFetchData(@"select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,(select isnull(Sum(QtyBalance),0) from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode where tblFaWarehouseMaster.BranchCode='" + BranchCode + "' and MaterialMasterId=MM.Id) as Stock from tblMmMaterialMaster MM where Id=" + MaterialId + "");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtMaterialDetails);
+        }
     }
 }

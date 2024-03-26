@@ -185,7 +185,7 @@ function BindMaterialPurchaseOrderList() {
 
             var html = '';
             for (var i = 0; i < data.length; i++) {
-                html = html + '<tr><td><input type="checkbox" class="editor-active chk_purchase_order_list"></td><td style="display:none;">' + data[i].Id + '</td><td onclick="FetchMaterialPurchaseOrderDetails(\'' + data[i].Id + '\');">' + data[i].VendorName + '</td>'
+                html = html + '<tr><td><input type="checkbox" class="editor-active chk_purchase_order_list"></td><td onclick="FetchMaterialPurchaseOrderDetails(\'' + data[i].Id + '\');">' + data[i].Id + '</td><td onclick="FetchMaterialPurchaseOrderDetails(\'' + data[i].Id + '\');">' + data[i].VendorName + '</td>'
                     + '<td onclick="FetchMaterialPurchaseOrderDetails(\'' + data[i].Id + '\');">' + (data[i].OrderEntryDate != undefined ? data[i].OrderEntryDate : '') + '</td>'
                     + '<td onclick="FetchMaterialPurchaseOrderDetails(\'' + data[i].Id + '\');">' + (data[i].OrderDeadlineDate != undefined ? data[i].OrderDeadlineDate : '') + '</td>'
                     + '<td onclick="FetchMaterialPurchaseOrderDetails(\'' + data[i].Id + '\');">' + data[i].ReceiptDate + '</td>'
@@ -628,4 +628,38 @@ function Base64ToBytes(base64) {
         bytes[i] = s.charCodeAt(i);
     }
     return bytes;
+}
+
+
+function GenerateOrderID() {
+    if ($('#txtEntryDate').val() != '') {
+        $.ajax({
+            type: "POST",
+            url: 'wfMmMaterialPurchaseOrderEntry.aspx/GenerateOrderID',
+            data: JSON.stringify({
+                "OrderDate": $('#txtEntryDate').val()
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function () {
+
+            },
+            success: function (response) {
+
+                var data = JSON.parse(response.d);
+                $('#txtID').val(data[0].Id);
+
+
+            },
+            complete: function () {
+
+            },
+            failure: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+    else {
+        $('#txtID').val('');
+    }
 }

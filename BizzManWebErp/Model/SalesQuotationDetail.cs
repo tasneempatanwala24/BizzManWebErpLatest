@@ -19,5 +19,6 @@ namespace BizzManWebErp.Model
         public decimal StateTaxPercent { get; set; }
         public decimal CessPercent { get; set; }
         public decimal Amount { get; set; }
+        public string Description { get; set; }
     }
 }

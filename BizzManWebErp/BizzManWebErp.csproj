@@ -201,6 +201,7 @@
     <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.min.js" />
     <Content Include="Scripts\MmMaterialPurchaseOrder.js" />
+    <Content Include="Scripts\MmMaterialPurchaseOrderDirectEntry.js" />
     <Content Include="Scripts\MmPurchaseQuotationEntry.js" />
     <Content Include="Scripts\MmRequisitionNote.js" />
     <Content Include="Scripts\MmVendorMaster.js" />
@@ -254,6 +255,7 @@
     <Content Include="wfMmMaterialPurchaseGateInword.aspx" />
     <Content Include="wfMmMaterialPurchaseGrnEntry.aspx" />
     <Content Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx" />
+    <Content Include="wfMmMaterialPurchaseOrderDirectEntry.aspx" />
     <Content Include="wfMmMaterialStockMaster.aspx" />
     <Content Include="wfMmVendorMaster.aspx" />
     <Content Include="wfMnfManufactureOperationsMaster.aspx" />
@@ -575,6 +577,13 @@
     </Compile>
     <Compile Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx.designer.cs">
       <DependentUpon>wfMmMaterialPurchaseGrnInvoiceEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseOrderDirectEntry.aspx.cs">
+      <DependentUpon>wfMmMaterialPurchaseOrderDirectEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseOrderDirectEntry.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialPurchaseOrderDirectEntry.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfMmMaterialStockMaster.aspx.cs">
       <DependentUpon>wfMmMaterialStockMaster.aspx</DependentUpon>

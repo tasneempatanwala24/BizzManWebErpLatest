@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -126,10 +127,10 @@ namespace BizzManWebErp
                                               CONVERT(nvarchar,po.OrderDeadlineDate,106) as OrderDeadlineDate,CONVERT(nvarchar,po.ReceiptDate,106) as ReceiptDate,
                                               b.BranchName,d.DeptName,po.PaymentTerm,po.PurchaseAgreement,po.QuotationNo
                                               from tblMmMaterialPurchaseOrderEntryMaster po
-                                              join tblMmVendorMaster v on po.VendoreId=v.Id
-                                              join tblHrBranchMaster b on b.BranchCode=po.BranchCode 
-                                              join tblHrDeptMaster d on d.Id=po.DepartmentId
-                                              where po.Active='Y'");
+                                              left join tblMmVendorMaster v on po.VendoreId=v.Id
+                                              left join tblHrBranchMaster b on b.BranchCode=po.BranchCode 
+                                              left join tblHrDeptMaster d on d.Id=po.DepartmentId
+                                              where po.Active='Y' and isnull(po.Source,'Quotation')='Quotation'");
             }
             catch (Exception ex)
             {
@@ -400,6 +401,23 @@ namespace BizzManWebErp
             ////return JsonConvert.SerializeObject(dtMaterialPurchaseOrderList, settings);
         }
 
+        [WebMethod]
+        public static string GenerateOrderID(string OrderDate)
+        {
+            DataTable dtNewQuotationID = new DataTable();
 
+            try
+            {
+                string formattedOrderDate = DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+
+                dtNewQuotationID = objMain.dtFetchData("select 'PORD' + CONVERT(NVARCHAR(10), '" + formattedOrderDate + "', 120) + '/' +\r\n                             RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(Id, LEN(Id) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4)\r\n as Id    FROM tblMmMaterialPurchaseOrderEntryMaster \r\n    WHERE OrderEntryDate ='" + formattedOrderDate + "'");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtNewQuotationID);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MmMainMenu.Master" AutoEventWireup="true" CodeBehind="wfMmMaterialPurchaseOrderEntry.aspx.cs" Inherits="BizzManWebErp.wfMmMaterialPurchaseOrderEntry" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="~/MmMainMenu.Master" CodeBehind="wfMmMaterialPurchaseOrderDirectEntry.aspx.cs" Inherits="BizzManWebErp.wfMmMaterialPurchaseOrderDirectEntry" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="css/style.css" rel="stylesheet" />
     <script src="Scripts/bootstrap.min.js"></script>
@@ -7,16 +8,22 @@
     <script src="Scripts/jquery-ui.min.js"></script>
     <%--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>--%>
     <script src="Scripts/moment.min.js"></script>
-    <script src="Scripts/MmMaterialPurchaseOrder.js"></script>
+    <link href="css/bootstrap-timepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="Scripts/bootstrap-timepicker.js"></script>
+    <script src="Scripts/MmMaterialPurchaseOrderDirectEntry.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <input type="hidden" id="loginuser" runat="server" />
-    <button onclick="CreateMaterialPurchaseOrder();">Create</button>
+
+ <button onclick="CreateMaterialPurchaseOrder();">Create</button>
     <button onclick="ViewMaterialPurchaseOrderList();">View</button>
     <button onclick="DownloadFile();" id="btnExport">Export To Excel</button>
     <button onclick="AddMaterialPurchaseOrder();" style="display: none;" id="btnSave">Save</button>
+      <button type="button" class="preventDefault" id="previewBtn" style="display:none" onclick="PrintPreview()">
+    Preview PDF
+</button>
 
-    <div class="container" id="divMaterialPurchaseOrderList" style="margin-top: 10px; overflow: auto;">
+ <div class="container" id="divMaterialPurchaseOrderList" style="margin-top: 10px; overflow: auto;">
         <table id="tblMaterialPurchaseOrderList" class="display">
             <thead>
                 <tr>
@@ -51,7 +58,7 @@
                             <tr>
                                 <td>Order Entry Date *</td>
                                 <td>
-                                    <input type="date" class="form-control dat" id="txtEntryDate" name="txtEntryDate" onchange="GenerateOrderID()" />
+                                    <input type="date" class="form-control dat" id="txtEntryDate" name="txtEntryDate"  onchange="GenerateOrderID()" />
                                 </td>
                                 <td>
                                     <label class="control-label">ID</label>
@@ -64,7 +71,7 @@
                             <tr>
                                 <td>Vendor *</td>
                                 <td>
-                                    <select id="ddlVendor" name="ddlVendor" class="form-control" onchange="FetchPurchaseQuotationMasterList('');" style="width:300px;">
+                                    <select id="ddlVendor" name="ddlVendor" class="form-control"  style="width:300px;">
                                         <option value="">-Select Vendor-</option>
                                     </select>
                                 </td>
@@ -136,66 +143,110 @@
         </div>
     </div>
 
-    <div class="container" id="divMaterialPurchaseOrderMasterList" style="margin-top: 10px; overflow: auto; display: none;">
+    <div class="container" id="divSalesOrderDetails" style="margin-top: 10px; overflow: auto; display: none;">
         <div class="card">
             <div class="card-header">
-                Material Purchase Quotation Master Details
+                Purchase Order Lines
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <table id="tblMaterialPurchaseOrderMasterList" class="display no-footer dataTable" style="width: 100%;">
+                        <table id="tblSalesOrderBOMDetails" class="display no-footer dataTable" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>Id</th>
-                                    <th>Quotation Entry Date</th>
-                                    <th>Quotation Date</th>
-                                    <th>Quotation Valid Date</th>
-                                    <th>Requisition Note</th>
-                                    <th>Vendor Name</th>
-                                    <th>Branch</th>
-                                    <th>Department</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody_MaterialPurchaseOrderMasterList">
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="container" id="divMaterialPurchaseOrderMasterDetails" style="margin-top: 10px; overflow: auto; display: none;">
-        <div class="card">
-            <div class="card-header">
-                Material Purchase Quotation Details
-            </div>
-            <div class="card-body">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <table id="tblMaterialPurchaseOrderMasterDetails" class="display no-footer dataTable" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th style="display:none;">Id</th>
+                                    <th style="display: none;">Material Master Id</th>
                                     <th>Material Name</th>
+                                       <th>Stock</th>
                                     <th>Qty</th>
+                                    <th>Unit Measeure</th>
+                                 <%-- <th>Package</th>
+                                    <th style="display: none;">Package Id</th>
+                                 --%>
                                     <th>Unit Price</th>
+                                    <%-- <th>Discount (%)</th>
+                                    <th>Tax (%)</th>--%>
                                     <th>Total Amount</th>
+                                    <th>Description</th>
+                                    <th></th>
                                 </tr>
                             </thead>
-                            <tbody id="tbody_MaterialPurchaseOrderMasterDetails">
-                                
+
+
+
+                            <tbody id="tbody_SalesOrderDetails">
+                                <tr id="tr_SalesOrderDetailEntry">
+                                    <td style="display: none;"></td>
+                                    <td>
+                                        <select id="ddlMaterialName" name="ddlMaterialName" class="form-control" onchange="FetchMaterialDetails();">
+                                            <option value="">-Select Material Name-</option>
+                                        </select>
+                                    </td>
+                                      <td>
+                                        <input type="text" class="form-control" id="txtMaterialStock" name="txtMaterialStock" readonly="readonly" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" value="0" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialUnitMeasure" name="txtMaterialUnitMeasure" readonly="readonly" />
+                                    </td>
+                                 <%-- <td>
+                                        <select id="ddlPackage" name="ddlPackage" class="form-control">
+                                            <option value="">-Select Package-</option>
+                                        </select>
+                                    </td>
+                                    <td style="display: none;"></td>--%>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" readonly="readonly" />
+                                    </td>
+                                      <%--  <td>
+                                        <input type="number" class="form-control" id="txtMaterialDiscount" name="txtMaterialDiscount" onchange="UpdateTotalAmount();" value="0" oninput="handleNumericInput(event)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialTax" name="txtMaterialTax" readonly="readonly" />
+                                    </td>--%>
+                                    <td>
+                                        <input type="text" class="form-control" id="txtMaterialTotalAmount" name="txtMaterialTotalAmount" readonly="readonly" />
+                                    </td>
+                                     <td>
+                                        <input type="text" class="form-control" id="txtDesciption" name="txtDesciption"  />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" onclick="SaveSalesOrderDetails();">Add</button>
+                                    </td>
+                                </tr>
                             </tbody>
+
+
+
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+         <!-- Modal to display PDF -->
+      <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">PDF Preview</h5>
+                <%--<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>--%>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfPreview" style="width: 100%; height: 900px;" frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"  onclick="ClosePDFModal();">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 </asp:Content>

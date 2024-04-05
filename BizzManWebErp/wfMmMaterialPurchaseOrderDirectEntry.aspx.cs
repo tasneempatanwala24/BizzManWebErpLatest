@@ -548,11 +548,11 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
                 //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 billToTable.AddCell(clientInfoCell);
                 DataTable dtQuotationDetails = objMain.dtFetchData(@"select SM.Id,FORMAT(OrderEntryDate, 'dd/MM/yyyy') as OrderDate,PaymentTerm as TermsAndConditions ,isnull(PurchaseAgreement,'') as Notes
-	   ,(Select cast (Sum(isnull(QtyOrder*MM.MRP*(MM.IntegratedTaxPercent/100),0))as decimal(16,2)) from tblMmMaterialPurchaseOrderEntryDetail SP 
+	   ,(Select cast (Sum(isnull(QtyOrder*SP.UnitPrice*(MM.IntegratedTaxPercent/100),0))as decimal(16,2)) from tblMmMaterialPurchaseOrderEntryDetail SP 
 inner join tblMmMaterialPurchaseOrderEntryMaster on tblMmMaterialPurchaseOrderEntryMaster.Id=SP.PurchaseOrderMasterId
 inner join tblMmMaterialMaster MM on MM.Id=SP.MaterialMasterId
 where SP.PurchaseOrderMasterId=SM.Id
-)NetGST,(Select cast (Sum(isnull(QtyOrder*MM.MRP,0))as decimal(16,2)) from tblMmMaterialPurchaseOrderEntryDetail SP 
+)NetGST,(Select cast (Sum(isnull(QtyOrder*SP.UnitPrice,0))as decimal(16,2)) from tblMmMaterialPurchaseOrderEntryDetail SP 
 inner join tblMmMaterialPurchaseOrderEntryMaster on tblMmMaterialPurchaseOrderEntryMaster.Id=SP.PurchaseOrderMasterId
 inner join tblMmMaterialMaster MM on MM.Id=SP.MaterialMasterId
 where SP.PurchaseOrderMasterId=SM.Id

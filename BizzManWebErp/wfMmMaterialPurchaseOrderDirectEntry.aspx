@@ -21,7 +21,7 @@
     <button onclick="AddMaterialPurchaseOrder();" style="display: none;" id="btnSave">Save</button>
       <button type="button" class="preventDefault" id="previewBtn" style="display:none" onclick="PrintPreview()">
     Preview PDF
-</button>
+</button>   
 
  <div class="container" id="divMaterialPurchaseOrderList" style="margin-top: 10px; overflow: auto;">
         <table id="tblMaterialPurchaseOrderList" class="display">
@@ -197,7 +197,7 @@
                                     </td>
                                     <td style="display: none;"></td>--%>
                                     <td>
-                                        <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" readonly="readonly" />
+                                        <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" />
                                     </td>
                                       <%--  <td>
                                         <input type="number" class="form-control" id="txtMaterialDiscount" name="txtMaterialDiscount" onchange="UpdateTotalAmount();" value="0" oninput="handleNumericInput(event)" />

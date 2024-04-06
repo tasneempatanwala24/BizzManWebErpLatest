@@ -7,13 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BizzManWebErp
-{
-
-
-    public partial class SdMainMenu
-    {
-
+namespace BizzManWebErp {
+    
+    
+    public partial class SdMainMenu {
+        
         /// <summary>
         /// head control.
         /// </summary>
@@ -22,7 +20,7 @@ namespace BizzManWebErp
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
-
+        
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -31,7 +29,7 @@ namespace BizzManWebErp
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-
+        
         /// <summary>
         /// profile_detail control.
         /// </summary>
@@ -40,7 +38,7 @@ namespace BizzManWebErp
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button profile_detail;
-
+        
         /// <summary>
         /// Button_logout control.
         /// </summary>
@@ -49,7 +47,7 @@ namespace BizzManWebErp
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton Button_logout;
-
+        
         /// <summary>
         /// ContentPlaceHolder1 control.
         /// </summary>

@@ -5,18 +5,18 @@ $(document).ready(function () {
     $('#ddlEmployee').select2();
     $('#ddl_Employee').select2();
     BindBranchDropdown();
-
-
+    var currentYear = new Date().getFullYear();
+    $("#txtYear").val(currentYear);
     SearchEmployeeSaleryApprove();
 
 });
-
-
+ 
+// =================
 
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpAttendance.aspx/BranchMasterList',
+        url: 'wfHrEmpSalaryApprove.aspx/BranchMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -42,8 +42,6 @@ function BindBranchDropdown() {
     });
 
 }
-
-
 
 function BindEmployeeDropdown(brnch) {
     var chk = 1;
@@ -71,7 +69,7 @@ function BindEmployeeDropdown(brnch) {
     if (chk == 1) {
         $.ajax({
             type: "POST",
-            url: 'wfHrEmpAttendance.aspx/EmployeeMasterList',
+            url: 'wfHrEmpSalaryApprove.aspx/EmployeeMasterList',
             data: JSON.stringify({
                 "branchid": branch
             }),
@@ -107,9 +105,6 @@ function BindEmployeeDropdown(brnch) {
     }
 }
 
-
-
-
 function CreateEmployeeSaleryApprove() {
     $('#divEmployeeSaleryApproveList').hide();
     $('#divEmployeeSaleryApproveEntry').show();
@@ -139,13 +134,11 @@ function ViewEmployeeSaleryApproveList() {
     $('#ddl_Employee').select2();
     const d = new Date();
     let year = d.getFullYear();
-    $('#ContentPlaceHolder1_txtYear').val(year);
-
+    //$('#ContentPlaceHolder1_txtYear').val(year);
+    $('#txtYear').val(year);
 
     SearchEmployeeSaleryApprove();
 }
-
-
 
 function ClearAll() {
     $('#SalaryApprove-select-all').prop('checked', false);
@@ -164,7 +157,6 @@ function ClearAll() {
     $('.Individual').show();
 }
 
-
 function ShowEmployeeName() {
     if ($('#ddlEmployee').val() != '') {
         FetchEmployeeDetails($('#ddlEmployee').val());
@@ -177,7 +169,7 @@ function ShowEmployeeName() {
 function FetchEmployeeDetails(empid) {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpAttendance.aspx/FetchEmployeeDetails',
+        url: 'wfHrEmpSalaryApprove.aspx/FetchEmployeeDetails',
         data: JSON.stringify({
             "EmpId": empid
         }),
@@ -201,9 +193,6 @@ function FetchEmployeeDetails(empid) {
     });
 
 }
-
-
-
 
 function SearchEmployeeSaleryApprove() {
     var chkMonth = 1;
@@ -232,15 +221,16 @@ function SearchEmployeeSaleryApprove() {
         if ($('#ddlMonth').val() != '') {
 
 
-            if ($('#ContentPlaceHolder1_txtYear').val() == '') {
+            //if ($('#ContentPlaceHolder1_txtYear').val() == '') {
+                if ($('#txtYear').val() == '') {
                 chkYear = 0;
             }
         }
 
-        if ($('#ddl_Branch').val() != '' || $('#ddlMonth').val() != '' || $('#ContentPlaceHolder1_txtYear').val() != '' || $('#ddl_Employee').val() != '') {
+        if ($('#ddl_Branch').val() != '' || $('#ddlMonth').val() != '' || $('#txtYear').val() != '' || $('#ddl_Employee').val() != '') {
             if (chkMonth == 1) {
                 if (chkYear == 1) {
-                    BindEmployeeSaleryApproveList('tbody_Employee_SalaryApproveList', 'tblEmployeeSalaryApproveList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#ContentPlaceHolder1_txtYear').val(), $('#ddl_Employee').val(), $('#ddl_SalaryType').val(), 'Y');
+                    BindEmployeeSaleryApproveList('tbody_Employee_SalaryApproveList', 'tblEmployeeSalaryApproveList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#txtYear').val(), $('#ddl_Employee').val(), $('#ddl_SalaryType').val(), 'Y');
                 }
                 else {
                     alertify.error('Please enter any year');
@@ -257,9 +247,6 @@ function SearchEmployeeSaleryApprove() {
     }
 
 }
-
-
-
 
 function BindEmployeeSaleryApproveList(tbodyid, tbl_id, branchid, month, year, empid, SalaryType, SalaryApprove) {
     $.ajax({
@@ -615,7 +602,6 @@ function RejectSalaryApprove(id) {
 
 }
 
-
 function UpdateSalaryApprove(id) {
     $.ajax({
         type: "POST",
@@ -646,8 +632,6 @@ function UpdateSalaryApprove(id) {
     });
 
 }
-
-
 
 function ExportToPDF() {
     $('#tblExportPDF').show();

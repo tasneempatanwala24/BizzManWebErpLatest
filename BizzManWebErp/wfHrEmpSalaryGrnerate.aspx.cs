@@ -19,33 +19,108 @@ namespace BizzManWebErp
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Id"] != null)
+            if (!IsPostBack)
             {
-                loginuser.Value = Session["Id"].ToString();
-                txtYear.Value = DateTime.Now.Year.ToString();
-
-                //added on 12 Dec 2023
-                //############START###############
-                if (Session["objMain_Session"] != null)
+                if (Session["Id"] != null)
                 {
-                    objMain = (clsMain)Session["objMain_Session"];
+                    loginuser.Value = Session["Id"].ToString();
+                    //txtYear.Value = DateTime.Now.Year.ToString();
+
+                    //added on 12 Dec 2023
+                    //############START###############
+                    if (Session["objMain_Session"] != null)
+                    {
+                        objMain = (clsMain)Session["objMain_Session"];
+                    }
+                    else
+                    {
+                        Response.Redirect("wfAdminLogin.aspx");
+                    }
+                    //############END###############
                 }
                 else
                 {
                     Response.Redirect("wfAdminLogin.aspx");
                 }
-                //############END###############
-
-
-            }
-            else
-            {
-                Response.Redirect("wfAdminLogin.aspx");
             }
         }
 
+        //=====================================
+        //========Totally unknow, why this function was===========================
+        //========temporary off, but don't know and effect====================
+        // when call Item Master page, this page erro
 
+        [WebMethod]
+        public static string BranchMasterList()
+        {
+            // clsMain objMain = new clsMain();
+            DataTable dtBranchList = new DataTable();
 
+            try
+            {
+
+                dtBranchList = objMain.dtFetchData("select [BranchCode],[BranchName] FROM [tblHrBranchMaster]");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtBranchList);
+        }
+
+        //====================================
+        //====================================
+        //===================================
+
+        //==================================
+        [WebMethod]
+        public static string EmployeeMasterList(string branchid = "")
+        {
+            // clsMain objMain = new clsMain();
+            DataTable dtDepartmentList = new DataTable();
+
+            try
+            {
+
+                dtDepartmentList = objMain.dtFetchData(@"select EmpId,EmpName+' ('+EmpId+')' as EmpName from tblHrEmpMaster where PresentStatus='Working' and Active='Y'
+                    " + (branchid != "" ? " and Branchcode='" + branchid + "'" : ""));
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtDepartmentList);
+        }
+        //============================
+        //=================================
+        [WebMethod]
+        public static string FetchEmployeeDetails(string EmpId = "")
+        {
+            // clsMain objMain = new clsMain();
+            DataTable dtEmpList = new DataTable();
+
+            try
+            {
+
+                dtEmpList = objMain.dtFetchData(@"select EmpId,EmpName,Branchcode,DOB,DOJ,PresentDesignation,PresentDepartId,Area,
+                                              FatherName,MotherName,SpouseName,Division,Grade,PresentResNo,PresentResName,
+                                              PresentRoadStreet,PresentPinNo,PresentPost,PresentState,PresentDistrict,
+                                              PermanentResNo,PermanentResName,PermanentRoadStreet,PermanentPinNo,PermanentPost,
+                                              PermanentState,PermanentDistrict,AdharNo,VoterNo,PanNo,Passport,DrivingNo,
+                                              IfscCode,BankBranchName,BankName,AcNumber,PfNo,EsiNo,Sex,MaritalStatus,
+                                              MobileNo,EmailAddress,Religion,Caste from tblHrEmpMaster where EmpId='" + EmpId + "'");
+            }
+            catch (Exception ex)
+            {
+                // return "";
+            }
+
+            string json = JsonConvert.SerializeObject(dtEmpList, Formatting.None);
+            return json;
+        }
+        //====================================
 
         [WebMethod]
         public static string AddEmployeeSalary(string inputType = "", string EmpId = "", string BranchId = "", string month = "", string year = "",
@@ -103,7 +178,7 @@ namespace BizzManWebErp
             return json;
         }
 
-
+           
 
         [WebMethod]
         public static string FetchEmployeSalaryGenerateList(string branchid = "", string month = "", string year = "", string EmployeeId = "")

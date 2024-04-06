@@ -19,28 +19,30 @@ namespace BizzManWebErp
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Id"] != null)
+            if (!IsPostBack)
             {
-                loginuser.Value = Session["Id"].ToString();
-
-                //added on 12 Dec 2023
-                //############START###############
-                if (Session["objMain_Session"] != null)
+                if (Session["Id"] != null)
                 {
-                    objMain = (clsMain)Session["objMain_Session"];
+                    loginuser.Value = Session["Id"].ToString();
+
+                    //added on 12 Dec 2023
+                    //############START###############
+                    if (Session["objMain_Session"] != null)
+                    {
+                        objMain = (clsMain)Session["objMain_Session"];
+                    }
+                    else
+                    {
+                        Response.Redirect("wfAdminLogin.aspx");
+                    }
+                    //############END###############
+
                 }
                 else
                 {
                     Response.Redirect("wfAdminLogin.aspx");
                 }
-                //############END###############
-
             }
-            else
-            {
-                Response.Redirect("wfAdminLogin.aspx");
-            }
-
         }
         [WebMethod]
         public static string FetchCategoryList()
@@ -52,7 +54,8 @@ namespace BizzManWebErp
             {
 
                 dtEmpList = objMain.dtFetchData(@"select cm.Id,cm.Name,cm.Description,cm.InventoryValuation,cm1.Name as ParentCategory,
-                                                  lm.LedgerName as IncomeAccount,lm1.LedgerName as ExpenseAccount from tblMmCategoryMaster cm 
+                                                  lm.LedgerName as IncomeAccount,lm1.LedgerName as ExpenseAccount,cm.CategoryType as CategoryType
+                                                    from tblMmCategoryMaster cm 
                                                   left join tblMmCategoryMaster cm1 on cm1.Id=cm.ParentCategoryId
                                                   left join tblFaLedgerMaster lm on lm.Id=cm.IncomeAccountId
                                                   left join tblFaLedgerMaster lm1 on lm1.Id=cm.ExpenseAccountId");
@@ -78,11 +81,11 @@ namespace BizzManWebErp
         
 
         [WebMethod]
-        public static string AddCategory(string Name = "", string Description = "", string InventoryValuation="", string IncomeAccount="", string ExpenseAccount="",string ParentCategory="")
+        public static string AddCategory(string Name = "", string Description = "", string InventoryValuation="", string IncomeAccount="", string ExpenseAccount="",string ParentCategory="", string CategoryType = "")
         {
 
            // clsMain objMain = new clsMain();
-            SqlParameter[] objParam = new SqlParameter[6];
+            SqlParameter[] objParam = new SqlParameter[7];
 
 
             objParam[0] = new SqlParameter("@Name", SqlDbType.NVarChar);
@@ -113,6 +116,10 @@ namespace BizzManWebErp
             objParam[5] = new SqlParameter("@ParentCategoryId", SqlDbType.NVarChar);
             objParam[5].Direction = ParameterDirection.Input;
             objParam[5].Value = ParentCategory;
+
+            objParam[6] = new SqlParameter("@CategoryType", SqlDbType.NVarChar);
+            objParam[6].Direction = ParameterDirection.Input;
+            objParam[6].Value = CategoryType;
 
             Debug.WriteLine("======================");
             Debug.WriteLine(Description);
@@ -161,7 +168,7 @@ namespace BizzManWebErp
             try
             {
 
-                dtCategoryList = objMain.dtFetchData(@"select Id,Name,Description,InventoryValuation,IncomeAccountId,ExpenseAccountId,ParentCategoryId from tblMmCategoryMaster where Name='" + Name + "'");
+                dtCategoryList = objMain.dtFetchData(@"select Id,Name,Description,InventoryValuation,IncomeAccountId,ExpenseAccountId,ParentCategoryId,CategoryType from tblMmCategoryMaster where Name='" + Name + "'");
             }
             catch (Exception ex)
             {
@@ -203,7 +210,23 @@ namespace BizzManWebErp
 
             return JsonConvert.SerializeObject(dtAccountList);
         }
+        [WebMethod]
+        public static string BindCategoryTypeDropdown()
+        {
+            DataTable dtCatTypeList = new DataTable();
 
+            try
+            {
+
+                dtCatTypeList = objMain.dtFetchData("select CategoryTypeName as Id,CategoryTypeName FROM tblMmCategoryTypeMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtCatTypeList);
+        }
 
         [WebMethod]
         public static string BindParentCategoryList(string categoryid="")

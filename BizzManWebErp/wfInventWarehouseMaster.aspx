@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/InventMainMenu.Master" AutoEventWireup="true" CodeBehind="wfInventWarehouseMaster.aspx.cs" Inherits="BizzManWebErp.wfInventWarehouseMaster" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MmMainMenu.Master" AutoEventWireup="true" CodeBehind="wfInventWarehouseMaster.aspx.cs" Inherits="BizzManWebErp.wfInventWarehouseMaster" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="css/style.css" rel="stylesheet" />

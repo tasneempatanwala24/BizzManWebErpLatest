@@ -355,7 +355,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 PdfPCell companyLogoCell = new PdfPCell();
                 if (dtCompanyDetails.Rows[0]["Logo"]!= System.DBNull.Value)
                 {
-                    byte[] imageData = dtCompanyDetails.Rows[0]["Logo"] as byte[];
+                    byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
 
                    
                     // Replace "path/to/your/logo.png" with the actual path to your logo image

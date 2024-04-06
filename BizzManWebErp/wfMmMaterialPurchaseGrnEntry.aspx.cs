@@ -20,29 +20,78 @@ namespace BizzManWebErp
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["Id"] != null)
+            if (!IsPostBack)
             {
-                loginuser.Value = Session["Id"].ToString();
-
-                //added on 12 Dec 2023
-                //############START###############
-                if (Session["objMain_Session"] != null)
+                if (Session["Id"] != null)
                 {
-                    objMain = (clsMain)Session["objMain_Session"];
+                    loginuser.Value = Session["Id"].ToString();
+
+                    //added on 12 Dec 2023
+                    //############START###############
+                    if (Session["objMain_Session"] != null)
+                    {
+                        objMain = (clsMain)Session["objMain_Session"];
+                    }
+                    else
+                    {
+                        Response.Redirect("wfAdminLogin.aspx");
+                    }
+                    //############END###############
+
                 }
                 else
                 {
                     Response.Redirect("wfAdminLogin.aspx");
                 }
-                //############END###############
-
-            }
-            else
-            {
-                Response.Redirect("wfAdminLogin.aspx");
             }
         }
 
+
+        //  error  06/04/2024
+        //============from wfMmMaterialPurchaseOrderEntry===================
+
+        [WebMethod]
+        public static string VendorList()
+        {
+            //   clsMain objMain = new clsMain();
+            DataTable dtVendorList = new DataTable();
+
+            try
+            {
+
+                dtVendorList = objMain.dtFetchData("select Id,VendorName FROM tblMmVendorMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtVendorList);
+        }
+
+        //=====================================
+
+        //=============================
+        [WebMethod]
+        public static string WarehouseList()
+        {
+            //  clsMain objMain = new clsMain();
+            DataTable dtWarehouseList = new DataTable();
+
+            try
+            {
+
+                dtWarehouseList = objMain.dtFetchData("select Id,Name FROM tblFaWarehouseMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtWarehouseList);
+        }
+
+        //============================
 
 
         [WebMethod]

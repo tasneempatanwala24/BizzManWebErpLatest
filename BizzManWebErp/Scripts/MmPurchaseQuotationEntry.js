@@ -503,7 +503,7 @@ function showSuccessMessage() {
 function BindBranchDetails() {
     $.ajax({
         type: "POST",
-        url: 'wfMmPurchaseQuotationEntry.aspx/GetBranchDetails',
+        url: 'wfMmRequisitionNote.aspx/GetBranchDetails',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -529,7 +529,7 @@ function BindBranchDetails() {
 function BindDeptDetails() {
     $.ajax({
         type: "POST",
-        url: 'wfMmPurchaseQuotationEntry.aspx/GetDeptDetails',
+        url: 'wfMmRequisitionNote.aspx/GetDeptDetails',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",

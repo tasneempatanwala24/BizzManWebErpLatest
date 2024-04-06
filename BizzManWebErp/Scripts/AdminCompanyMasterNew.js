@@ -71,7 +71,7 @@ function FetchCRMCompanyMaster(Id) {
             $('#txtCompanyName').val(data.CompanyName);
             
             $('#hfBase64').val(data.PhotoImage);
-            $("#imgFU").attr('src', 'data:image/png;base64,' +data.PhotoImage);
+            $("#imgFU").attr('src', data.PhotoImage);
 
             $('#txtAddress1').val(data.Address1);
             $('#txtAddress2').val(data.Address2);

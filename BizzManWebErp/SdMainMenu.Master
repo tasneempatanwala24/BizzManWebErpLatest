@@ -163,9 +163,10 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="wSdSalesQuotationMaster.aspx">Quotations</a></li>
-            <li><a class="dropdown-item" href="#">Orders</a></li>
+            <li><a class="dropdown-item" href="wfSdSalesQuotationOrder.aspx">Quotations Orders</a></li>
+            <li><a class="dropdown-item" href="wfSdSalesOrderInvoice.aspx">Sales Order Invoice</a></li>
               <li><a class="dropdown-item" href="#">Sales Teams</a></li>
-              <li><a class="dropdown-item" href="#">Customers</a></li>
+              <li><a class="dropdown-item" href="wfCrmCustomerMaster.aspx">Customers</a></li>
           </ul>
         </li>
 

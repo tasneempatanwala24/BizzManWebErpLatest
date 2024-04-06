@@ -2,9 +2,11 @@
     $("button").click(function (event) {
         event.preventDefault();
     });
+    BindCategoryTypeDropdown();
     BindAccountDropdown();
     BindParentCategoryDropdown();
     BindCategoryList();
+    
 });
 
 
@@ -42,10 +44,34 @@ function BindParentCategoryDropdown(categoryid) {
 
 
 }
+function BindCategoryTypeDropdown() {
+    $.ajax({
+        type: "POST",
+        url: 'wfMmCategoryMaster.aspx/BindCategoryTypeDropdown',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
 
+        },
+        success: function (response) {
+            
+            var data = JSON.parse(response.d);
+            var catType = "";
+            for (var i = 0; i < JSON.parse(response.d).length; i++) {
+                catType = catType + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].CategoryTypeName + "</option>";
+            }
+            $('#ddlCategoryType').append(catType);
+        },
+        complete: function () {
 
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
 
+        }
+    });
 
+}
 
 function BindAccountDropdown() {
     $.ajax({
@@ -105,6 +131,7 @@ function BindCategoryList() {
                     + '<td style="white-space: nowrap;">' + (data[i].InventoryValuation != undefined ? data[i].InventoryValuation : '') + '</td>'
                     + '<td style="white-space: nowrap;">' + (data[i].IncomeAccount != undefined ? data[i].IncomeAccount : '') + '</td>'
                     + '<td style="white-space: nowrap;">' + (data[i].ExpenseAccount != undefined ? data[i].ExpenseAccount : '') + '</td>'
+                    + '<td style="white-space: nowrap;">' + data[i].CategoryType + '</td>'
             }
             $('#tbody_Category_List').html(html);
             $('#tblCategoryList').DataTable();
@@ -134,7 +161,7 @@ function ClearAll() {
     $('#ddlInventoryValuation').val('');
     $('#ddlIncomeAccount').val('');
     $('#ddlExpenseAccount').val('');
-    
+    $('#ddlCategoryType').val('');
 }
 
 function CreateCategory() {
@@ -186,7 +213,8 @@ function AddCategory() {
                             "InventoryValuation": $('#ddlInventoryValuation').val(),
                             "IncomeAccount": $('#ddlIncomeAccount').val(),
                             "ExpenseAccount": $('#ddlExpenseAccount').val(),
-                            "ParentCategory": $('#ddlParentCaategory').val()
+                            "ParentCategory": $('#ddlParentCaategory').val(),
+                            "CategoryType": $('#ddlCategoryType').val()
 
                         }),
                         contentType: "application/json; charset=utf-8",
@@ -256,6 +284,7 @@ function FetchEmployeeDetails(name) {
             $('#ddlInventoryValuation').val(data[0].InventoryValuation);
             $('#ddlIncomeAccount').val(data[0].IncomeAccountId);
             $('#ddlExpenseAccount').val(data[0].ExpenseAccountId);
+            $('#ddlCategoryType').val(data[0].CategoryType);
             setTimeout(function () {
                 $('#ddlParentCaategory').val(data[0].ParentCategoryId);
             }, 1000);

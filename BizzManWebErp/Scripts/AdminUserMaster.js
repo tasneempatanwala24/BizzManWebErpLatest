@@ -126,8 +126,9 @@ function FetchUserMasterDetails(UserName) {
             $('#divUserMasterEntry').show();
             $("#btnSave").html('Update');
 
-            $('#txtUserName,#txtPassword,#txtPersonName,#txtAddress,#txtMobileNo,#txtEmail,#txtDescription').attr("readonly", "readonly");
+            $('#txtUserName,#txtPassword,#txtPersonName,#txtAddress,#txtMobileNo,#txtEmail').attr("readonly", "readonly");
             $("#ddlEmpId").attr("disabled", "disabled");
+            $("#txtDescription").attr("disabled", "disabled");
             $("#btnSave").show();
 
 
@@ -180,8 +181,9 @@ function CreateUser() {
     $('#btnSave').show();
     //dynamic breadcrumbs
     $("#btntitle").html('User Master / New');
-    $('#txtUserName,#txtPassword,#ddlEmpId,#txtPersonName,#txtAddress,#txtMobileNo,#txtEmail,#txtDescription').removeAttr("readonly");
+    $('#txtUserName,#txtPassword,#ddlEmpId,#txtPersonName,#txtAddress,#txtMobileNo,#txtEmail').removeAttr("readonly");
     $("#ddlEmpId").attr("disabled", false);
+    $("#txtDescription").attr("disabled", false);
     ClearAll();
 }
 

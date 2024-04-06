@@ -1011,6 +1011,13 @@ function BindEmployeeList() {
                     + '<td>' + (data[i].EmailAddress != undefined ? data[i].EmailAddress : '') + '</td>'
                     + '<td>' + (data[i].DOB != undefined ? data[i].DOB : '') + '</td>'
                     + '<td>' + (data[i].DOJ != undefined ? data[i].DOJ : '') + '</td>'
+                  //  + '<td>' + (data[i].DOJ != undefined ? data[i].DOJ.toLocaleString('en-US', { timeZoneName: 'short' }) : '') + '</td>'
+                   // + '<td>' + (data[i].DOJ != undefined ? data[i].DOJ.toLocaleDateString('en-us', { weekday: "long", year: "numeric", month: "numeric", day: "numeric" }) : '') + '</td>'
+                  //  + '<td>' + (data[i].DOJ != undefined ? data[i].DOJ.toISOString('mm/dd/yyyy') : '') + '</td>'
+                    //toLocaleDateString() 
+                    //new Date().toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) 
+                 //   + '<td>' + (data[i].DOJ != undefined ? data[i].DOJ.getDate() : '' ) + '</td>'
+
                     + '<td>' + (data[i].Sex != undefined ? data[i].Sex : '') + '</td>'
                     + '<td>' + (data[i].MaritalStatus != undefined ? data[i].MaritalStatus : '') + '</td>'
                     + '<td>' + (data[i].Religion != undefined ? data[i].Religion : '') + '</td>'

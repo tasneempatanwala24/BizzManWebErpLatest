@@ -19,16 +19,17 @@ $(document).ready(function () {
 
     });
 
-    BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#ContentPlaceHolder1_txtYear').val(), $('#ddl_Employee').val());
-
+    BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#txtYear').val(), $('#ddl_Employee').val());
+    var currentYear = new Date().getFullYear();
+    $("#txtYear").val(currentYear);
 });
 
-
+ //BranchMasterList
 
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpAttendance.aspx/BranchMasterList',
+        url: 'wfHrEmpSalaryGrnerate.aspx/BranchMasterList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -83,7 +84,7 @@ function BindEmployeeDropdown(brnch) {
     if (chk == 1) {
         $.ajax({
             type: "POST",
-            url: 'wfHrEmpAttendance.aspx/EmployeeMasterList',
+            url: 'wfHrEmpSalaryGrnerate.aspx/EmployeeMasterList',
             data: JSON.stringify({
                 "branchid": branch
             }),
@@ -145,8 +146,8 @@ function ViewEmployeeSaleryGenerateList() {
     $('#ddl_Employee').select2();
     const d = new Date();
     let year = d.getFullYear();
-    $('#ContentPlaceHolder1_txtYear').val(year);
-    BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', '', '', $('#ContentPlaceHolder1_txtYear').val(), '');
+    $('#txtYear').val(year);
+    BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', '', '', $('#txtYear').val(), '');
 }
 
 
@@ -174,10 +175,11 @@ function ShowEmployeeName() {
     }
 }
 
+//FetchEmployeeDetails
 function FetchEmployeeDetails(empid) {
     $.ajax({
         type: "POST",
-        url: 'wfHrEmpAttendance.aspx/FetchEmployeeDetails',
+        url: 'wfHrEmpSalaryGrnerate.aspx/FetchEmployeeDetails',
         data: JSON.stringify({
             "EmpId": empid
         }),
@@ -286,15 +288,15 @@ function SearchEmployeeSaleryGenerate() {
     if ($('#ddlMonth').val() != '') {
 
 
-        if ($('#ContentPlaceHolder1_txtYear').val() == '') {
+        if ($('#txtYear').val() == '') {
             chkYear = 0;
         }
     }
 
-    if ($('#ddl_Branch').val() != '' || $('#ddlMonth').val() != '' || $('#ContentPlaceHolder1_txtYear').val() != '' || $('#ddl_Employee').val() != '') {
+    if ($('#ddl_Branch').val() != '' || $('#ddlMonth').val() != '' || $('#txtYear').val() != '' || $('#ddl_Employee').val() != '') {
             if (chkMonth == 1) {
                 if (chkYear == 1) {
-                    BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#ContentPlaceHolder1_txtYear').val(), $('#ddl_Employee').val());
+                    BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#txtYear').val(), $('#ddl_Employee').val());
                 }
                 else {
                     alertify.error('Please enter any year');
@@ -309,7 +311,7 @@ function SearchEmployeeSaleryGenerate() {
         alertify.error('Please enter any searching criteria');
     }
 }
-
+//FetchEmployeSalaryGenerateList
 
 function BindEmployeeSaleryGenerateList(tbodyid, tbl_id, branchid, month, year, empid) {
     $.ajax({
@@ -388,6 +390,11 @@ function BindEmployeeSaleryGenerateList(tbodyid, tbl_id, branchid, month, year, 
                     + '<td>' + (data[i].ESI_EmployeesPercentage != undefined ? data[i].ESI_EmployeesPercentage : '') + '</td>'
                     + '<td>' + (data[i].ESI_EmployeesValue != undefined ? data[i].ESI_EmployeesValue : '') + '</td>'
                     + '<td>' + (data[i].PT != undefined ? data[i].PT : '') + '</td>'
+                    //=======by MK====================================
+                    + '<td>' + (data[i].LoanApplicationId != undefined ? data[i].LoanApplicationId : '') + '</td>'  // loan app id
+                    + '<td>' + (data[i].LoanEmiAmount != undefined ? data[i].LoanEmiAmount : '') + '</td>'  //  emi amt
+                  //  + '<td>' + (data[i].PT != undefined ? data[i].PT : '') + '</td>'  //  tds amt
+                    //============================================
                     + '<td>' + (data[i].NetPay != undefined ? data[i].NetPay : '') + '</td>'
                     + '<td>' + (data[i].SalaryApprove != undefined ? data[i].SalaryApprove : '') + '</td>'
                     + '<td>' + (data[i].SalaryPayment != undefined ? data[i].SalaryPayment : '') + '</td></tr>';
@@ -488,7 +495,7 @@ function DeleteSalary(id) {
 
                 alertify.success("Salary deleted successfully");
                 $('#example-select-all').prop('checked', false);
-                BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#ContentPlaceHolder1_txtYear').val(), $('#ddl_Employee').val());
+                BindEmployeeSaleryGenerateList('tbody_Employee_SalaryGenerateList', 'tblEmployeeSalaryGenerateList', $('#ddl_Branch').val(), $('#ddlMonth').val(), $('#txtYear').val(), $('#ddl_Employee').val());
 
             },
             complete: function () {

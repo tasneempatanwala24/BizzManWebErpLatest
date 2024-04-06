@@ -19,7 +19,7 @@
     });
 });
 
-
+ 
 function BindBranchDropdown() {
     $.ajax({
         type: "POST",

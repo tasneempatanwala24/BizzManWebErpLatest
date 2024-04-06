@@ -108,10 +108,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 15%;">Description *</td>
-                                <td>
-                                   <input type="text" style="width: 31%;" class="form-control rounded border-dark" id="txtDescription" name="txtDescription" />
-                                </td>
+                                 <td style="width: 15%;">Description *</td>
+                                     <td>
+                                     <select style="width: 31%;" id="txtDescription" name="txtDescription" class="form-control rounded border-dark">
+                                             <option value="">-Select Description -</option>
+                                             <option value="Internal Link">Internal Link</option>
+                                             <option value="External Link">External Link</option>
+                                     </select>                             
+                                     </td>
+                                
                             </tr>
                               <tr>
                                 <td style="width: 11%;">Access Status</td>

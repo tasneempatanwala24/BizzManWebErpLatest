@@ -19,12 +19,12 @@ $(document).ready(function () {
     }).trigger("change");
 });
 
-
+  
 
 function BindWarehouseDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmMaterialPurchaseGateInword.aspx/WarehouseList',
+        url: 'wfMmMaterialPurchaseGrnEntry.aspx/WarehouseList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -56,7 +56,7 @@ function BindWarehouseDropdown() {
 function BindVendorDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmMaterialPurchaseOrderEntry.aspx/VendorList',
+        url: 'wfMmMaterialPurchaseGrnEntry.aspx/VendorList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",

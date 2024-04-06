@@ -25,6 +25,7 @@
                     <th style="white-space: nowrap;">Inventory Valuation</th>
                     <th style="white-space: nowrap;">Income Account</th>
                     <th style="white-space: nowrap;">Expense Account</th>
+                    <th style="white-space: nowrap;">Category Type</th>
                 </tr>
             </thead>
             <tbody id="tbody_Category_List">
@@ -78,6 +79,15 @@
                                 <td>
                                     <select  style="width: 300px;" class="form-control rounded border-dark" id="ddlParentCaategory" name="ddlParentCaategory">
                                         <option value="">-Select Parent Category-</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                              
+                                <td style="width: 17%;">Category Type</td>
+                                <td>
+                                    <select  style="width: 300px;" class="form-control rounded border-dark" id="ddlCategoryType" name="ddlCategoryType">
+                                        <option value="">-Select Category Type-</option>
                                     </select>
                                 </td>
                             </tr>

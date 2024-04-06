@@ -18,7 +18,7 @@
     <button onclick="AddEmployeeSaleryGenerate();" style="display: none;" id="btnSave">Save</button>
     <button onclick="SearchEmployeeSaleryGenerate();" id="btnSearch">Search</button>
     <button  id="btnDelete">Delete</button>
-
+   
     <div class="container" id="divEmployeeSaleryGenerateList" style="margin-top: 10px; overflow: auto;">
         <table class="tbl">
             <tr>
@@ -55,7 +55,7 @@
                     <label class="control-label">Year</label>
                 </td>
                 <td>
-                    <input type="number" class="form-control" id="txtYear" name="txtYear" runat="server" />
+                    <input type="number" class="form-control" id="txtYear" name="txtYear"/>
                 </td>
                 <td>
                     <label class="control-label">Employee</label>
@@ -124,10 +124,12 @@
                     <th>ESI Employees %</th>
                     <th>ESI Employees Value</th>
                     <th>PT</th>
+                      <th>Loan Application Id</th>
+                      <th>Loan EMI Amount</th>
                     <th>Net Pay</th>
                     <th>Salary Approve</th>
                     <th>Salary Payment</th>
-                    
+                      
                 </tr>
             </thead>
             <tbody id="tbody_Employee_SalaryGenerateList">

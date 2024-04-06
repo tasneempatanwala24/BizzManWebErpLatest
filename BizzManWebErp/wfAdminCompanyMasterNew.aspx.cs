@@ -81,10 +81,9 @@ namespace BizzManWebErp
 
             objParam[7] = new SqlParameter("@PhotoImage", SqlDbType.VarBinary);
             objParam[7].Direction = ParameterDirection.Input;
-            // objParam[7].Value = Encoding.UTF8.GetBytes(PhotoImage);
-            objParam[7].Value = Convert.FromBase64String(PhotoImage.Split(',')[1]);
+            objParam[7].Value = Encoding.UTF8.GetBytes(PhotoImage);
 
-             objParam[8] = new SqlParameter("@User", SqlDbType.VarChar);
+            objParam[8] = new SqlParameter("@User", SqlDbType.VarChar);
             objParam[8].Direction = ParameterDirection.Input;
             objParam[8].Value = User;
 
@@ -135,7 +134,7 @@ namespace BizzManWebErp
 
             try
             {
-                string sqlQuery = $"SELECT CompanyName,Address1,Address2,PhoneNo as Phone,EmailAddress as Email,PanNo as PAN,WebSiteAddress, Logo as [PhotoImage],GstNo,Active from tblAdminCompanyMaster WHERE Id ={Id} ";
+                string sqlQuery = $"SELECT CompanyName,Address1,Address2,PhoneNo as Phone,EmailAddress as Email,PanNo as PAN,WebSiteAddress, CAST(Logo as varchar(max))[PhotoImage],GstNo,Active from tblAdminCompanyMaster WHERE Id ={Id} ";
 
                 dtList = objMain.dtFetchData(sqlQuery);
             }

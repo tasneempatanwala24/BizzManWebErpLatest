@@ -91,8 +91,10 @@ namespace BizzManWebErp
             return JsonConvert.SerializeObject(dtBranchList);
         }
 
-//==============================
-//=============================
+        //==============================
+        //=============================
+        //  error  06/04/2024
+        //============from wfMmMaterialPurchaseOrderEntry===================
 
         [WebMethod]
         public static string VendorList()
@@ -112,7 +114,8 @@ namespace BizzManWebErp
 
             return JsonConvert.SerializeObject(dtVendorList);
         }
- 
+
+ //=====================================
 
         [WebMethod]
         public static string FetchMaterialPurchaseOrderList()

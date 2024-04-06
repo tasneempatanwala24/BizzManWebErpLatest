@@ -4,6 +4,8 @@ $(document).ready(function () {
     });
     $('#ddlEmployee').select2();
     $('#ddl_Employee').select2();
+    var currentYear = new Date().getFullYear();
+    $("#txtYear").val(currentYear);
    // BindEmployeeDropdown('0', 'ddl_Employee');
     BindBranchDropdown();
     BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', '', '', '', '','');
@@ -97,8 +99,8 @@ function ViewEmployeeAttendanceList() {
     $('#ddl_Employee').select2();
     const d = new Date();
     let year = d.getFullYear();
-    $('#ContentPlaceHolder1_txtYear').val(year);
-    BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', '', '', $('#ContentPlaceHolder1_txtYear').val(),'','');
+    $('#txtYear').val(year);
+    BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', '', '', $('#txtYear').val(),'','');
 }
 
 function ShowEmployeeAttendance() {
@@ -300,7 +302,7 @@ function SearchEmployeeAttendance() {
             chkMonth = 0;
         }
 
-        if ($('#ContentPlaceHolder1_txtYear').val() == '') {
+        if ($('#txtYear').val() == '') {
             chkYear = 0;
         }
     }
@@ -308,16 +310,16 @@ function SearchEmployeeAttendance() {
     if ($('#ddlMonth').val() != '') {
         
 
-        if ($('#ContentPlaceHolder1_txtYear').val() == '') {
+        if ($('#txtYear').val() == '') {
             chkYear = 0;
         }
     }
 
-    if ($('#ddlDay').val() != '' || $('#ddlMonth').val() != '' || $('#ContentPlaceHolder1_txtYear').val() != '' || $('#ddl_Employee').val() != '' || $('#ddl_Branch').val() != '') {
+    if ($('#ddlDay').val() != '' || $('#ddlMonth').val() != '' || $('#txtYear').val() != '' || $('#ddl_Employee').val() != '' || $('#ddl_Branch').val() != '') {
         if (chkDay == 1) {
             if (chkMonth == 1) {
                 if (chkYear == 1) {
-                    BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', $('#ddlDay').val(), $('#ddlMonth').val(), $('#ContentPlaceHolder1_txtYear').val(), $('#ddl_Employee').val(), $('#ddl_Branch').val());
+                    BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', $('#ddlDay').val(), $('#ddlMonth').val(), $('#txtYear').val(), $('#ddl_Employee').val(), $('#ddl_Branch').val());
                 }
                 else {
                     alertify.error('Please enter any year');

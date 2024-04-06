@@ -90,12 +90,12 @@ function ClearAll() {
     $('#txtDeadlineDate').val('');
 }
 
-
+  
 
 function BindVendorDropdown() {
     $.ajax({
         type: "POST",
-        url: 'wfMmMaterialPurchaseOrderEntry.aspx/VendorList',
+        url: 'wfMmMaterialPurchaseGateInword.aspx/VendorList',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",

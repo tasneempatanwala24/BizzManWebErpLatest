@@ -11,7 +11,7 @@ namespace BizzManWebErp
 {
 
 
-    public partial class wfMmBomEntry
+    public partial class wfHrDesignationMasterNew
     {
 
         /// <summary>
@@ -22,23 +22,5 @@ namespace BizzManWebErp
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden loginuser;
-
-        /// <summary>
-        /// hdnMaterialId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdnMaterialId;
-
-        /// <summary>
-        /// hdnBOMId control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdnBOMId;
     }
 }

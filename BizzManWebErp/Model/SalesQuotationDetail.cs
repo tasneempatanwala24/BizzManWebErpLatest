@@ -20,5 +20,10 @@ namespace BizzManWebErp.Model
         public decimal CessPercent { get; set; }
         public decimal Amount { get; set; }
         public string Description { get; set; }
+
+
+        public string QtyRecieve { get; set; }
+        public string QtyReturn { get; set; }
+        public string WareHouseId { get; set; }
     }
 }

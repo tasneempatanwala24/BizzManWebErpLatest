@@ -230,8 +230,8 @@ function FetchPurchaseOrderDetails() {
                         + '<td>' + (data.PurchaseItems[0].Table[i].BalanceQty != undefined ? data.PurchaseItems[0].Table[i].BalanceQty : '') + '</td>'
                         + '<td>' + (data.PurchaseItems[0].Table[i].UnitPrice != undefined ? data.PurchaseItems[0].Table[i].UnitPrice : '') + '</td>'
                        
-                        + '<td><input type="number" class="form-control RcvQty" onchange="UpdateReturnQty(this)" oninput="handleNumericInput(event)"  value="' + (data.PurchaseItems[0].Table[i].BalanceQty != undefined ? data.PurchaseItems[0].Table[i].BalanceQty : '') +'" /></td>'
-                        + '<td><input type="number" class="form-control RtrnQty"  value="0" onchange="UpdateReceiveQty(this)" oninput="handleNumericInput(event)" /></td>'
+                        + '<td><input type="number" class="form-control RcvQty" onchange="CheckRecive(this)" oninput="handleNumericInput(event)"  value="' + (data.PurchaseItems[0].Table[i].BalanceQty != undefined ? data.PurchaseItems[0].Table[i].BalanceQty : '') +'" /></td>'
+                        + '<td><input type="number" class="form-control RtrnQty"  value="0" onchange="CheckReturn(this)" oninput="handleNumericInput(event)" /></td>'
                         + '<td>' + warehouseHtml + '</td><td><input type="text" class="form-control descptn" /></td><td><input type="checkbox" class="editor-active"></td></tr>';
 
                 }
@@ -252,27 +252,34 @@ function FetchPurchaseOrderDetails() {
     }
 }
 
-function UpdateReturnQty(ele) {
+function CheckRecive(ele)
+{
     var GrnBalanceQty = parseInt($(ele.parentElement.parentElement.children[5])[0].innerText);
-    if ($(ele).val() != '') {
-        if (parseInt($(ele).val()) < 0) {
-            $(ele.parentElement.parentElement.children[7].children[0]).val(GrnBalanceQty);
-            $(ele.parentElement.parentElement.children[8].children[0]).val('0');
-        }
-        else {
-           
-            var RcvQty = parseInt($(ele).val());
-            if (RcvQty <= GrnBalanceQty) {
-                $(ele.parentElement.parentElement.children[8].children[0]).val(GrnBalanceQty - RcvQty);
+    var RtrnQty = parseInt($(ele.parentElement.parentElement.children[8].children[0]).val());
+    var RcvQty = parseInt($(ele).val());
+    if ((RcvQty + RtrnQty) <= GrnBalanceQty && RcvQty >= 0 && RtrnQty>=0) {
+              
             }
             else {
-                $(ele.parentElement.parentElement.children[7].children[0]).val(GrnBalanceQty);
-                $(ele.parentElement.parentElement.children[8].children[0]).val('0');
+       
+        $(ele.parentElement.parentElement.children[8].children[0]).val('0')
+        $(ele).val('0');
+        alertify.error("Invalid Recieve Qty");
             }
-        }
+}
+
+function CheckReturn(ele) {
+    var GrnBalanceQty = parseInt($(ele.parentElement.parentElement.children[5])[0].innerText);
+    var RcvQty = parseInt($(ele.parentElement.parentElement.children[7].children[0]).val());
+    var RtrnQty = parseInt($(ele).val());
+    if ((RcvQty + RtrnQty) <= GrnBalanceQty && RcvQty >= 0 && RtrnQty >= 0) {
+
     }
     else {
-        $(ele.parentElement.parentElement.children[8].children[0]).val(GrnBalanceQty);
+
+        $(ele.parentElement.parentElement.children[7].children[0]).val('0')
+        $(ele).val('0');
+        alertify.error("Invalid Return Qty");
     }
 }
 
@@ -617,15 +624,15 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
             return false;
         }
 
-        var descptn = $(this).find('.descptn');
+        //var descptn = $(this).find('.descptn');
 
-        // Check if the warehouse input value is empty
-        if (descptn.val() === '') {
-            // Set the flag to true if any warehouse is not selected
-            found = true;
-            // Break out of the loop since we've found at least one warehouse not selected
-            return false;
-        }
+        //// Check if the warehouse input value is empty
+        //if (descptn.val() === '') {
+        //    // Set the flag to true if any warehouse is not selected
+        //    found = true;
+        //    // Break out of the loop since we've found at least one warehouse not selected
+        //    return false;
+        //}
     });
 
 

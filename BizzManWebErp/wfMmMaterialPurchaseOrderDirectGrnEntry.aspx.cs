@@ -145,7 +145,7 @@ namespace BizzManWebErp
             {
 
                 dtPurchaseOrderDetails = objMain.dtFetchData(@"select OE.Id,M.MaterialName,OE.QtyOrder,OE.UnitPrice,OE.QtyReceive,
-                                                                          M.UnitMesure,(OE.QtyOrder-OE.QtyReceive) as BalanceQty
+                                                                          M.UnitMesure,(OE.QtyOrder-(OE.QtyReceive)) as BalanceQty
                                                                           from tblMmMaterialPurchaseOrderEntryDetail OE
                                                                           join tblMmMaterialMaster M on M.Id=OE.MaterialMasterId
                                                                           where OE.Active='Y' and OE.PurchaseOrderMasterId='" + OrderId + "'");

@@ -133,7 +133,7 @@ namespace BizzManWebErp
                                               left join tblMmVendorMaster v on po.VendoreId=v.Id
                                              left join tblHrBranchMaster b on b.BranchCode=po.BranchCode 
                                              left join tblHrDeptMaster d on d.Id=po.DepartmentId
-                                              where po.Active='Y' ");
+                                             ");
             }
             catch (Exception ex)
             {
@@ -217,7 +217,7 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
                                                           from tblMmMaterialPurchaseOrderEntryDetail o
 														  inner join tblMmMaterialPurchaseOrderEntryMaster SO on SO.Id=o.PurchaseOrderMasterId
                                                           left join tblMmMaterialMaster m on m.Id=o.MaterialMasterId
-                                                          where o.Active='Y' and o.PurchaseOrderMasterId='" + id + "'");
+                                                          where o.PurchaseOrderMasterId='" + id + "'");
             }
             catch (Exception ex)
             {

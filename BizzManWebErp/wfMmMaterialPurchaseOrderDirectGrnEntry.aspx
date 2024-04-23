@@ -46,7 +46,7 @@
             <div class="card-body">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <table id="tblMaterialPurchaseGrnDetails" class="display no-footer dataTable" style="width: 100%;">
+                        <table id="tblMaterialPurchaseGrnDetails" class="display no-footer dataTable dataTable" style="width: 100%;">
                             <thead>
                                 <tr>
                                     <th>Material Name</th>
@@ -57,6 +57,8 @@
                                     <th>Return Qty</th>
                                     <th>Unit Price</th>
                                     <th>Total Amount</th>
+                                     <th>Package</th>
+                                     <th>Package Qty</th>
                                     <th>Warehouse</th>
                                 </tr>
                             </thead>
@@ -189,10 +191,15 @@
                                     <label class="control-label">Warehouse *</label>
                                 </td>
                                 <td style="display:none;" id="td_warehouse">
-                                    <select id="ddlWarehouse" name="ddlWarehouse" class="form-control" style="width:300px;">
+                                    <select id="ddlWarehouse" name="ddlWarehouse" class="form-control" style="width:200px;">
                                         <option value="">-Select Warehouse-</option>
                                     </select>
                                 </td>
+                                 <td style="display:none;" id="td_package">
+                                        <select id="ddlPackage" name="ddlPackage" class="form-control" style="width:200px;">
+                                            <option value="">-Select Package-</option>
+                                        </select>
+                                    </td>
                             </tr>
                         </table>
                     </div>
@@ -210,7 +217,8 @@
             <div class="card-body">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <table id="tblMaterialPurchaseOrderMasterDetails" class="display no-footer dataTable" style="width: 100%;">
+                         <div class="table-responsive">
+                        <table id="tblMaterialPurchaseOrderMasterDetails" class="display no-footer dataTable table" style="width: 100%;">
                             <thead>
                                 <tr>
                                     <th style="display:none;">Order Detail Id</th>
@@ -222,6 +230,8 @@
                                     <th>Unit Price</th>
                                     <th>Receive Qty</th>
                                     <th>Return Qty</th>
+                                    <th>Package Name</th>
+                                    <th>Package Qty</th>
                                     <th>Warehouse</th>
                                     <th>Description</th>
                                     <th>Q/C</th>
@@ -231,6 +241,7 @@
                                 
                             </tbody>
                         </table>
+                             </div>
                     </div>
                 </div>
             </div>

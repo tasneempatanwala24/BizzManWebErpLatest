@@ -144,11 +144,19 @@ namespace BizzManWebErp
             try
             {
 
-                dtPurchaseOrderDetails = objMain.dtFetchData(@"select OE.Id,M.MaterialName,OE.QtyOrder,OE.UnitPrice,OE.QtyReceive,
-                                                                          M.UnitMesure,(OE.QtyOrder-(OE.QtyReceive)) as BalanceQty
-                                                                          from tblMmMaterialPurchaseOrderEntryDetail OE
-                                                                          join tblMmMaterialMaster M on M.Id=OE.MaterialMasterId
-                                                                          where OE.Active='Y' and OE.PurchaseOrderMasterId='" + OrderId + "'");
+                //dtPurchaseOrderDetails = objMain.dtFetchData(@"select OE.Id,M.MaterialName,OE.QtyOrder,OE.UnitPrice,OE.QtyReceive,
+                //                                                          M.UnitMesure,(OE.QtyOrder-(OE.QtyReceive)) as BalanceQty,OE.MaterialMasterId
+                //                                                          from tblMmMaterialPurchaseOrderEntryDetail OE
+                //                                                          join tblMmMaterialMaster M on M.Id=OE.MaterialMasterId
+                //                                                          where OE.Active='Y' and OE.PurchaseOrderMasterId='" + OrderId + "'");
+
+
+                dtPurchaseOrderDetails = objMain.dtFetchData(@"select OE.Id,M.MaterialName,OE.QtyOrder,isnull(PGD.UnitPrice,OE.UnitPrice)UnitPrice,OE.QtyReceive,
+M.UnitMesure,(OE.QtyOrder-(OE.QtyReceive)) as BalanceQty,OE.MaterialMasterId,OE.PurchaseOrderMasterId,PGD.Id,PGD.UnitPrice
+from tblMmMaterialPurchaseOrderEntryDetail OE
+inner join tblMmMaterialMaster M on M.Id=OE.MaterialMasterId
+left join tblMmMaterialPurchaseGrnMaster on tblMmMaterialPurchaseGrnMaster.PurchaseOrderdMasterId=OE.PurchaseOrderMasterId and 
+tblMmMaterialPurchaseGrnMaster.Id in(select top 1 id from tblMmMaterialPurchaseGrnMaster where PurchaseOrderdMasterId='" + OrderId + "' order by CreateDate desc) left join tblMmMaterialPurchaseGrnDetail PGD on PGD.GrnMasterId=tblMmMaterialPurchaseGrnMaster.Id and PGD.MaterialMasterId=OE.MaterialMasterId where  OE.Active='Y' and OE.PurchaseOrderMasterId='" + OrderId + "' ");
 
                 DataTable dtPurchaseOrder = objMain.dtFetchData(@"select *
 from tblMmMaterialPurchaseOrderEntryMaster a
@@ -225,11 +233,11 @@ where Id='" + OrderId + "'");
             {
 
                 dtMaterialPurchaseGrnList = objMain.dtFetchData(@"select PG.Id,CONVERT(nvarchar,PG.GrnEntryDate,106) as GrnEntryDate,PG.GateInwardMasterId,
-                                                                          GI.OrderId,v.VendorName,b.BranchName from tblMmMaterialPurchaseGrnMaster PG
-                                                                          left join tblMmMaterialPurchaseGateInwardMaster GI on GI.Id=PG.GateInwardMasterId
-                                                                       left   join tblMmVendorMaster v on v.Id=PG.VendorId
-                                                                        left  join tblHrBranchMaster b on b.BranchCode=PG.BranchCode
-                                                                          where PG.Active='Y'");
+isnull(GI.OrderId,PG.PurchaseOrderdMasterId) OrderId,v.VendorName,b.BranchName from tblMmMaterialPurchaseGrnMaster PG
+left join tblMmMaterialPurchaseGateInwardMaster GI on GI.Id=PG.GateInwardMasterId
+left   join tblMmVendorMaster v on v.Id=PG.VendorId
+left  join tblHrBranchMaster b on b.BranchCode=PG.BranchCode
+where PG.Active='Y'");
             }
             catch (Exception ex)
             {
@@ -256,11 +264,13 @@ where Id='" + OrderId + "'");
             try
             {
 
-                dtMaterialPurchaseGrnDetails = objMain.dtFetchData(@"select PG.Id,M.MaterialName,M.UnitMesure,W.Name as WareHouse,PG.QtyOrder,                        PG.GateInwordQtyReceive,PG.QtyStockEntry,PG.QtyReturn,PG.UnitPrice,PG.TotalAmt
-                                                                  from tblMmMaterialPurchaseGrnDetail PG
-                                                                  join tblMmMaterialMaster M on M.Id=PG.MaterialMasterId
-                                                                  join tblFaWarehouseMaster W on W.Id=PG.WarehouseId
-                                                                  where PG.Active='Y' and PG.GrnMasterId='" + id + "'");
+                dtMaterialPurchaseGrnDetails = objMain.dtFetchData(@"select PG.Id,M.MaterialName,M.UnitMesure,W.Name as WareHouse,PG.QtyOrder,                        
+                                            PG.GateInwordQtyReceive,PG.QtyStockEntry,PG.QtyReturn,PG.UnitPrice,PG.TotalAmt,Packaging,PG.PackageQty
+                                            from tblMmMaterialPurchaseGrnDetail PG
+                                            join tblMmMaterialMaster M on M.Id=PG.MaterialMasterId
+                                            join tblFaWarehouseMaster W on W.Id=PG.WarehouseId
+                                            left join tblMmMaterialPackagingDetails on tblMmMaterialPackagingDetails.id=PG.packageId
+                                            where PG.Active='Y' and PG.GrnMasterId='" + id + "'");
 
           
                 }
@@ -327,7 +337,9 @@ where Id='" + OrderId + "'");
                     strBuild.Append("<QtyReturn>" + item.QtyReturn + "</QtyReturn>");
                     strBuild.Append("<WareHouseId>" + item.WareHouseId + "</WareHouseId>");
                     strBuild.Append("<Description>" + item.Description + "</Description>");
-                   
+                    strBuild.Append("<PackageId>" + item.PackageId + "</PackageId>");
+                    strBuild.Append("<PackageQuantity>" +  item.PackageQuantity + "</PackageQuantity>");
+                    strBuild.Append("<Rate>" + item.Rate + "</Rate>");
                     strBuild.Append("</SalesQuotationDetail>");
                 }
             }
@@ -349,6 +361,25 @@ where Id='" + OrderId + "'");
 
 
             return "";
+        }
+
+        [WebMethod]
+        public static string MaterialPackagingList(string materialid)
+        {
+            //  clsMain objMain = new clsMain();
+            DataTable dtMaterialPackagingList = new DataTable();
+
+            try
+            {
+
+                dtMaterialPackagingList = objMain.dtFetchData("select id,Packaging from tblMmMaterialPackagingDetails where MaterialMasterId=" + materialid);
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtMaterialPackagingList);
         }
     }
 }

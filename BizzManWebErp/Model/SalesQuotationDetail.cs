@@ -13,6 +13,7 @@ namespace BizzManWebErp.Model
         public string PackageId { get; set; }
         public decimal Rate { get; set; }
         public decimal Quantity { get; set; }
+        public string PackageQuantity { get; set; }
         public decimal Discount { get; set; }
         public decimal GST { get; set; }
         public decimal CentralTaxPercent { get; set; }

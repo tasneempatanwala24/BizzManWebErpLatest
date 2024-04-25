@@ -185,7 +185,7 @@
                                         <input type="text" class="form-control" id="txtMaterialStock" name="txtMaterialStock" readonly="readonly" />
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" value="0" />
+                                        <input type="text" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" onblur="checkInputGiven(event)" value="0" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" id="txtMaterialUnitMeasure" name="txtMaterialUnitMeasure" readonly="readonly" />
@@ -197,7 +197,7 @@
                                     </td>
                                     <td style="display: none;"></td>--%>
                                     <td>
-                                        <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" />
+                                        <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)" onblur="checkInputGiven(event)" />
                                     </td>
                                       <%--  <td>
                                         <input type="number" class="form-control" id="txtMaterialDiscount" name="txtMaterialDiscount" onchange="UpdateTotalAmount();" value="0" oninput="handleNumericInput(event)" />

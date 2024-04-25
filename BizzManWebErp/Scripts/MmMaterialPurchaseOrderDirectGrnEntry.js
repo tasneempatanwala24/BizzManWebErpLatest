@@ -791,6 +791,17 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
             return false;
         }
 
+
+
+        var UnitPrice = $(this).find('.UnitPrice');
+
+        // Check if the warehouse input value is empty
+        if (UnitPrice.val() === '' || UnitPrice.val() === '0') {
+            // Set the flag to true if any warehouse is not selected
+            found = true;
+            // Break out of the loop since we've found at least one warehouse not selected
+            return false;
+        }
         //var descptn = $(this).find('.descptn');
 
         //// Check if the warehouse input value is empty
@@ -807,7 +818,7 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
     // Check the flag value
     if (found) {
         // If the flag is true, it means at least one warehouse is not selected
-        alertify.error('Please enter receive quantity,return quantity and warehouse on purchase details list');
+        alertify.error('Please enter receive quantity,return quantity,Unit price and warehouse on purchase details list');
         return;
     } 
 
@@ -852,7 +863,7 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
 
 
                 hideLoader();
-                alertify.success('Sales Order details added successfully');
+                alertify.success('Purchase Order GRN Entry added successfully');
                 ClearAll();
             }, 1000); // Hide loader after 3 seconds
         },

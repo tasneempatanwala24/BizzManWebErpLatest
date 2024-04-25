@@ -288,7 +288,10 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
             try
             {
 
-                dtMaterialDetails = objMain.dtFetchData(@"select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,(select isnull(Sum(QtyBalance),0) from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode where tblFaWarehouseMaster.BranchCode='" + BranchCode + "' and MaterialMasterId=MM.Id) as Stock from tblMmMaterialMaster MM where Id=" + MaterialId + "");
+                dtMaterialDetails = objMain.dtFetchData(@"select MM.Id,MaterialName,UnitMesure,isnull(PGD.UnitPrice,0)MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,(select isnull(Sum(QtyBalance),0) 
+from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId 
+inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode 
+where tblFaWarehouseMaster.BranchCode='"+BranchCode+"' and MaterialMasterId=MM.Id) as Stock from tblMmMaterialMaster MM  left join tblMmMaterialPurchaseGrnDetail PGD on PGD.MaterialMasterId=MM.Id and PGD.ID in(select top 1 ID from tblMmMaterialPurchaseGrnDetail where MaterialMasterId=PGD.MaterialMasterId order by CreateDate desc) where MM.Id=" + MaterialId + "");
             }
             catch (Exception ex)
             {

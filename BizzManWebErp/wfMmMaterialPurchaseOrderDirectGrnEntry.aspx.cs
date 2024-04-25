@@ -155,8 +155,8 @@ namespace BizzManWebErp
 M.UnitMesure,(OE.QtyOrder-(OE.QtyReceive)) as BalanceQty,OE.MaterialMasterId,OE.PurchaseOrderMasterId,PGD.Id,PGD.UnitPrice
 from tblMmMaterialPurchaseOrderEntryDetail OE
 inner join tblMmMaterialMaster M on M.Id=OE.MaterialMasterId
-left join tblMmMaterialPurchaseGrnMaster on tblMmMaterialPurchaseGrnMaster.PurchaseOrderdMasterId=OE.PurchaseOrderMasterId and 
-tblMmMaterialPurchaseGrnMaster.Id in(select top 1 id from tblMmMaterialPurchaseGrnMaster where PurchaseOrderdMasterId='" + OrderId + "' order by CreateDate desc) left join tblMmMaterialPurchaseGrnDetail PGD on PGD.GrnMasterId=tblMmMaterialPurchaseGrnMaster.Id and PGD.MaterialMasterId=OE.MaterialMasterId where  OE.Active='Y' and OE.PurchaseOrderMasterId='" + OrderId + "' ");
+left join tblMmMaterialPurchaseGrnDetail PGD on PGD.MaterialMasterId=M.Id and PGD.ID in(select top 1 ID from tblMmMaterialPurchaseGrnDetail where MaterialMasterId=PGD.MaterialMasterId order by CreateDate desc)
+where  OE.Active='Y'  and OE.PurchaseOrderMasterId='" + OrderId + "' ");
 
                 DataTable dtPurchaseOrder = objMain.dtFetchData(@"select *
 from tblMmMaterialPurchaseOrderEntryMaster a

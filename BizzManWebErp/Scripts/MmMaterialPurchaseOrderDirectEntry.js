@@ -3,6 +3,7 @@
         event.preventDefault();
     });
     $('#ddlVendor').select2();
+    $('#ddlMaterialName').select2();
     BindVendorDropdown();
     BindBranchDropdown();
     BindDepartmentDropdown();
@@ -166,8 +167,9 @@ function ClearAll() {
     $('#ddlBranch').val('');
     $('#ddlDepartment').val('');
 
-
+    $('#ddlMaterialName').select2('destroy');
     $('#ddlMaterialName').val('');
+    $('#ddlMaterialName').select2();
     $('#txtMaterialQty').val('');
     $('#txtMaterialUnitMeasure').val('');
     $('#txtMaterialRate').val('');
@@ -470,7 +472,7 @@ function AddMaterialPurchaseOrder() {
 
 
                 hideLoader();
-                alertify.success('Sales Order details added successfully');
+                alertify.success('Purchase Order details added successfully');
                 ClearAll();
             }, 1000); // Hide loader after 3 seconds
         },
@@ -708,7 +710,9 @@ function Base64ToBytes(base64) {
 function FetchMaterialDetails() {
     if ($('#ddlBranch').val() == '') {
         alertify.error('Please Select Branch');
+        $('#ddlMaterialName').select2('destroy');
         $('#ddlMaterialName').val('');
+        $('#ddlMaterialName').select2();
         return;
     }
 
@@ -771,9 +775,12 @@ function SaveSalesOrderDetails() {
 
     if ($('#ddlMaterialName').val() != '') {
 
+        if ($('#txtMaterialRate').val() == '' || $('#txtMaterialRate').val() == '0') {
+            alertify.error('Please enter valid Rate');
+            return;
+        }
 
-
-        if ($('#txtMaterialQty').val() != '') {
+        if ($('#txtMaterialQty').val() != '' && $('#txtMaterialQty').val() != '0') {
             //if ($('#ddlPackage').val() != '') {
             $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + $('#ddlMaterialName').val() + '</td>'
                 + '<td>' + $("#ddlMaterialName option:selected").text() + '</td>'
@@ -869,13 +876,15 @@ function BindMaterialMasterDropdown() {
 
         },
         success: function (response) {
+            $('#ddlMaterialName').select2('destroy');
             $('#ddlMaterialName').html('');
             var data = JSON.parse(response.d);
             var req = "<option value=''>-Select Material-</option>";
             for (var i = 0; i < JSON.parse(response.d).length; i++) {
-                req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].MaterialName + "</option>";
+                req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].Id+'-'+JSON.parse(response.d)[i].MaterialName + "</option>";
             }
             $('#ddlMaterialName').append(req);
+            $('#ddlMaterialName').select2();
         },
         complete: function () {
 
@@ -887,22 +896,38 @@ function BindMaterialMasterDropdown() {
 }
 
 
-// Function to handle numeric input
+function checkInputGiven(event) {
+    var value = event.target.value;
+    if (/^\d\.$/.test(value)) { // Checks if input is a single digit followed by a dot
+        event.target.value = value.charAt(0); // Sets the value to the single digit
+    }
+}
 function handleNumericInput(event) {
     // Get the input element
     var inputElement = event.target;
 
-    // Remove non-numeric characters (except 0)
-    var numericValue = inputElement.value.replace(/[^0-9]/g, '');
+    // Remove non-numeric characters (except decimal point)
+    var numericValue = inputElement.value.replace(/[^\d.]/g, '');
 
-    // Handle leading zeros
-    if (numericValue.length > 1 && numericValue.charAt(0) === '0') {
-        numericValue = numericValue.slice(1); // Remove leading zero
+    // Handle multiple decimal points
+    numericValue = numericValue.replace(/(\..*)\./g, '$1');
+
+    // Limit to two decimal places
+    numericValue = numericValue.replace(/(\.\d{2})\d+$/g, '$1');
+
+    // If the input starts with a decimal point, add a leading zero
+    if (numericValue.charAt(0) === '.') {
+        numericValue = '0' + numericValue;
     }
 
     // Set the default value to 0 if the input is empty
     if (numericValue === '') {
         numericValue = '0';
+    }
+
+    // Handle leading zeros
+    if (numericValue.length > 1 && numericValue.charAt(0) === '0' && numericValue.charAt(1) !== '.') {
+        numericValue = numericValue.slice(1); // Remove leading zero
     }
 
     // Update the input value
@@ -912,11 +937,9 @@ function handleNumericInput(event) {
 function UpdateTotalAmount() {
     if ($('#txtMaterialQty').val() != '') {
         if ($('#ddlMaterialName').val() != '') {
-            // var totalAmnt = parseFloat($('#txtMaterialRate').val()) * parseInt($('#txtMaterialQty').val());
-            // totalAmnt = totalAmnt + ((totalAmnt * parseInt($('#txtMaterialTax').val())) / 100);
-            /*  var amount = (qty * rate) * (1 - discount / 100) * (1 + gst / 100);*/
+   
 
-            var totalAmnt = (parseInt($('#txtMaterialQty').val()) * parseFloat($('#txtMaterialRate').val())) ;
+            var totalAmnt = (parseFloat($('#txtMaterialQty').val()) * parseFloat($('#txtMaterialRate').val())) ;
 
             $('#txtMaterialTotalAmount').val(totalAmnt.toFixed(2));
         }

@@ -450,7 +450,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 decimal stateTaxPercent = 0;
                 decimal cessTaxPercent = 0;
                 decimal qty = 0;
-                decimal actualRate = 0;
+                decimal Rate = 0;
 
 
                 if (dtSalesQuotationDetail != null && dtSalesQuotationDetail.Rows.Count > 0)
@@ -468,11 +468,11 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                         stateTaxPercent = Convert.ToDecimal(row["StateTaxPercent"].ToString());
                         cessTaxPercent = Convert.ToDecimal(row["CessPercent"].ToString());
                         qty = Convert.ToDecimal(row["Qty"].ToString());
-                        actualRate = Convert.ToDecimal(row["ActualRate"].ToString());
+                        Rate = Convert.ToDecimal(row["Rate"].ToString());
 
-                        centralTaxValue += (qty * actualRate) * (centralTaxPercent / 100);
-                        stateTaxValue += (qty * actualRate) * (stateTaxPercent / 100);
-                        cessTaxValue += (qty * actualRate) * (cessTaxPercent / 100);
+                        centralTaxValue += (qty * Rate) * (centralTaxPercent / 100);
+                        stateTaxValue += (qty * Rate) * (stateTaxPercent / 100);
+                        cessTaxValue += (qty * Rate) * (cessTaxPercent / 100);
                     }
 
 

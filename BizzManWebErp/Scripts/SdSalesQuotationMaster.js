@@ -273,7 +273,7 @@ function calculateGrandTotal() {
         grandTotal += totalAmount;
 
         const gst = parseFloat($(this).find('.txtGST').val());
-        grandTotalGST += (qty * actualRate) * (gst / 100);
+        grandTotalGST += (qty * rate) * (gst / 100);
     });
 
     // Display the calculated values in the table footer
@@ -611,7 +611,7 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             var stateTaxPercent = 0;
             var cessTaxPercent = 0;
             var qty = 0;
-            var actualRate = 0;
+            var Rate = 0;
 
             var html = '';
             for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
@@ -627,11 +627,11 @@ function GetSdSalesQuotationMasterById(QuoatId) {
                 stateTaxPercent = parseFloat(data.SalesItems[0].Table[i].StateTaxPercent);
                 cessTaxPercent = parseFloat(data.SalesItems[0].Table[i].CessPercent);
                 qty = parseFloat(data.SalesItems[0].Table[i].Qty);
-                actualRate = parseFloat(data.SalesItems[0].Table[i].ActualRate);
+                Rate = parseFloat(data.SalesItems[0].Table[i].Rate);
 
-                centralTaxValue += (qty * actualRate) * (centralTaxPercent / 100);
-                stateTaxValue += (qty * actualRate) * (stateTaxPercent / 100);
-                cessTaxValue += (qty * actualRate) * (cessTaxPercent / 100);
+                centralTaxValue += (qty * Rate) * (centralTaxPercent / 100);
+                stateTaxValue += (qty * Rate) * (stateTaxPercent / 100);
+                cessTaxValue += (qty * Rate) * (cessTaxPercent / 100);
             }
 
 

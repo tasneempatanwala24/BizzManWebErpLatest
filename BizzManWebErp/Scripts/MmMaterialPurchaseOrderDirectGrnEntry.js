@@ -158,6 +158,8 @@ function GenerateOrderID() {
 
 function BindPurchaseOrderDropdown() {
     showLoader();
+  
+ 
     $.ajax({
         type: "POST",
         url: 'wfMmMaterialPurchaseOrderDirectGrnEntry.aspx/PurchaseOrderList',
@@ -168,8 +170,16 @@ function BindPurchaseOrderDropdown() {
             "VendorId": $('#ddlVendor').val()
         }),
         success: function (response) {
+            $('#tbody_MaterialPurchaseOrderMasterDetails').html('');
             $('#ddlOrder').select2('destroy');
             $('#ddlOrder').html('');
+            $('#txtDeadlineDate').val('');
+            $('#txtReceiptDate').val('');
+            $('#txtPaymentTerm').val('');
+            $('#txtPurchaseAgreement').val('');
+            $('#txtQuotationNo').val('');
+            $('#ddlBranch').val('');
+            $('#ddlDepartment').val('');
             var data = JSON.parse(response.d);
             var req = "<option value=''>-Select Order-</option>";
             for (var i = 0; i < JSON.parse(response.d).length; i++) {
@@ -305,7 +315,14 @@ function FetchPurchaseOrderDetails() {
             beforeSend: function () {
 
             },
-            success: function (response) {
+           success: function (response) {
+               $('#txtDeadlineDate').val('');
+               $('#txtReceiptDate').val('');
+               $('#txtPaymentTerm').val('');
+               $('#txtPurchaseAgreement').val('');
+               $('#txtQuotationNo').val('');
+               $('#ddlBranch').val('');
+               $('#ddlDepartment').val('');
                 var data = JSON.parse(response.d);
                 $('#txtDeadlineDate').val(data.PurchaseOrderMasterInfo.OrderDeadlineDate)
                 $('#txtReceiptDate').val(data.PurchaseOrderMasterInfo.ReceiptDate)

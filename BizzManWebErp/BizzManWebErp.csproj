@@ -211,6 +211,7 @@
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\MmMaterialPurchaseGrnReturn.js" />
     <Content Include="Scripts\MmMaterialPurchaseOrder.js" />
     <Content Include="Scripts\MmMaterialPurchaseOrderDirectEntry.js" />
     <Content Include="Scripts\MmMaterialPurchaseOrderDirectGrnEntry.js" />
@@ -287,6 +288,7 @@
     <Content Include="wfMmMaterialPurchaseGateInword.aspx" />
     <Content Include="wfMmMaterialPurchaseGrnEntry.aspx" />
     <Content Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx" />
+    <Content Include="wfMmMaterialPurchaseGrnReturn.aspx" />
     <Content Include="wfMmMaterialPurchaseOrderDirectEntry.aspx" />
     <Content Include="wfMmMaterialPurchaseOrderDirectGrnEntry.aspx" />
     <Content Include="wfMmMaterialStockMaster.aspx" />
@@ -747,6 +749,13 @@
     </Compile>
     <Compile Include="wfMmMaterialPurchaseGrnInvoiceEntry.aspx.designer.cs">
       <DependentUpon>wfMmMaterialPurchaseGrnInvoiceEntry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGrnReturn.aspx.cs">
+      <DependentUpon>wfMmMaterialPurchaseGrnReturn.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmMaterialPurchaseGrnReturn.aspx.designer.cs">
+      <DependentUpon>wfMmMaterialPurchaseGrnReturn.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfMmMaterialPurchaseOrderDirectEntry.aspx.cs">
       <DependentUpon>wfMmMaterialPurchaseOrderDirectEntry.aspx</DependentUpon>

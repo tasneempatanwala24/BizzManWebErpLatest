@@ -118,14 +118,7 @@
 
                                  
 
-                                  <td style="display:none;">
-                                    <label class="control-label">Warehouse *</label>
-                                </td>
-                                <td style="display:none;" id="td_warehouse">
-                                    <select id="ddlWarehouse" name="ddlWarehouse" class="form-control" style="width:200px;">
-                                        <option value="">-Select Warehouse-</option>
-                                    </select>
-                                </td>
+                                
                                 
                             </tr>
                            

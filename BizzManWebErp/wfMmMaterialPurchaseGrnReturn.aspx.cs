@@ -119,10 +119,11 @@ namespace BizzManWebErp
             {
 
                 dtPurchaseOrderDetails = objMain.dtFetchData(@"select OE.Id,M.MaterialName,OE.QtyOrder,OE.UnitPrice,OE.QtyStockEntry,OE.QtyReturn,
-M.UnitMesure,stock.QtyBalance,OE.MaterialMasterId,OE.GrnMasterId
+M.UnitMesure,stock.QtyBalance,OE.MaterialMasterId,OE.GrnMasterId,OE.WarehouseId,warehouse.Name as Warehouse
 from tblMmMaterialPurchaseGrnDetail OE
 inner join tblMmMaterialMaster M on M.Id=OE.MaterialMasterId
 inner join tblMmMaterialStockMaster stock on stock.TransectionId=OE.GrnMasterId and stock.MaterialMasterId=OE.MaterialMasterId
+inner join tblFaWarehouseMaster warehouse on warehouse.Id=OE.WarehouseId
 where  OE.Active='Y'  and OE.GrnMasterId='" + GRNId + "' ");
 
                 DataTable dtPurchaseOrder = objMain.dtFetchData(@"select *
@@ -248,25 +249,7 @@ left  join tblHrBranchMaster b on b.BranchCode=PG.BranchCode");
         }
 
 
-        [WebMethod]
-        public static string WarehouseList()
-        {
-            //  clsMain objMain = new clsMain();
-            DataTable dtWarehouseList = new DataTable();
-
-            try
-            {
-
-                dtWarehouseList = objMain.dtFetchData("select Id,Name FROM tblFaWarehouseMaster");
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-
-            return JsonConvert.SerializeObject(dtWarehouseList);
-        }
-
+       
         [WebMethod]
         public static string AddMaterialPurchaseOrderGrnReturn(List<SalesQuotationDetail> data, string GRNID = "", string ReturnDate = "", string Vendor = "", string GRNReturnID = "", string BranchCode = "", string LoginUser = "")
         {
@@ -288,8 +271,7 @@ left  join tblHrBranchMaster b on b.BranchCode=PG.BranchCode");
                     strBuild.Append("<SalesQuotationDetail>");
                     strBuild.Append("<ItemId>" + Convert.ToInt32(item.ItemID) + "</ItemId>");
                     strBuild.Append("<QtyReturn>" + item.QtyReturn + "</QtyReturn>");
-                    strBuild.Append("<WareHouseId>" + item.WareHouseId + "</WareHouseId>");
-                     strBuild.Append("</SalesQuotationDetail>");
+                      strBuild.Append("</SalesQuotationDetail>");
                 }
             }
             strBuild.Append("</SalesQuotationDetails>");

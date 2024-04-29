@@ -7,7 +7,7 @@
     $('#ddlGRN').select2();
     BindVendorDropdown();
     BindBranchDropdown();
-    BindWarehouseDropdown();
+   
     BindMaterialPurchaseGrnList();
 
     $(".dat").on("change", function () {
@@ -190,7 +190,7 @@ function FetchPurchaseOrderDetails() {
                  $('#ddlBranch').val(data.PurchaseOrderMasterInfo.BranchCode)
                 $('#tbody_MaterialPurchaseOrderMasterDetails').html('');
 
-                var warehouseHtml = $('#td_warehouse').html();
+              
                 var html = '';
 
                 var promises = [];
@@ -206,7 +206,8 @@ function FetchPurchaseOrderDetails() {
 
                     + '<td>' + (data.PurchaseItems[0].Table[index].UnitPrice != undefined ? data.PurchaseItems[0].Table[index].UnitPrice : '') + '</td>'
                      + '<td><input type="text" class="form-control RtrnQty"  value="0" onchange="CheckReturn(this)" oninput="handleNumericInput(event)" onblur="checkInputGiven(event)" /></td>'
-                    + '<td>' + warehouseHtml + '</td><td><input type="text" class="form-control descptn" /></td></tr>';
+                    + '<td>' + (data.PurchaseItems[0].Table[index].Warehouse != undefined ? data.PurchaseItems[0].Table[index].Warehouse : '') + '</td>'
+                        + '<td><input type="text" class="form-control descptn" /></td></tr > '
                           
                 }
 
@@ -452,35 +453,7 @@ function FetchMaterialPurchaseGrnDetails(id) {
 }
 
 
-function BindWarehouseDropdown() {
-    $.ajax({
-        type: "POST",
-        url: 'wfMmMaterialPurchaseGrnReturn.aspx/WarehouseList',
-        data: {},
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        beforeSend: function () {
 
-        },
-        success: function (response) {
-            // $('#ddlWarehouse').select2('destroy');
-            $('#ddlWarehouse').html('');
-            var data = JSON.parse(response.d);
-            var req = "<option value=''>-Select Warehouse-</option>";
-            for (var i = 0; i < JSON.parse(response.d).length; i++) {
-                req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].Name + "</option>";
-            }
-            $('#ddlWarehouse').append(req);
-            // $('#ddlWarehouse').select2();
-        },
-        complete: function () {
-
-        },
-        failure: function (jqXHR, textStatus, errorThrown) {
-
-        }
-    });
-}
 
 
 
@@ -510,15 +483,7 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
     // Iterate over each <tr> element
     $('#tbody_MaterialPurchaseOrderMasterDetails').find('tr').each(function () {
         // Find the select element with id 'ddlWarehouse' within this <tr>
-        var warehouseSelect = $(this).find('#ddlWarehouse');
-
-        // Check if the selected value of the warehouse dropdown is empty
-        if (!warehouseSelect.val()) {
-            // Set the flag to true if any warehouse is not selected
-            found = true;
-            // Break out of the loop since we've found at least one warehouse not selected
-            return false;
-        }
+       
 
        
 
@@ -540,7 +505,7 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
     // Check the flag value
     if (found) {
         // If the flag is true, it means at least one warehouse is not selected
-        alertify.error('Please enter return quantity and warehouse on purchase details list');
+        alertify.error('Please enter return quantity on purchase details list');
         return;
     }
 
@@ -549,15 +514,18 @@ function AddMaterialPurchaseOrderDirectGrnEntry() {
 
         var materialID = $(this)[0].cells[0].innerText;
         var QtyReturn = $(this).find('.RtrnQty').val();//$(this)[0].cells[8].innerText;
-        var WareHouseId = $(this).find('#ddlWarehouse').val();
-        var Description = $(this).find('.descptn').val();
+         var Description = $(this).find('.descptn').val();
         if (parseFloat(QtyReturn) > 0) {
-            data.push({ ItemID: materialID, QtyReturn: QtyReturn, WareHouseId: WareHouseId, Description: Description });
+            data.push({ ItemID: materialID, QtyReturn: QtyReturn,  Description: Description });
         }
         
 
 
     });
+    if (data.length == 0) {
+        alertify.error('Please enter return quantity on purchase details list');
+        return;
+    }
 
     showLoader();
     // Send data to server using AJAX

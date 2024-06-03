@@ -37,6 +37,19 @@ $(document).ready(function () {
         calculateTotalRowAmount(this);
     });
 
+    // Attach keydown listeners to existing rows on page load
+    // Attach keydown listeners to the initial row if any
+    attachKeydownListenersToRow($("#dataTable tbody tr"));
+
+    // Detect Ctrl+S key press
+    $(document).on("keydown", function (event) {
+        // Check if Ctrl key is pressed along with 'S' key
+        if (event.ctrlKey && event.key === "s") {
+            event.preventDefault(); // Prevent the default save dialog
+            saveData(); // Call the save function
+        }
+    });
+
 });
 
 
@@ -88,7 +101,7 @@ function GetCustomerDetails() {
                 $('#txtClientAddress').val(data[0].Address);
                 $('#txtContactNumber').val(data[0].Mobile);
                 $('#txtEmail').val(data[0].Email);
-               
+                $('#quotationDate').focus();
             },
             complete: function () {
 
@@ -111,23 +124,23 @@ function addRow() {
     cols += '<td><select  class="ddlMaterialName form-control" onchange="FetchUnitMeasure(this);" > < option value = "" > -Select Material Name -</option > </select ></td>';
 
     // Add Qty with input
-    cols += '<td style="width:10%"><input class="txtQuantity form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0" oninput="handleNumericInput(event)" ></td>';
+    cols += '<td style="width:10%"><input class="txtQuantity form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" ></td>';
 
    
     // Add Amount
     cols += '<td style="width:10%"><input class="txtUnitMeasure form-control" type="text" disabled></td>';
 
     // Add Rate with input
-    cols += '<td style="width:10%"><input class="txtRate form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)"><input type="hidden" value="" class="hdnActualRate"></td>';
+    cols += '<td style="width:10%"><input class="txtRate form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)" onblur="checkInputGiven(event)"><input type="hidden" value="" class="hdnActualRate"></td>';
 
     // Add Discount with input
     cols += '<td style="width:10%"><input class="txtDiscount form-control" onchange="calculateTotalRowAmount(this)" type="text" value="0"  oninput="handleNumericInput(event)" ></td>';
 
     // Add GST
-    cols += '<td style="width:10%"><input class="txtGST form-control" type="text"  disabled><input type="hidden" value="" class="hdnCentralTaxPercent"><input type="hidden" value="" class="hdnStateTaxPercent"><input type="hidden" value="" class="hdnCessPercent"></td>';
+    cols += '<td style="width:10%"><input class="txtGST form-control" type="text"  disabled><input type="hidden" value="0" class="hdnCentralTaxPercent"><input type="hidden" value="" class="hdnStateTaxPercent"><input type="hidden" value="" class="hdnCessPercent"></td>';
 
     // Add Amount
-    cols += '<td style="width:20%"><input class="txtAmount form-control" type="text" disabled></td>';
+    cols += '<td style="width:20%"><input class="txtAmount form-control" value="0" type="text" disabled></td>';
 
 
    
@@ -151,6 +164,50 @@ function addRow() {
     }
 
     toggleTfootVisibility();
+    // Attach keydown event listeners to the newly added row
+    attachKeydownListenersToRow(newRow);
+
+    // Focus on the Material dropdown of the newly added row
+    newRow.find('.ddlMaterialName').focus();
+}
+// Function to attach keydown event listeners
+// Function to attach keydown event listeners to a specific row
+function attachKeydownListenersToRow(row) {
+    // Focus Qty when Enter is pressed in dropdown
+    row.find(".ddlMaterialName").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $(this).closest("tr").find(".txtQuantity").focus();
+        }
+    });
+
+    row.find(".ddlMaterialName").on("change", function () {
+        $(this).closest("tr").find(".txtQuantity").focus();
+    });
+
+    // Focus Rate when Enter is pressed in Qty
+    row.find(".txtQuantity").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $(this).closest("tr").find(".txtRate").focus();
+        }
+    });
+
+    // Focus Discount when Enter is pressed in Rate
+    row.find(".txtRate").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $(this).closest("tr").find(".txtDiscount").focus();
+        }
+    });
+
+    // Do something when Enter is pressed in Discount
+    row.find(".txtDiscount").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            addRow();
+        }
+    });
 }
 
 function toggleTfootVisibility() {
@@ -176,7 +233,8 @@ function FetchBOMDetailsMaterials() {
                 var data = JSON.parse(response.d);
                 var req = "<option value=''>-Select Material-</option>";
                 for (var i = 0; i < JSON.parse(response.d).length; i++) {
-                    req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].MaterialName + "</option>";
+                  /*  req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].MaterialName + "</option>";*/
+                    req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].Id + '-' + JSON.parse(response.d)[i].MaterialName + "</option>";
                 }
                 optionsOfMaterialDropdownGrid = req;
                 dropdown.append(req);
@@ -224,6 +282,7 @@ function FetchUnitMeasure(dropdown) {
                 row.find('.hdnStateTaxPercent').val(data[0].StateTaxPercent);
                 row.find('.hdnCessPercent').val(data[0].CessPercent);
                 calculateTotalRowAmount(dropdown);
+                row.find('.txtQuantity').focus();
             },
             complete: function () {
 
@@ -235,7 +294,7 @@ function FetchUnitMeasure(dropdown) {
     }
     else {
         row.find('.txtRate').val('0');
-        row.find('.txtGST').val('');
+        row.find('.txtGST').val('0');
         row.find('.txtUnitMeasure').val('');
     }
 }
@@ -264,37 +323,65 @@ function calculateGrandTotal() {
     var grandTotal = 0;
     var grandTotalGST = 0;
     var shippingCharges = parseFloat($('#ShippingCharges').val());
+
+    // Check if shippingCharges is a valid number, if not set to 0
+    if (isNaN(shippingCharges)) {
+        shippingCharges = 0;
+    }
+
     // Iterate through each row in the table body
     $('#dataTable tbody tr').each(function () {
         var qty = parseFloat($(this).find('.txtQuantity').val());
         var rate = parseFloat($(this).find('.txtRate').val());
         var actualRate = parseFloat($(this).find('.hdnActualRate').val());
         var totalAmount = parseFloat($(this).find('.txtAmount').val());
-        grandTotal += totalAmount;
+        var gst = parseFloat($(this).find('.txtGST').val());
 
-        const gst = parseFloat($(this).find('.txtGST').val());
+        // Check if the values are valid numbers, if not set to 0
+        if (isNaN(qty)) qty = 0;
+        if (isNaN(rate)) rate = 0;
+        if (isNaN(actualRate)) actualRate = 0;
+        if (isNaN(totalAmount)) totalAmount = 0;
+        if (isNaN(gst)) gst = 0;
+
+        grandTotal += totalAmount;
         grandTotalGST += (qty * rate) * (gst / 100);
     });
 
     // Display the calculated values in the table footer
     $('#grandTotal').val(grandTotal.toFixed(2));
     $('#grandTotalGST').val(grandTotalGST.toFixed(2));
-    grandTotal += shippingCharges
+
+    grandTotal += shippingCharges;
     $('#netAmount').val(grandTotal.toFixed(2));
 }
 
 
-// Function to handle numeric input
+
+function checkInputGiven(event) {
+    var value = event.target.value;
+    if (/^\d\.$/.test(value)) { // Checks if input is a single digit followed by a dot
+        event.target.value = value.charAt(0); // Sets the value to the single digit
+    }
+    // Allow focus to change
+    $(event.target).trigger('focusout');
+}
 function handleNumericInput(event) {
     // Get the input element
     var inputElement = event.target;
 
-    // Remove non-numeric characters (except 0)
-    var numericValue = inputElement.value.replace(/[^0-9]/g, '');
+    // Remove non-numeric characters (except decimal point)
+    var numericValue = inputElement.value.replace(/[^\d.]/g, '');
 
-    // Handle leading zeros
-    if (numericValue.length > 1 && numericValue.charAt(0) === '0') {
-        numericValue = numericValue.slice(1); // Remove leading zero
+    // Handle multiple decimal points
+    numericValue = numericValue.replace(/(\..*)\./g, '$1');
+
+    // Limit to two decimal places
+    numericValue = numericValue.replace(/(\.\d{2})\d+$/g, '$1');
+
+    // If the input starts with a decimal point, add a leading zero
+    if (numericValue.charAt(0) === '.') {
+        numericValue = '0' + numericValue;
     }
 
     // Set the default value to 0 if the input is empty
@@ -302,9 +389,15 @@ function handleNumericInput(event) {
         numericValue = '0';
     }
 
+    // Handle leading zeros
+    if (numericValue.length > 1 && numericValue.charAt(0) === '0' && numericValue.charAt(1) !== '.') {
+        numericValue = numericValue.slice(1); // Remove leading zero
+    }
+
     // Update the input value
     inputElement.value = numericValue;
 }
+
 
 // Event listener for datepicker change
 function QuotationDateChange() {
@@ -350,7 +443,7 @@ function GenerateQuotationID() {
 
                 var data = JSON.parse(response.d);
                 $('#txtQuotation').val(data[0].QuotationID);
-              
+             
 
             },
             complete: function () {
@@ -392,21 +485,22 @@ function saveData() {
     showLoader();
     var data = [];
     $("#dataTable tbody tr").each(function () {
-       
+        if ($(this).find('.ddlMaterialName').val() != '') {
+            var materialID = $(this).find('.ddlMaterialName').val();
+            var qty = $(this).find('.txtQuantity').val();
+            var rate = $(this).find('.txtRate').val();
+            var discount = $(this).find('.txtDiscount').val();
+            var gst = $(this).find('.txtGST').val();
+            var amount = $(this).find('.txtAmount').val();
 
-        var materialID = $(this).find('.ddlMaterialName').val();
-        var qty = $(this).find('.txtQuantity').val();
-        var rate = $(this).find('.txtRate').val();
-        var discount = $(this).find('.txtDiscount').val();
-        var gst = $(this).find('.txtGST').val();
-        var amount = $(this).find('.txtAmount').val();
+            var centralTaxPercent = $(this).find('.hdnCentralTaxPercent').val();
+            var stateTaxPercent = $(this).find('.hdnStateTaxPercent').val();
+            var cessPercent = $(this).find('.hdnCessPercent').val();
 
-        var centralTaxPercent = $(this).find('.hdnCentralTaxPercent').val();
-        var stateTaxPercent = $(this).find('.hdnStateTaxPercent').val();
-        var cessPercent = $(this).find('.hdnCessPercent').val();
+            data.push({ ItemID: materialID, Quantity: qty, Rate: rate, Discount: discount, GST: gst, CentralTaxPercent: centralTaxPercent, StateTaxPercent: stateTaxPercent, CessPercent: cessPercent, Amount: amount });
 
-        data.push({ ItemID: materialID, Quantity: qty, Rate: rate, Discount: discount, GST: gst, CentralTaxPercent: centralTaxPercent, StateTaxPercent: stateTaxPercent, CessPercent: cessPercent, Amount: amount });
-    });
+        }
+           });
     var quotationId = $('#txtQuotation').val();
     var customerId = $('#ddlClientName').val();
     var quotationDate = $('#quotationDate').val();

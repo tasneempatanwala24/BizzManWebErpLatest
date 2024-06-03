@@ -60,7 +60,7 @@ namespace BizzManWebErp
             {
 
                 //  dtMaterialMasterList = objMain.dtFetchData("select Id,MaterialName from tblMmMaterialMaster where Id not in(select MaterialMasterId from tblMmBomMaster) and BOM='Y'");
-                dtMaterialMasterList = objMain.dtFetchData("select Id,MaterialName from tblMmMaterialMaster");
+                dtMaterialMasterList = objMain.dtFetchData("select Id,MaterialName from tblMmMaterialMaster where CanSale=1");
             }
             catch (Exception ex)
             {

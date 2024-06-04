@@ -359,24 +359,15 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 // Company logo on the right
                 //adding company logo
                 PdfPCell companyLogoCell = new PdfPCell();
-                if (dtCompanyDetails.Rows[0]["Logo"]!= System.DBNull.Value)
+                // Load the logo image from the specified file path
+                string logoPath = System.IO.Path.Combine("Images", "CompanyLogo.png");
+                if (File.Exists(logoPath))
                 {
-                    byte[] imageData = (byte[])dtCompanyDetails.Rows[0]["Logo"];
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(logoPath);
+                    logo.ScaleToFit(100, 100); // Adjust the size of the logo as needed
 
-                   
-                    // Replace "path/to/your/logo.png" with the actual path to your logo image
-                    //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
-
-                    // Attempt to create an iTextSharp Image instance from the byte array
-                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
-
-
-                    logo.ScaleToFit(100, 100); // Adjust the width and height as needed
+                    // Add the logo to the logo cell
                     companyLogoCell.AddElement(logo);
-                   
-
-                    
-                   
                 }
                 companyLogoCell.BorderWidth = 0;
                 companyLogoCell.HorizontalAlignment = Element.ALIGN_RIGHT; // Align to the right

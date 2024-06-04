@@ -67,7 +67,7 @@
     <button onclick="ViewDataList();"  class="preventDefault">View</button>
   <button id="saveDataBtn" onclick="saveData()"  class="preventDefault" style="display:none">Save</button>
  <%--<button id="PrintDataBtn" runat="server" OnClientClick="generatePDF()" OnClick="btnPrint_Click"  style="display:none">Print</button>--%>
-    <asp:Button runat="server" ID="PrintDataBtn" style="display:none;background-color:#7952b3;color:#fff;padding:7px;border:none" OnClientClick="generatePDF()" OnClick="btnPrint_Click" Text="Print"/>
+  <%--  <asp:Button runat="server" ID="PrintDataBtn" style="display:none;background-color:#7952b3;color:#fff;padding:7px;border:none" OnClientClick="generatePDF()" OnClick="btnPrint_Click" Text="Print"/>--%>
     <button type="button" class="preventDefault" id="previewBtn" style="display:none" onclick="PrintPreview()">
     Preview PDF
 </button>
@@ -102,6 +102,10 @@
 
       <div class="container" id="divDataEntry" style="margin-top: 10px;display:none; overflow: auto;">
        
+           <div class="card">
+            <div class="card-header">
+                <b>Sales Quotation</b>
+            </div>
             <div class="card-body">
                 <div class="panel panel-default">   
                     <div class="panel-body">
@@ -157,7 +161,7 @@
                     </div>
                 </div>
             </div>
-         
+         </div>
             
 
             <div class="card-body">

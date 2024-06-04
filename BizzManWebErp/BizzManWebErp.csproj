@@ -328,7 +328,6 @@
     <Content Include="wfAdminUserMaster.aspx" />
     <Content Include="wfCrmCustomerMaster.aspx" />
     <Content Include="wfCrmMain.aspx" />
-    <Content Include="wfFaTrialBalance.aspx" />
     <Content Include="wfHrDeptMasterNew.aspx" />
     <Content Include="wfHrDesignationMasterNew.aspx" />
     <Content Include="wfHrEmpEsiStaturyReport.aspx" />
@@ -343,17 +342,10 @@
     <Content Include="wfHrEmpKpiReport.aspx" />
     <Content Include="wfHrEmpKpiSelfAsseesmentEntry.aspx" />
     <Content Include="wfHrEmpKpiSubGroup.aspx" />
-    <Content Include="wfHrEmpLeaveApplication.aspx" />
-    <Content Include="wfHrEmpLeaveApplicationIndivisual.aspx" />
-    <Content Include="wfHrEmpLoan.aspx" />
-    <Content Include="wfHrEmpLoanApplicationMaster.aspx" />
-    <Content Include="wfHrEmpOtEntry.aspx" />
     <Content Include="wfHrEmpPfStaturyReport.aspx" />
     <Content Include="wfHrEmpSalaryPaySlip.aspx" />
     <Content Include="wfHrEmpSalaryReport.aspx" />
     <Content Include="wfHrEmpSalaryReportIndivisual.aspx" />
-    <Content Include="wfHrEmpSalaryReport_1.aspx" />
-    <Content Include="wfHrEmpSummerAEntry.aspx" />
     <Content Include="wfInventLocationMaster.aspx" />
     <Content Include="wfInventoryMain.aspx" />
     <Content Include="wfInventPutwayRule.aspx" />
@@ -388,12 +380,10 @@
     <Content Include="wfHrBranchMasterNew.aspx" />
     <Content Include="wfHrEmpSalaryApprove.aspx" />
     <Content Include="wfHrEmpSalaryGrade.aspx" />
-    <Content Include="wfHrEmpSalaryGrnerate.aspx" />
     <Content Include="wfFaMainMenu.aspx" />
     <Content Include="wfHrDesignationMaster.aspx" />
     <Content Include="wfHrDeptMaster.aspx" />
     <Content Include="wfHrEmpAttendance.aspx" />
-    <Content Include="wfHrEmpMasterTransection.aspx" />
     <Content Include="wfHrEsiMaster.aspx" />
     <Content Include="wfHrPfMaster.aspx" />
     <Content Include="wfHrHrmsMain.aspx" />
@@ -556,12 +546,6 @@
     <Compile Include="wfCrmMain.aspx.designer.cs">
       <DependentUpon>wfCrmMain.aspx</DependentUpon>
     </Compile>
-    <Compile Include="wfFaTrialBalance.aspx.cs">
-      <DependentUpon>wfFaTrialBalance.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfFaTrialBalance.aspx.designer.cs">
-      <DependentUpon>wfFaTrialBalance.aspx</DependentUpon>
-    </Compile>
     <Compile Include="wfHrDeptMasterNew.aspx.cs">
       <DependentUpon>wfHrDeptMasterNew.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -660,36 +644,6 @@
     <Compile Include="wfHrEmpKpiSubGroup.aspx.designer.cs">
       <DependentUpon>wfHrEmpKpiSubGroup.aspx</DependentUpon>
     </Compile>
-    <Compile Include="wfHrEmpLeaveApplication.aspx.cs">
-      <DependentUpon>wfHrEmpLeaveApplication.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLeaveApplication.aspx.designer.cs">
-      <DependentUpon>wfHrEmpLeaveApplication.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLeaveApplicationIndivisual.aspx.cs">
-      <DependentUpon>wfHrEmpLeaveApplicationIndivisual.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLeaveApplicationIndivisual.aspx.designer.cs">
-      <DependentUpon>wfHrEmpLeaveApplicationIndivisual.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLoan.aspx.cs">
-      <DependentUpon>wfHrEmpLoan.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLoan.aspx.designer.cs">
-      <DependentUpon>wfHrEmpLoan.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLoanApplicationMaster.aspx.cs">
-      <DependentUpon>wfHrEmpLoanApplicationMaster.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpLoanApplicationMaster.aspx.designer.cs">
-      <DependentUpon>wfHrEmpLoanApplicationMaster.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpOtEntry.aspx.cs">
-      <DependentUpon>wfHrEmpOtEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpOtEntry.aspx.designer.cs">
-      <DependentUpon>wfHrEmpOtEntry.aspx</DependentUpon>
-    </Compile>
     <Compile Include="wfHrEmpPfStaturyReport.aspx.cs">
       <DependentUpon>wfHrEmpPfStaturyReport.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -717,18 +671,6 @@
     </Compile>
     <Compile Include="wfHrEmpSalaryReportIndivisual.aspx.designer.cs">
       <DependentUpon>wfHrEmpSalaryReportIndivisual.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpSalaryReport_1.aspx.cs">
-      <DependentUpon>wfHrEmpSalaryReport_1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpSalaryReport_1.aspx.designer.cs">
-      <DependentUpon>wfHrEmpSalaryReport_1.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpSummerAEntry.aspx.cs">
-      <DependentUpon>wfHrEmpSummerAEntry.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpSummerAEntry.aspx.designer.cs">
-      <DependentUpon>wfHrEmpSummerAEntry.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfInventLocationMaster.aspx.cs">
       <DependentUpon>wfInventLocationMaster.aspx</DependentUpon>
@@ -968,12 +910,6 @@
     <Compile Include="wfHrEmpSalaryGrade.aspx.designer.cs">
       <DependentUpon>wfHrEmpSalaryGrade.aspx</DependentUpon>
     </Compile>
-    <Compile Include="wfHrEmpSalaryGrnerate.aspx.cs">
-      <DependentUpon>wfHrEmpSalaryGrnerate.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpSalaryGrnerate.aspx.designer.cs">
-      <DependentUpon>wfHrEmpSalaryGrnerate.aspx</DependentUpon>
-    </Compile>
     <Compile Include="wfFaMainMenu.aspx.cs">
       <DependentUpon>wfFaMainMenu.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1001,12 +937,6 @@
     </Compile>
     <Compile Include="wfHrEmpAttendance.aspx.designer.cs">
       <DependentUpon>wfHrEmpAttendance.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpMasterTransection.aspx.cs">
-      <DependentUpon>wfHrEmpMasterTransection.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="wfHrEmpMasterTransection.aspx.designer.cs">
-      <DependentUpon>wfHrEmpMasterTransection.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEsiMaster.aspx.cs">
       <DependentUpon>wfHrEsiMaster.aspx</DependentUpon>

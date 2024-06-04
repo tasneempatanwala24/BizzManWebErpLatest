@@ -34,7 +34,7 @@
         var container = $('#tableContainer');
 
         var tableHTML = '<table class="center" id="tab2" style="width:90%;border:solid 1px black;padding:5px;"><tr><td colspan="2" style="text-align:center;"><h2>Pay Slip</h2></td></tr>'
-            + '<tr><td>' + data.Table1[0].CompanyName + '<br/>' + data.Table1[0].Address1 + '<br /><b> Email:</b> ' + data.Table1[0].EmailAddress + '<br /><b>Contact:</b> ' + data.Table1[0].PhoneNo + '</td><td><img src="data:image/png;base64,' + data.Table1[0].Logo + '" style="width:150px;height:150px;float:right;" /></td></tr>'
+            + '<tr><td>' + data.Table1[0].CompanyName + '<br/>' + data.Table1[0].Address1 + '<br /><b> Email:</b> ' + data.Table1[0].EmailAddress + '<br /><b>Contact:</b> ' + data.Table1[0].PhoneNo + '</td><td><img src="../Images/logo.png" style="width:150px;height:150px;float:right;" /></td></tr>'
             + '<tr><td colspan="2"></td></tr><tr><td colspan="2"></td></tr>'
             + '<tr><td colspan="2" style="text-align:center;"><h3>Pay Slip-' + data.Table2[0].Month + ' ' + data.Table2[0].Year  + '</h3></td></tr>'
             + '<tr><td colspan="2"></td></tr><tr><td colspan="2"><table id="search_form" style="width:100%;">'

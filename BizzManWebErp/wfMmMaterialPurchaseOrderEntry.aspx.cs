@@ -93,8 +93,8 @@ namespace BizzManWebErp
 
         //==============================
         //=============================
-        //  error  06/04/2024
-        //============from wfMmMaterialPurchaseOrderEntry===================
+        //  error  18/04/2024
+        
 
         [WebMethod]
         public static string VendorList()

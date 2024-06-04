@@ -228,7 +228,7 @@ function RefreshMaterialQuotationBalanceData() {
     });
 }
 
-
+ 
 function FetchRequsitionNotes() {
     var selectedReqNote = $('#ddlRequistionNotes').find('option:selected');
     var optDeptId = selectedReqNote.attr('DeptId');
@@ -251,6 +251,16 @@ function FetchRequsitionNotes() {
     $('.btnDeleteRow').trigger('click');
     $(".ddlMaterialMaster option:not(:first)").remove();
     BindMaterialMasterDetails(false);
+
+    //=========by mk ===on 27/04/2024=========
+
+   // BindRequistionNoteDetails();
+
+
+
+    //=======================
+
+
 }
 
 function AddNewRow() {
@@ -503,7 +513,7 @@ function showSuccessMessage() {
 function BindBranchDetails() {
     $.ajax({
         type: "POST",
-        url: 'wfMmRequisitionNote.aspx/GetBranchDetails',
+        url: 'wfMmPurchaseQuotationEntry.aspx/GetBranchDetails',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -529,7 +539,7 @@ function BindBranchDetails() {
 function BindDeptDetails() {
     $.ajax({
         type: "POST",
-        url: 'wfMmRequisitionNote.aspx/GetDeptDetails',
+        url: 'wfMmPurchaseQuotationEntry.aspx/GetDeptDetails',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",

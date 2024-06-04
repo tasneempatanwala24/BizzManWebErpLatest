@@ -28,7 +28,7 @@
                     <th>Id</th>
                     <th>Invoice Entry Date</th>
                     <th>Order ID</th>
-                    <th>Gate Inword ID</th>
+                    <th>Gate Inward ID</th>
                     <th>GRN ID</th>
                     <th>Vendor Name</th>
                     <th>Branch</th>
@@ -42,7 +42,7 @@
     <div class="container" id="divMaterialPurchaseGrnInvoiceEntryDetailsList" style="margin-top: 10px; overflow: auto;">
         <div class="card">
             <div class="card-header">
-                Material Purchase Grn Invoice Details
+                Purchase GRN Invoice Details
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -70,7 +70,7 @@
     <div class="container" id="divMaterialPurchaseGrnInvoiceEntry" style="display: none; margin-top: 10px;">
         <div class="card">
             <div class="card-header">
-                Add Material Purchase Grn Invoice
+                Add Purchase GRN Invoice
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -112,7 +112,7 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>GRN Entry Date</th>
-                                    <th>Gate Inword ID</th>
+                                    <th>Gate Inward ID</th>
                                     <th>Vendor Name</th>
                                     <th>Branch</th>
                                 </tr>
@@ -131,7 +131,7 @@
     <div class="container" id="divMaterialPurchaseGRNMasterDetails" style="margin-top: 10px; overflow: auto; display: none;">
         <div class="card">
             <div class="card-header">
-                Material Purchase GRN Details
+                Purchase GRN Details
             </div>
             <div class="card-body">
                 <div class="panel panel-default">

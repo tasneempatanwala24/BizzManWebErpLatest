@@ -250,9 +250,28 @@
                             </tr>
                             <tr id="tr_upload" style="display: none;">
                                 <td>
+                                    <select id="ddlYearFile" name="ddlYearFile" class="form-control">
+                                        <option value="">-Select Year-</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="ddlMonthFile" name="ddlMonthFile" class="form-control">
+                                        <option value="">-Select Month-</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button id="downloadTemplateBtn">Download Template</button>
+                                </td>
+                                <td>
                                     <label class="control-label">Upload File</label></td>
-                                <td colspan="3">
+                                <td>
                                     <input type="file" id="AttendanceUpload" class="form-control" accept=".xlsx" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                     <div id="specificSection" style="display:none;color:red;border:1px solid red;">
+                                     </div>
+                                </td>
                             </tr>
                         </table>
 

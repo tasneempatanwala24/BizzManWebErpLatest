@@ -43,6 +43,33 @@ namespace BizzManWebErp
                 }
             }
         }
+
+        //===================error on 12/04/2024  ============
+        /*
+        [WebMethod]
+        public static string GetDeptDetails()
+        {
+            //  clsMain objMain = new clsMain();
+            DataTable dtList = new DataTable();
+
+            try
+            {
+
+                dtList = objMain.dtFetchData("select DeptName, Id from tblHrDeptMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtList);
+        }
+        //=============================
+        */
+
+
+         
+
         [WebMethod]
         public static string GetRequsitionNotes()
         {

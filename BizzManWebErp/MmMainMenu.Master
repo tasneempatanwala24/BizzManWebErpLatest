@@ -168,8 +168,10 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="wfMmCategoryMaster.aspx">Material Item Category</a></li>
-            <li><a class="dropdown-item" href="wfMmMaterialMaster.aspx">Meterial Item Master</a></li>
-              <li><a class="dropdown-item" href="wfMmItemMaster.aspx">Meterial Item Master New</a></li>
+            <li><a class="dropdown-item" href="wfMmMaterialMaster.aspx">Meterial Master</a></li>
+              <li><a class="dropdown-item" href="wfMmItemMaster.aspx">Meterial Item Master</a></li>
+              <li><a class="dropdown-item" href="wfMmItemMasterNew.aspx">Meterial Item Master New</a></li>
+
             <li><a class="dropdown-item" href="wfMmBomEntry.aspx">Meterial BOM Master</a></li>
 
             <li><a class="dropdown-item" href="wfMmUnitMesureMaster.aspx">Material Unit Master</a></li>
@@ -185,14 +187,19 @@
             Purchase
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" href="wfMmRequisitionNote.aspx">Material Requisition Note</a></li>
-            <li><a class="dropdown-item" href="wfMmMaterialIndentMaster.aspx">Material Requisition indent</a></li>
-            <li><a class="dropdown-item" href="wfMmPurchaseQuotationEntry.aspx">Material Purchase Qutation Entry</a></li>
-            <li><a class="dropdown-item" href="wfMmMaterialPurchaseOrderEntry.aspx">Material Purchase Order Entry</a></li>
-            <li><a class="dropdown-item" href="wfMmMaterialPurchaseOrderDirectEntry.aspx">Material Purchase Order Direct Entry</a></li>
+            <li><a class="dropdown-item" href="wfMmRequisitionNote.aspx">Purchase Requisition Note</a></li>
+            <li><a class="dropdown-item" href="wfMmMaterialIndentMaster.aspx">Purchase Requisition Indent</a></li>
+            <li><a class="dropdown-item" href="wfMmPurchaseQuotationEntry.aspx">Purchase Quotation Entry</a></li>
+            <li><a class="dropdown-item" href="wfMmMaterialPurchaseOrderEntry.aspx">Purchase Order Entry</a></li>
+            <li><a class="dropdown-item" href="wfMmMaterialPurchaseOrderDirectEntry.aspx">Purchase Order Direct Entry</a></li>
 
-            <li><a class="dropdown-item" href="wfMmMaterialPurchaseGateInword.aspx">Material Purchase Gate Inword Entry</a></li>
-            <li><a class="dropdown-item" href="wfMmMaterialPurchaseGrnEntry.aspx">Material Purchase GRN Entry</a></li>
+            <li><a class="dropdown-item" href="wfMmMaterialPurchaseGateInword.aspx">Purchase Gate Inward Entry</a></li>
+            <li><a class="dropdown-item" href="wfMmMaterialPurchaseGrnEntry.aspx">Purchase GRN Entry</a></li>
+             <li><a class="dropdown-item" href="wfMmMaterialPurchaseOrderDirectGrnEntry.aspx">Purchase Order Direct GRN Entry</a></li>
+
+            <li><a class="dropdown-item" href="wfMmMaterialPurchaseGrnReturn.aspx">Purchase GRN Return Entry</a></li>
+
+
             <li><a class="dropdown-item" href="wfMmMaterialPurchaseGrnInvoiceEntry.aspx">Material Purchase GRN Invoice Entry</a></li>
             <li><a class="dropdown-item" href="wfMmMaterialStockMaster.aspx">Material Stock</a></li>
           </ul>

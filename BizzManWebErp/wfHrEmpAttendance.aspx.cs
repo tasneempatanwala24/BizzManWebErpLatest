@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Services;
 using System.Web.UI;
@@ -92,7 +93,52 @@ namespace BizzManWebErp
 
             return JsonConvert.SerializeObject(dtBranchList);
         }
+        [WebMethod]
+        public static string YearList()
+        {
+            // clsMain objMain = new clsMain();
+            DataTable dtYearList = new DataTable();
 
+            try
+            {
+
+                dtYearList = objMain.dtFetchData("select [Year] FROM tblHrYearMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            // return JsonConvert.SerializeObject(dtBranchList);
+
+            string json = JsonConvert.SerializeObject(dtYearList, Formatting.None);
+            dtYearList.Clear();
+            return json;
+
+        }
+
+        [WebMethod]
+        public static string MonthList()
+        {
+            DataTable dtMonthList = new DataTable();
+
+            try
+            {
+
+                dtMonthList = objMain.dtFetchData("select MonthName FROM tblHrMonthMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            // return JsonConvert.SerializeObject(dtBranchList);
+
+            string json = JsonConvert.SerializeObject(dtMonthList, Formatting.None);
+            dtMonthList.Clear();
+            return json;
+
+        }
         //====================================
         //====================================
         //===================================

@@ -26,9 +26,9 @@
                 <tr>
                     <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                     <th>Id</th>
-                    <th>Grn Entry Date</th>
+                    <th>GRN Entry Date</th>
                     <th>Order ID</th>
-                    <th>Gate Inword ID</th>
+                    <th>Gate Inward ID</th>
                     <th>Vendor Name</th>
                     <th>Branch</th>
                 </tr>
@@ -41,7 +41,7 @@
     <div class="container" id="divMaterialPurchaseGrnDetailsList" style="margin-top: 10px; overflow: auto;">
         <div class="card">
             <div class="card-header">
-                Material Purchase Grn Details
+                Purchase GRN Details
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -53,7 +53,7 @@
                                     <th>Order Qty</th>
                                     <th>Unit Measure</th>
                                     <th>GateInword Receive Qty</th>
-                                    <th>Grn Receive Qty</th>
+                                    <th>GRN Receive Qty</th>
                                     <th>Return Qty</th>
                                     <th>Unit Price</th>
                                     <th>Total Amount</th>
@@ -75,14 +75,14 @@
     <div class="container" id="divMaterialPurchaseGrnEntry" style="display: none; margin-top: 10px;">
         <div class="card">
             <div class="card-header">
-                Add Material Purchase Grn
+                Add Purchase GRN
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <table class="tbl">
                             <tr>
-                                <td>Grn Entry Date *</td>
+                                <td>GRN Entry Date *</td>
                                 <td>
                                     <input type="date" class="form-control dat" id="txtEntryDate" name="txtEntryDate" onchange="GenerateOrderID()" />
                                 </td>
@@ -212,7 +212,7 @@
      <div class="container" id="divMaterialPurchaseOrderMasterDetails" style="margin-top: 10px; overflow: auto; display: none;">
         <div class="card">
             <div class="card-header">
-                Material Purchase Order Details
+                Purchase Order Details
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -228,10 +228,10 @@
                                     <th>Total Receive Qty</th>
                                     <th>Balance Qty</th>
                                     <th>Unit Price</th>
-                                    <th>Receive Qty</th>
-                                    <th>Return Qty</th>
+                                    <th>Receive QTY</th>
+                                    <th>Return QTY</th>
                                     <th>Package Name</th>
-                                    <th>Package Qty</th>
+                                    <th>Package QTY</th>
                                     <th>Warehouse</th>
                                     <th>Description</th>
                                     <th>Q/C</th>

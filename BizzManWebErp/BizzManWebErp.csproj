@@ -558,7 +558,6 @@
     </Compile>
     <Compile Include="wfFaTrialBalance.aspx.cs">
       <DependentUpon>wfFaTrialBalance.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfFaTrialBalance.aspx.designer.cs">
       <DependentUpon>wfFaTrialBalance.aspx</DependentUpon>
@@ -663,35 +662,30 @@
     </Compile>
     <Compile Include="wfHrEmpLeaveApplication.aspx.cs">
       <DependentUpon>wfHrEmpLeaveApplication.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpLeaveApplication.aspx.designer.cs">
       <DependentUpon>wfHrEmpLeaveApplication.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEmpLeaveApplicationIndivisual.aspx.cs">
       <DependentUpon>wfHrEmpLeaveApplicationIndivisual.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpLeaveApplicationIndivisual.aspx.designer.cs">
       <DependentUpon>wfHrEmpLeaveApplicationIndivisual.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEmpLoan.aspx.cs">
       <DependentUpon>wfHrEmpLoan.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpLoan.aspx.designer.cs">
       <DependentUpon>wfHrEmpLoan.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEmpLoanApplicationMaster.aspx.cs">
       <DependentUpon>wfHrEmpLoanApplicationMaster.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpLoanApplicationMaster.aspx.designer.cs">
       <DependentUpon>wfHrEmpLoanApplicationMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEmpOtEntry.aspx.cs">
       <DependentUpon>wfHrEmpOtEntry.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpOtEntry.aspx.designer.cs">
       <DependentUpon>wfHrEmpOtEntry.aspx</DependentUpon>
@@ -726,14 +720,12 @@
     </Compile>
     <Compile Include="wfHrEmpSalaryReport_1.aspx.cs">
       <DependentUpon>wfHrEmpSalaryReport_1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpSalaryReport_1.aspx.designer.cs">
       <DependentUpon>wfHrEmpSalaryReport_1.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfHrEmpSummerAEntry.aspx.cs">
       <DependentUpon>wfHrEmpSummerAEntry.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpSummerAEntry.aspx.designer.cs">
       <DependentUpon>wfHrEmpSummerAEntry.aspx</DependentUpon>
@@ -978,7 +970,6 @@
     </Compile>
     <Compile Include="wfHrEmpSalaryGrnerate.aspx.cs">
       <DependentUpon>wfHrEmpSalaryGrnerate.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpSalaryGrnerate.aspx.designer.cs">
       <DependentUpon>wfHrEmpSalaryGrnerate.aspx</DependentUpon>
@@ -1013,7 +1004,6 @@
     </Compile>
     <Compile Include="wfHrEmpMasterTransection.aspx.cs">
       <DependentUpon>wfHrEmpMasterTransection.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="wfHrEmpMasterTransection.aspx.designer.cs">
       <DependentUpon>wfHrEmpMasterTransection.aspx</DependentUpon>

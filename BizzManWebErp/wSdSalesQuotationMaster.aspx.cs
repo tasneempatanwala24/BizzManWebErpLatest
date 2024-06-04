@@ -206,9 +206,15 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
             try
             {
 
-                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
+                        dtQuotationDetails = objMain.dtFetchData(@"select                          QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions 
+                        ,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email 
+                        ,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSdSalesQuotationMaster SM  
+                         inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
 
-                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate,material.UnitMesure from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+                dtSalesQuotationDetail = objMain.dtFetchData(@"select QuotationId,SD.ItemId,material.materialName,SD.Qty,SD.Rate,SD.Discount,SD.GST,SD.Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate,material.UnitMesure from 
+ tblSdSalesQuotationMaster SM
+ inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId
+ inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
 
                 if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
                 {
@@ -404,7 +410,10 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 clientInfoCell.Padding = 0;
                 //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 billToTable.AddCell(clientInfoCell);
-                DataTable dtQuotationDetails = objMain.dtFetchData("select QuotationId,FORMAT(QuotationDate, 'dd/MM/yyyy') as QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
+                DataTable dtQuotationDetails = objMain.dtFetchData(@"select QuotationId,FORMAT(QuotationDate, 'dd/MM/yyyy') as QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions 
+,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email ,
+isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSdSalesQuotationMaster SM  
+inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
                 // Quotation details on the right
                 PdfPCell quotationDetailsCell = new PdfPCell();
                 quotationDetailsCell.AddElement(new Paragraph("Quotation ID: " + QuotationId, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
@@ -438,7 +447,10 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-                DataTable dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
+                DataTable dtSalesQuotationDetail = objMain.dtFetchData(@"select QuotationId,ItemId,materialName,Qty,Rate,SD.Discount,
+GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate from 
+tblSdSalesQuotationMaster SM  inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId 
+inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
                 // Add table rows with item details
                 // Replace the following with your actual data
 
@@ -542,63 +554,6 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
             }
         }
 
-        protected void btnPrint_Click(object sender, EventArgs e)
-        {
-            string QuotationId = printQuotationId.Value;
-            // Output directory for the PDF file
-           // string filePath = Server.MapPath("~/"+ QuotationId.Replace("/","") + ".pdf");
-            //if (File.Exists(filePath))
-            //    File.Delete(filePath);
-            DataTable dtQuotationDetails = new DataTable();
-            DataTable dtSalesQuotationDetail = new DataTable();
-            try
-            {
-
-                dtQuotationDetails = objMain.dtFetchData("select QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions\r\n,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email\r\n,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address\r\nfrom tblSdSalesQuotationMaster SM\r\n inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId\r\n inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
-
-                dtSalesQuotationDetail = objMain.dtFetchData(" select QuotationId,ItemId,materialName,Qty,Rate,Discount,GST,Amount from \r\n tblSdSalesQuotationMaster SM\r\n inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId\r\n inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "'");
-
-                if (dtQuotationDetails != null && dtQuotationDetails.Rows.Count > 0)
-                {
-                    //var fs = new FileStream(filePath, FileMode.Create);
-                    //  MemoryStream fs = new MemoryStream();
-
-                    Response.ContentType = "application/pdf";
-                    Response.AppendHeader("Content-Disposition", "attachment; filename=" + QuotationId.Replace("/", "") + ".pdf");
-
-                    using (MemoryStream fs = new MemoryStream())
-                    {
-                        Document document = new Document(PageSize.A4, 25, 25, 30, 30);
-                        //PdfWriter writer = PdfWriter.GetInstance(document, fs);
-                        PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
-
-                        document.Open();
-                        AddInvoiceContent(document, QuotationId);
-                        document.Close();
-                        Response.End();
-                    }
-                    
-                }
-                else
-                {
-
-                }
-                //if (File.Exists(filePath))
-                //    File.Delete(filePath);
-
-             
-              //  Response.TransmitFile(filePath);
-            
-
-
-               
-
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
 
 
         [WebMethod]

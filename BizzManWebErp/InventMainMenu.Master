@@ -121,6 +121,9 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" href="#">Transfers</a></li>
+
+               <li><a class="dropdown-item" href="wfInventTransportDetail.aspx">Transport Detail</a></li>
+
             <li><a class="dropdown-item" href="#">Replenishment</a></li>
               <li><a class="dropdown-item" href="#">Batch Transfers</a></li>
               <li><a class="dropdown-item" href="#">Inventory Adjustment</a></li>
@@ -164,6 +167,9 @@
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><a class="dropdown-item" href="wfInventWarehouseMaster.aspx">Warehouses</a></li>
               <li><a class="dropdown-item" href="wfInventLocationMaster.aspx">Locations</a></li>  
+
+         <li><a class="dropdown-item" href="wfInventTransportMaster.aspx">Transport Master</a></li>  
+
                <li><a class="dropdown-item" href="#">Rules</a></li>  
                <li><a class="dropdown-item" href="#">Routes</a></li>  
                <li><a class="dropdown-item" href="#">Operations Types</a></li>  

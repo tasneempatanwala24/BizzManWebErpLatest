@@ -272,7 +272,29 @@ namespace BizzManWebErp
         }
 
 
+        //  error  18/04/2024
 
+
+        [WebMethod]
+        public static string VendorList()
+        {
+            //   clsMain objMain = new clsMain();
+            DataTable dtVendorList = new DataTable();
+
+            try
+            {
+
+                dtVendorList = objMain.dtFetchData("select Id,VendorName FROM tblMmVendorMaster");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtVendorList);
+        }
+
+        //=====================================
 
 
     }

@@ -62,6 +62,31 @@ $(document).ready(function () {
         }
 
     }).trigger("change");
+    //$('#txtHours').keypress(function (event) {
+    //    if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+    //        event.preventDefault();
+    //    }
+    //});
+    $('#txtHours').keypress(function (event) {
+        // Allowing only digits (0-9), decimal point (.), and backspace (8)
+        if ((event.which != 8 && event.which != 46 && (event.which < 48 || event.which > 57)) ||
+            // Allowing only one decimal point
+            ($(this).val().indexOf('.') != -1 && event.which == 46) ||
+            // Limiting to three decimal places
+            ($(this).val().indexOf('.') != -1 && $(this).val().split('.')[1].length >= 3)) {
+            event.preventDefault();
+        }
+    });
+    $('#txtTotalHours').keypress(function (event) {
+        // Allowing only digits (0-9), decimal point (.), and backspace (8)
+        if ((event.which != 8 && event.which != 46 && (event.which < 48 || event.which > 57)) ||
+            // Allowing only one decimal point
+            ($(this).val().indexOf('.') != -1 && event.which == 46) ||
+            // Limiting to three decimal places
+            ($(this).val().indexOf('.') != -1 && $(this).val().split('.')[1].length >= 3)) {
+            event.preventDefault();
+        }
+    });
 });
 function BindBranchDropdown() {
 
@@ -233,7 +258,8 @@ function ClearAll() {
     $('#ddlMonth').val('');
     $('#txtTotalOT').val('');
     $('#txtOTDate').val('');
-
+    $('#txtHours').val('');
+    $('#txtTotalHours').val('');
 }
 function CreateData() {
     $('#divDataList').hide();
@@ -249,6 +275,7 @@ function CreateData() {
     $('#ddlYear').attr("disabled", false);
     $('#ddlMonth').attr("disabled", false);
     $('#txtTotalOT').attr("readonly", "readonly");
+    $('#txtTotalHours').attr("readonly", "readonly");
     $('#txtOTDate').removeAttr("readonly");
     ClearAll();
 
@@ -283,6 +310,7 @@ function BindEmpOTList() {
                     + '<td>' + data[i].EmpName + '</td>'
                     + '<td>' + data[i].Year + '</td>'
                     + '<td>' + data[i].Month + '</td>'
+                    + '<td>' + data[i].TotalHours + '</td>'
                     + '<td>' + data[i].TotalOT + '</td></tr > ';
             }
             $('#tbody_EmpOT_List').html(html);
@@ -364,7 +392,7 @@ function BindEmpOTDetailList() {
             $('#tbody_EmpOTDetail_List').html('');
 
 
-            var html = ''; var countOT;
+            var html = ''; var countOT; var counthours = 0;
             for (var i = 0; i < JSON.parse(response.d).length; i++) {
                 html = html + '<tr>'
                     //+ '<td> ' + data[i].Id + '</td > '
@@ -372,14 +400,17 @@ function BindEmpOTDetailList() {
                     + '<td>' + data[i].Year + '</td>'
                     + '<td>' + data[i].Month + '</td>'
                     + '<td>' + data[i].Day + '</td>'
+                    + '<td>' + data[i].Hours + '</td>'
                     + '<td><a onclick="DeleteOTDetailData(\'' + data[i].Id + '\',\'' + data[i].OtMasterEntryId + '\');" style="cursor:pointer;"><i class="fa fa-trash" aria-hidden="true"></i></a></td>'
                     + '</tr>';
                 countOT = i + 1;
+                counthours = counthours + data[i].Hours;
                 ParentId = data[i].OtMasterEntryId;
             }
             $('#tbody_EmpOTDetail_List').html(html);
             $('#tblEmpOTDetailList').DataTable();
             $('#txtTotalOT').val(countOT);
+            $('#txtTotalHours').val(counthours);
         },
         complete: function () {
 
@@ -454,7 +485,8 @@ function AddData() {
                             "Year": $('#ddlYear').val(),
                             "Month": $('#ddlMonth').val(),
                             "OTDate": $('#txtOTDate').val().trim(),
-                            "LoginUser": $('#ContentPlaceHolder1_loginuser').val()
+                            "LoginUser": $('#ContentPlaceHolder1_loginuser').val(),
+                            "Hours": $('#txtHours').val(),
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -466,6 +498,8 @@ function AddData() {
                             if (r.status == "success") {
                                 alertify.success('Employee OT detail added successfully');
                                 $('#txtOTDate').val('');
+                                $('#txtHours').val('');
+                                //$('#txtTotalHours').val('');
                                 BindEmpOTDetailList();
                             }
                             else {
@@ -534,6 +568,8 @@ function FetchEmpOTDetails(id) {
             $('#ddlMonth').val(data[0].Month);
             $('#txtId').val(data[0].Id);
             $('#txtTotalOT').val(data[0].TotalOT);
+            //$('#txtTotalHours').val(data[0].TotalHours).toFixed(3);
+            $('#txtTotalHours').val(data[0].TotalHours);
             $('#txtOTDate').val(data[0].OTDate);
             BindEmpOTDetailList();
 

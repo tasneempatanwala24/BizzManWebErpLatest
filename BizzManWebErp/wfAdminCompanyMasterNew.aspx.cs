@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -47,8 +48,14 @@ namespace BizzManWebErp
        
         [WebMethod]
         public static string AddCompany(string CompanyName, string Address1, string Address2, string Phone, string Email, string Website,
-            string PhotoImage, string User, string Id,string PAN,string Gst)
+            string PhotoImage, string User, string Id, string PAN, string Gst)
         {
+            string filename = string.Empty;
+            if (!string.IsNullOrEmpty(PhotoImage) || PhotoImage == "Images/logo.png")
+            {
+                filename = "logo.png";
+            }
+
             SqlParameter[] objParam = new SqlParameter[11];
 
             objParam[0] = new SqlParameter("@CompanyName", SqlDbType.VarChar);
@@ -81,7 +88,7 @@ namespace BizzManWebErp
 
             objParam[7] = new SqlParameter("@PhotoImage", SqlDbType.VarBinary);
             objParam[7].Direction = ParameterDirection.Input;
-            objParam[7].Value = Encoding.UTF8.GetBytes(PhotoImage);
+            objParam[7].Value = Encoding.UTF8.GetBytes(PhotoImage); ;
 
             objParam[8] = new SqlParameter("@User", SqlDbType.VarChar);
             objParam[8].Direction = ParameterDirection.Input;
@@ -96,7 +103,21 @@ namespace BizzManWebErp
             objParam[10].Value = Gst;
 
             var result = objMain.ExecuteProcedure("procAdminCompanyMaster", objParam);
-            
+            if (result.status == "success")
+            {
+                if (PhotoImage != "Images/logo.png")
+                {
+                    if (!string.IsNullOrEmpty(PhotoImage))
+                    {
+                        int startIndex = PhotoImage.IndexOf(',') + 1;
+                        PhotoImage = PhotoImage.Substring(startIndex);
+                        byte[] imageBytes = Convert.FromBase64String(PhotoImage);
+                        string folderPath = HttpContext.Current.Server.MapPath("~/Images/");
+                        string imagePath = System.IO.Path.Combine(folderPath, filename);
+                        File.WriteAllBytes(imagePath, imageBytes);
+                    }
+                }
+            }
             return "";
         }
 
@@ -108,7 +129,7 @@ namespace BizzManWebErp
             try
             {
 
-                dtlist = objMain.dtFetchData(@"SELECT Id,CompanyName,PhoneNo,EmailAddress,CAST(Logo as varchar(max))[PhotoImage],GstNo,PanNo,WebSiteAddress FROM tblAdminCompanyMaster");
+                dtlist = objMain.dtFetchData(@"SELECT Id,CompanyName,PhoneNo,EmailAddress,'Images/logo.png' as Logo,GstNo,PanNo,WebSiteAddress FROM tblAdminCompanyMaster");
             }
             catch (Exception ex)
             {
@@ -134,7 +155,7 @@ namespace BizzManWebErp
 
             try
             {
-                string sqlQuery = $"SELECT CompanyName,Address1,Address2,PhoneNo as Phone,EmailAddress as Email,PanNo as PAN,WebSiteAddress, CAST(Logo as varchar(max))[PhotoImage],GstNo,Active from tblAdminCompanyMaster WHERE Id ={Id} ";
+                string sqlQuery = $"SELECT CompanyName,Address1,Address2,'Images/logo.png' as Logo,PhoneNo as Phone,EmailAddress as Email,PanNo as PAN,WebSiteAddress, GstNo,Active from tblAdminCompanyMaster WHERE Id ={Id} ";
 
                 dtList = objMain.dtFetchData(sqlQuery);
             }
@@ -155,7 +176,7 @@ namespace BizzManWebErp
 
             try
             {
-                string sqlQuery = $"SELECT CAST(Logo as varchar(max))[PhotoImage] " +
+                string sqlQuery = $"SELECT 'Images/logo.png' as Logo, " +
                                   $"FROM tblAdminCompanyMaster WHERE CompanyName ={Id} ";
 
                 dtImages = objMain.dtFetchData(sqlQuery);

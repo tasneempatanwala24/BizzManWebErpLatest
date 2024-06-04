@@ -1,3 +1,4 @@
+var formattedTime;
 $(document).ready(function () {
     $("button").click(function (event) {
         event.preventDefault();
@@ -9,7 +10,8 @@ $(document).ready(function () {
    // BindEmployeeDropdown('0', 'ddl_Employee');
     BindBranchDropdown();
     BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', '', '', '', '','');
-
+    BindYearDropdown();
+    BindMonthDropdown();
     $("#txtAttendanceDate").on("change", function () {
         this.setAttribute(
             "data-date",
@@ -18,8 +20,15 @@ $(document).ready(function () {
         );
     }).trigger("change");
 
-    
-    $('#txtAttendanceTime').timepicker();
+    var currentTime = new Date();
+
+    // Get hours and minutes
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+
+    // Format the time as HH:MM
+    formattedTime = hours + ':' + minutes;
+    $('#txtAttendanceTime').val(formattedTime);
 
     $('input[type=radio][name=optradioAttendanceType]').change(function () {
         if (this.value == "1") {
@@ -40,7 +49,24 @@ $(document).ready(function () {
             $('#divAttendanceListDateWise').hide();
         }
     });
+    $("#downloadTemplateBtn").click(function () {
+        // Replace 'template.xlsx' with the actual URL of your template file
+        var templateUrl = '/Templates/Attendance.xlsx';
 
+        // Create a hidden link element
+        var link = document.createElement('a');
+        link.href = templateUrl;
+        link.download = 'Attendance.xlsx'; // Set the filename for download
+        
+        // Append the link to the document body
+        document.body.appendChild(link);
+
+        // Trigger a click event on the link
+        link.click();
+        
+        // Remove the link from the document body
+        document.body.removeChild(link);
+    });
 });
  
 
@@ -75,9 +101,8 @@ function BindBranchDropdown() {
     });
 
 }
-
-
 function CreateEmployeeAttendance() {
+    $('#txtAttendanceTime').val(formattedTime);
     $('#divEmployeeAttendanceList').hide();
     $('#divEmployeeAttendanceEntry').show();
     $('#divAttendanceListDateWise').show();
@@ -85,7 +110,6 @@ function CreateEmployeeAttendance() {
     $('#btnSearch').hide();
     ClearAll();
 }
-
 function ViewEmployeeAttendanceList() {
     $('#divEmployeeAttendanceList').show();
     $('#divEmployeeAttendanceEntry').hide();
@@ -102,7 +126,6 @@ function ViewEmployeeAttendanceList() {
     $('#txtYear').val(year);
     BindEmployeeAttendanceList('', 'tbody_Employee_AttendanceList', 'tblEmployeeAttendanceList', '', '', $('#txtYear').val(),'','');
 }
-
 function ShowEmployeeAttendance() {
     if ($('#txtAttendanceDate').val() != '') {
         if (moment($('#txtAttendanceDate').val(), 'YYYY-MM-DD', true).isValid() == true) {
@@ -118,8 +141,6 @@ function ShowEmployeeAttendance() {
         $('#tblAttendanceListDateWise').DataTable();
     }
 }
-
-
 function ShowEmployeeName() {
     if ($('#ddlEmployee').val() != '') {
         FetchEmployeeDetails($('#ddlEmployee').val());
@@ -128,7 +149,6 @@ function ShowEmployeeName() {
         $('#txtEmpName').val('');
     }
 }
-
 function ClearAll() {
     $('#tblAttendanceListDateWise').DataTable().clear();
     $('#tblAttendanceListDateWise').DataTable().destroy();
@@ -139,10 +159,9 @@ function ClearAll() {
     $('#ddlEmployee').select2();
     $('#txtEmpName').val('');
     $('#txtAttendanceDate').val('');
-    $('#txtAttendanceTime').val('');
     $('#txtAttendanceTime').timepicker('remove');
     $('#txtAttendanceTime').timepicker();
-    $('#txtAttendanceTime').val('');
+    $('#txtAttendanceTime').val(formattedTime);
     $('input:radio[name="optradioAttendanceType"][value="1"]').prop('checked', true);
     $('input[name=optradioAttendance]').removeAttr('checked');
     $('#ddlBranch').val('');
@@ -153,9 +172,11 @@ function ClearAll() {
     $('.individual_entry').show();
     $('#AttendanceUpload').val('');
     $('#divAttendanceListDateWise').show();
+    $('#ddlYearFile').val('');
+    $('#ddlMonthFile').val('');
+    $('#specificSection').text('');
+    $('#specificSection').hide();
 }
-
-
 function FetchEmployeeDetails(empid) {
     $.ajax({
         type: "POST",
@@ -183,10 +204,6 @@ function FetchEmployeeDetails(empid) {
     });
 
 }
-
-
-
-
 function BindEmployeeAttendanceList(AttendanceDate, tbodyid, tbl_id,day,month,year,empid,branchid) {
     $.ajax({
         type: "POST",
@@ -238,8 +255,6 @@ function BindEmployeeAttendanceList(AttendanceDate, tbodyid, tbl_id,day,month,ye
     });
 
 }
-
-
 function BindEmployeeDropdown(brnch, elmnt,branchid) {
     var chk = 1;
     var branch = '';
@@ -290,8 +305,6 @@ function BindEmployeeDropdown(brnch, elmnt,branchid) {
         $('#' + elmnt).select2();
     }
 }
-
-
 function SearchEmployeeAttendance() {
     var chkDay = 1;
     var chkMonth = 1;
@@ -337,18 +350,120 @@ function SearchEmployeeAttendance() {
         alertify.error('Please enter any searching criteria');
     }
 }
+function CheckExcelEmpId(filename) {
+    //alert(filename.val());
+    var Id = filename;//"E:\\Projects\\Bizz\\BizzManWebErp\\Templates\\Attendance.xlsx";
+    
+    $.ajax({
+        type: "POST",
+        url: 'wfHrEmpAttendance.aspx/CompareExcelToDatabase',
+        data: JSON.stringify({
+            "excelFilePath": Id
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
 
+        },
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            var htmlTable = "<table style='width:100%;border:1px solid black;'><tr style='border:1px solid black;color:red;'><td colspan='2'><b>Error at : Please enter valid Emp ID</b></td></tr><tr style='border:1px solid black;'><th>Excel Row No</th><th>EmpId</th></tr>";
+            $.each(data, function (i, item) {
+                htmlTable += "<tr style='border:1px solid black;'><td>" + JSON.parse(response.d)[i].rowNumber + "</td><td>" + JSON.parse(response.d)[i].excelValue1 + "</td></tr>";
+            });
+
+            htmlTable += "</table>";
+
+            // Attach the HTML table to the specific section
+            $('#specificSection').append(htmlTable);
+
+        },
+        complete: function () {
+
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+
+}
+function BindYearDropdown() {
+    $.ajax({
+        type: "POST",
+        url: 'wfHrEmpAttendance.aspx/YearList',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            var abranch = "";
+            for (var i = 0; i < JSON.parse(response.d).length; i++) {
+                abranch = abranch + "<option value='" + JSON.parse(response.d)[i].Year + "'>" + JSON.parse(response.d)[i].Year + "</option>";
+            }
+            $('#ddlYearFile').append(abranch);
+        },
+        complete: function () {
+
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+}
+function BindMonthDropdown() {
+    $.ajax({
+        type: "POST",
+        url: 'wfHrEmpAttendance.aspx/MonthList',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+
+        },
+        success: function (response) {
+            var data = JSON.parse(response.d);
+            var abranch = "";
+            for (var i = 0; i < JSON.parse(response.d).length; i++) {
+                abranch = abranch + "<option value='" + JSON.parse(response.d)[i].MonthName + "'>" + JSON.parse(response.d)[i].MonthName + "</option>";
+            }
+            $('#ddlMonthFile').append(abranch);
+        },
+        complete: function () {
+
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+
+        }
+    });
+}
 function AddEmployeeAttendance() {
     if ($("input:radio[name='optradioAttendanceType']:checked").val() == "3") {
-        if ($('#AttendanceUpload').val() != '') {
+        if ($('#ddlYearFile').val() == '') {
+            alertify.error("Please select Year");
+            isValid = false;
+        }
+        else if ($('#ddlMonthFile').val() == '') {
+            alertify.error("Please select Month");
+            isValid = false;
+        }
+        else if ($('#AttendanceUpload').val() != '') {
+            showLoader();
             var fileUpload = $("#AttendanceUpload").get(0);
             var files = fileUpload.files;
-
-            var data = new FormData();
+            data = new FormData();
+            var userid = $('#ContentPlaceHolder1_loginuser').val();
+            var year = $('#ddlYearFile').val();
+            var month = $('#ddlMonthFile').val();
             for (var i = 0; i < files.length; i++) {
-                data.append($('#ContentPlaceHolder1_loginuser').val(), files[i]);
+                //data.append($('#ContentPlaceHolder1_loginuser').val(), files[i]);
+                //data.append($('#ddlYearFile').val()),
+                //data.append($('#ddlMonthFile').val());
+                var form_data = userid + "," + year + "," + month;
+                data.append(form_data, files[i]);
             }
-
             $.ajax({
                 url: "FileUploadHandler.ashx",
                 type: "POST",
@@ -358,16 +473,26 @@ function AddEmployeeAttendance() {
                 success: function (result) {
                     var str = "success";
                     if (result.indexOf(str) != -1) {
-                        alertify.success(result);
+                       alertify.success(result);
                         ClearAll();
                     }
                     else {
-                        alertify.error(result);
+                        
+                        $('#AttendanceUpload').val('');
+                        //var htmlTable = "";
+                        //htmlTable = "<table style='width:50%;border:1px solid black;color:red;' id='tblerror'><tr><td>" + result + "</td></tr></table>";
+                        // Attach the HTML table to the specific section
+                        $('#specificSection').show();
+                        $('#specificSection').text(result);
+                        
                     }
-
+                    hideLoader();
                 },
                 error: function (err) {
+                    hideLoader();
                     // alert(err.statusText)
+                    alertify.error(err.statusText);
+                    ClearAll();
                 }
             });
         }

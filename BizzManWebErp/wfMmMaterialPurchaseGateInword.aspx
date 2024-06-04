@@ -24,7 +24,7 @@
                 <tr>
                     <th><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
                     <th>Id</th>
-                    <th>Inword Entry Date</th>
+                    <th>Inward Entry Date</th>
                     <th>Order ID</th>
                     <th>Vendor Name</th>
                     <th>Branch</th>
@@ -43,7 +43,7 @@
     <div class="container" id="divMaterialPurchaseGateInwordDetailsList" style="margin-top: 10px; overflow: auto;">
         <div class="card">
             <div class="card-header">
-                Material Purchase Gate Inword Details
+                Purchase Gate Inward Details
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -73,14 +73,14 @@
     <div class="container" id="divMaterialPurchaseGateInwordEntry" style="display: none; margin-top: 10px;">
         <div class="card">
             <div class="card-header">
-                Add Material Purchase Gate Inword
+                Add Purchase Gate Inward
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <table class="tbl">
                             <tr>
-                                <td>Inword Entry Date *</td>
+                                <td>Inward Entry Date *</td>
                                 <td>
                                     <input type="date" class="form-control dat" id="txtEntryDate" name="txtEntryDate" />
                                 </td>
@@ -201,7 +201,7 @@
     <div class="container" id="divMaterialPurchaseOrderMasterDetails" style="margin-top: 10px; overflow: auto; display: none;">
         <div class="card">
             <div class="card-header">
-                Material Purchase Order Details
+                Purchase Order Details
             </div>
             <div class="card-body">
                 <div class="panel panel-default">

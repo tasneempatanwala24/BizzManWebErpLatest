@@ -69,10 +69,8 @@ function FetchCRMCompanyMaster(Id) {
             $("#btnSave").show();
             $('#txtCompanyName').attr("readonly", "readonly");
             $('#txtCompanyName').val(data.CompanyName);
-            
-            $('#hfBase64').val(data.PhotoImage);
-            $("#imgFU").attr('src', data.PhotoImage);
-
+            $('#hfBase64').val("Images/logo.png");
+            $("#imgFU").attr('src', "Images/logo.png");
             $('#txtAddress1').val(data.Address1);
             $('#txtAddress2').val(data.Address2);
             $('#txtWebsite').val(data.WebSiteAddress);
@@ -143,6 +141,7 @@ function AddDetails() {
         var imgDataURL = '';
         if ($('#imgFU').attr("src") != "Images/fileupload.png") {
             imgDataURL = $('#imgFU').attr("src").toString();
+
         }
 
         $.ajax({
@@ -217,18 +216,25 @@ function AddDetails() {
 
 function readURL(input) {
     if (input.files && input.files[0]) {
+        var file = input.files[0];
         var reader = new FileReader();
 
-        reader.onload = function (e) {
-            $('#imgFU')
-                .attr('src', e.target.result);
-            $("#ContentPlaceHolder1_hfBase64").val(e.target.result);
+        // Check if the file is a PNG
+        if (file.type === 'image/png') {
+            reader.onload = function (e) {
+                $('#imgFU').attr('src', e.target.result);
+                $("#ContentPlaceHolder1_hfBase64").val(e.target.result);
+            };
 
-        };
-
-        reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
+        } else {
+            alertify.error("Please select a PNG file.");
+            // Optionally clear the input value
+            input.value = '';
+        }
     }
 }
+
 
 
 function dataURItoBlob(dataURI) {
@@ -306,7 +312,7 @@ function createKanbanViewItem(item) {
         '<tbody>' +
         '<tr>' +
         '<td style="vertical-align:top;">' +
-        '<img class="kanban-img"  src="' + item.PhotoImage + '" style="width: 80px;height:96px; text-align: top;"></td>' +
+        '<img class="kanban-img"  src="Images/logo.png" style="width: 80px;height:96px; text-align: top;"></td>' +
         '<td style="width:70%; vertical-align: top; padding-top: 10px;font-size:small"><span style="font-size:small">' + item.CompanyName +
         '</td > ' +
         '</tr>' +
@@ -340,7 +346,7 @@ function showAllImages() {
             dataType: "json",
             success: function (response) {
                 var data = JSON.parse(response.d)[0];
-                $(this).attr('src', data.PhotoImage);
+                $(this).attr('src', "Images/logo.png");
             }
         });
 

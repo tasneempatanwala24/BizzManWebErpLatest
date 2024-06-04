@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <h5 class="card-title" style="font-size: 15px;">Inventory Management</h5>
+                            <h5 class="card-title" style="font-size: 15px;">Inventory Procurement System</h5>
                             <a href="wfMmMainMenu.aspx" class="btn btn-light text-dark">Open</a>
                           </div>
                         </div>
@@ -132,7 +132,7 @@
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <h5 class="card-title">Inventory Main</h5>
+                            <h5 class="card-title">Inventory Management System</h5>
                             <a href="wfInventoryMain.aspx" class="btn btn-light text-dark">Open</a>
                           </div>
                         </div>
@@ -172,6 +172,26 @@
                     </div>
               </div>
                 
+
+
+                <div class="col-sm-4">
+                <div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+                      <div class="row g-0">
+                        <div class="col-md-4">
+                          <img src="https://t4.ftcdn.net/jpg/04/75/00/99/360_F_475009987_zwsk4c77x3cTpcI3W1C1LU4pOSyPKaqi.jpg" class="img-fluid rounded-start" alt="..." />
+                        </div>
+                        <div class="col-md-8">
+                          <div class="card-body">
+                            <h5 class="card-title">Project Management System</h5>
+                            <a href="wfPmMain.aspx" class="btn btn-light text-dark">Open</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+
+
+
                 </div>
             </div>
     </form>

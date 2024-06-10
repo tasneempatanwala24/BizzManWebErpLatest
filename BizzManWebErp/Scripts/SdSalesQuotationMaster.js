@@ -50,6 +50,10 @@ $(document).ready(function () {
         }
     });
     attachKeydownListenersToRow($("#dataTable tbody tr"));
+    // Event listeners for removing the is-invalid class on input change
+    $(document).on('input change', '.txtQuantity, .txtRate, .ddlMaterialName', function () {
+        $(this).removeClass('is-invalid');
+    });
 });
 
 
@@ -304,6 +308,7 @@ function FetchUnitMeasure(dropdown) {
                 row.find('.hdnCessPercent').val(data[0].CessPercent);
                 calculateTotalRowAmount(dropdown);
                 row.find('.txtQuantity').focus();
+                $('.txtRate').removeClass('is-invalid');
             },
             complete: function () {
 
@@ -480,29 +485,73 @@ function GenerateQuotationID() {
     }
 }
 
+function validateRows() {
+    var isValid = true;
+    var errorMessage = "";
+
+    $("#dataTable tbody tr").each(function () {
+        var itemName = $(this).find(".ddlMaterialName").val();
+        var qty = $(this).find(".txtQuantity").val();
+        var rate = $(this).find(".txtRate").val();
+
+        if (!itemName) {
+            isValid = false;
+            errorMessage += "Item Name is required.\n";
+            $(this).find(".ddlMaterialName").addClass("is-invalid");
+        } else {
+            $(this).find(".ddlMaterialName").removeClass("is-invalid");
+        }
+
+        if (!qty || isNaN(qty) || parseFloat(qty) <= 0 || !/^\d+(\.\d{1,2})?$/.test(qty)) {
+            isValid = false;
+            errorMessage += "Quantity must be a number greater than 0 with up to 2 decimal places.\n";
+            $(this).find(".txtQuantity").addClass("is-invalid");
+        } else {
+            $(this).find(".txtQuantity").removeClass("is-invalid");
+        }
+
+        if (!rate || isNaN(rate) || parseFloat(rate) <= 0 || !/^\d+(\.\d{1,2})?$/.test(rate)) {
+            isValid = false;
+            errorMessage += "Rate must be a number greater than 0 with up to 2 decimal places.\n";
+            $(this).find(".txtRate").addClass("is-invalid");
+        } else {
+            $(this).find(".txtRate").removeClass("is-invalid");
+        }
+    });
+
+    if (!isValid) {
+        alertify.error(errorMessage);
+    }
+
+    return isValid;
+}
+
 function saveData() {
-    if ($('#quotationDate').val() == '') {
+    if ($('#ddlClientName').val() == '') {
+        alertify.error("Please Select Customer Name");
+        return;
+    } 
+    else if ($('#quotationDate').val() == '') {
         alertify.error("Please enter Quotation Date");
         return;
     }
-    else if ($('#ddlClientName').val() == '')
-    {
-        alertify.error("Please Select Customer Name");
-        return;
-    }
-    else if ($('#notes').val() == '') {
-        alertify.error("Please Enter Notes");
-        return;
-    }
-    else if ($('#terms').val() == '') {
-        alertify.error("Please Enter Terms and Conditions");
-        return;
-    }
+
     var hasRows = $('#dataTable tbody tr').length > 0;
     if (!hasRows) {
         alertify.error("Please Enter some items.");
         return;
     }
+    if (!validateRows()) {
+        return;
+    }
+    //else if ($('#notes').val() == '') {
+    //    alertify.error("Please Enter Notes");
+    //    return;
+    //}
+    //else if ($('#terms').val() == '') {
+    //    alertify.error("Please Enter Terms and Conditions");
+    //    return;
+    //}
     showLoader();
     var data = [];
     $("#dataTable tbody tr").each(function () {
@@ -547,6 +596,10 @@ function saveData() {
     var Notes = $('#notes').val(); 
     var TermsAndConditions = $('#terms').val(); 
     // Send data to server using AJAX
+    if (data.length == 0) {
+        alertify.error("Please Enter some items.");
+        return;
+    }
     $.ajax({
         type: "POST",
         url: "wSdSalesQuotationMaster.aspx/AddtSalesQuotationMasterAndDetails", // Adjust the URL based on your setup
@@ -584,6 +637,8 @@ function ClearAll() {
     $('#ddlClientName').select2('destroy');
     $('#ddlClientName').html('<option value="">-Select Client Name-</option>');
     $('#ddlClientName').select2();
+    BindCustomerDropdown();
+    addRow();
 }
 
 function CreateData() {
@@ -600,8 +655,8 @@ function CreateData() {
     $('#dispddlQuotStatus').prop('disabled', true);
     ClearAll();
    
-    addRow();
-    BindCustomerDropdown();
+ 
+   
    
 }
 
@@ -850,32 +905,33 @@ function generatePDF() {
 }
 
 function PrintPreview() {
-    showLoader();
+   // showLoader();
     generatePDF();
     // Call the server-side method to get the PDF content
-    $.ajax({
-        type: 'POST',
-        url: 'wSdSalesQuotationMaster.aspx/GetPdfContent',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({
-            "QuotationId": $('#disptxtQuotation').val()
-        }),
-        dataType: 'json',
-        success: function (response) {
-            setTimeout(function () {
-                hideLoader();
+   window.open('wSdSalesQuotationMaster_display.aspx?id=' + $('#disptxtQuotation').val(),"_blank");
+    //$.ajax({
+    //    type: 'POST',
+    //    url: 'wSdSalesQuotationMaster.aspx/GetPdfContent',
+    //    contentType: 'application/json; charset=utf-8',
+    //    data: JSON.stringify({
+    //        "QuotationId": $('#disptxtQuotation').val()
+    //    }),
+    //    dataType: 'json',
+    //    success: function (response) {
+    //        setTimeout(function () {
+    //            hideLoader();
 
 
-                // Display the PDF content in the modal
-                $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
-                $('#pdfModal').modal('show');
-            }, 1000); // Hide loader after 3 seconds
+    //            // Display the PDF content in the modal
+    //            $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
+    //            $('#pdfModal').modal('show');
+    //        }, 1000); // Hide loader after 3 seconds
           
-        },
-        error: function (xhr, status, error) {
-            console.log('Error fetching PDF:', error);
-        }
-    });
+    //    },
+    //    error: function (xhr, status, error) {
+    //        console.log('Error fetching PDF:', error);
+    //    }
+    //});
 
 }
 

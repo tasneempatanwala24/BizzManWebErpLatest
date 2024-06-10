@@ -56,98 +56,19 @@
     <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
     </Reference>
-    <Reference Include="itext.barcodes, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.barcodes.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.bouncy-castle-connector, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.bouncy-castle-connector.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.commons, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.commons.8.0.4\lib\net461\itext.commons.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.forms, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.forms.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.io, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.io.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.kernel, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.kernel.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.layout, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.layout.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.pdfa, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.pdfa.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.pdfua, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.pdfua.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.sign, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.sign.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.styledxmlparser, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.styledxmlparser.dll</HintPath>
-    </Reference>
-    <Reference Include="itext.svg, Version=8.0.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <HintPath>..\packages\itext.8.0.4\lib\net461\itext.svg.dll</HintPath>
-    </Reference>
     <Reference Include="itextsharp">
       <HintPath>..\..\Developer\Tashneem\TaskSaleQuotation (1)_13012024\TaskSaleQuotation\CodeChanges\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.5.0.0\lib\net461\Microsoft.Extensions.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Logging.Abstractions.5.0.0\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Options, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Options.5.0.0\lib\net461\Microsoft.Extensions.Options.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.5.0.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-    </Reference>
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -203,6 +124,7 @@
     <Content Include="Images\kanban-view.png" />
     <Content Include="Images\list-view.png" />
     <Content Include="Images\logo.jpg" />
+    <Content Include="Images\logo.png" />
     <Content Include="Images\Remove1.jpg" />
     <Content Include="Images\Remove2.jpg" />
     <Content Include="Images\RemoveRow.png" />
@@ -252,6 +174,9 @@
     <Content Include="Scripts\InventLocationMaster.js" />
     <Content Include="Scripts\InventPutwayPule.js" />
     <Content Include="Scripts\InventStockReportPutwayRule.js" />
+    <Content Include="Scripts\InventTransportDetail.js" />
+    <Content Include="Scripts\InventTransportDetailDisplay.js" />
+    <Content Include="Scripts\InventTransportMaster.js" />
     <Content Include="Scripts\InventWarehouseMaster.js" />
     <Content Include="Scripts\jqq.min.js" />
     <Content Include="Scripts\jquery-3.5.1.slim.min.js" />
@@ -266,6 +191,8 @@
     <Content Include="Scripts\MmCategoryMasterNew.js" />
     <Content Include="Scripts\MmItemGroupMaster.js" />
     <Content Include="Scripts\MmItemMaster.js" />
+    <Content Include="Scripts\MmItemMasterNew.js" />
+    <Content Include="Scripts\MmItemMasterNew1.js" />
     <Content Include="Scripts\MmItemPackagingMaster.js" />
     <Content Include="Scripts\MmMaterialIndentMaster.js" />
     <Content Include="Scripts\MmMaterialMaster.js" />
@@ -304,6 +231,8 @@
     <Content Include="Scripts\MnfMaterialManufactureOperationsDetail.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\pdfmake.min.js" />
+    <Content Include="Scripts\PmCustomerMaster.js" />
+    <Content Include="Scripts\PmScheduleActivity.js" />
     <Content Include="Scripts\poppar.js" />
     <Content Include="Scripts\PosCustomerMaster.js" />
     <Content Include="Scripts\PosPayment.js" />
@@ -327,6 +256,7 @@
     <Content Include="wfAdminRoleModuleMaster.aspx" />
     <Content Include="wfAdminUserMaster.aspx" />
     <Content Include="wfCrmCustomerMaster.aspx" />
+    <Content Include="wfCrmLeadMaster.aspx" />
     <Content Include="wfCrmMain.aspx" />
     <Content Include="wfHrDeptMasterNew.aspx" />
     <Content Include="wfHrDesignationMasterNew.aspx" />
@@ -350,11 +280,16 @@
     <Content Include="wfInventoryMain.aspx" />
     <Content Include="wfInventPutwayRule.aspx" />
     <Content Include="wfInventStockReportPutwayRule.aspx" />
+    <Content Include="wfInventTransportDetail.aspx" />
+    <Content Include="wfInventTransportDetail_display.aspx" />
+    <Content Include="wfInventTransportMaster.aspx" />
     <Content Include="wfInventWarehouseMaster.aspx" />
     <Content Include="wfManufactureMain.aspx" />
+    <Content Include="wfMmBomEntry.aspx" />
     <Content Include="wfMmCategoryMasterNew.aspx" />
     <Content Include="wfMmItemGroupMaster.aspx" />
     <Content Include="wfMmItemMaster.aspx" />
+    <Content Include="wfMmItemMasterNew.aspx" />
     <Content Include="wfMmItemPackagingMaster.aspx" />
     <Content Include="wfMmMaterialPurchaseGateInword.aspx" />
     <Content Include="wfMmMaterialPurchaseGrnEntry.aspx" />
@@ -369,6 +304,8 @@
     <Content Include="wfMnfManufactureWorkCentersMaster.aspx" />
     <Content Include="wfMnfManufactureWorkCentersOperationsTransection.aspx" />
     <Content Include="wfMnfMaterialManufactureOperationsDetail.aspx" />
+    <Content Include="wfPmCustomerMaster.aspx" />
+    <Content Include="wfPmMain.aspx" />
     <Content Include="wfPosCustomer.aspx" />
     <Content Include="wfPosMain.aspx" />
     <Content Include="wfPosPayment.aspx" />
@@ -386,6 +323,7 @@
     <Content Include="wfHrEmpAttendance.aspx" />
     <Content Include="wfHrEsiMaster.aspx" />
     <Content Include="wfHrPfMaster.aspx" />
+    <Content Include="wfHrEmpMaster.aspx" />
     <Content Include="wfHrHrmsMain.aspx" />
     <Content Include="wfAdminLogin.aspx" />
     <Content Include="wfMmCategoryMaster.aspx" />
@@ -402,6 +340,7 @@
     <Content Include="wfSdSalesOrderInvoice.aspx" />
     <Content Include="wfSdSalesQuotationOrder.aspx" />
     <Content Include="wSdSalesQuotationMaster.aspx" />
+    <Content Include="wSdSalesQuotationMaster_display.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMain.Master.cs">
@@ -458,9 +397,17 @@
       <DependentUpon>MmMainMenu.Master</DependentUpon>
     </Compile>
     <Compile Include="Model\CommonModel.cs" />
+    <Compile Include="Model\CompanyDetails.cs" />
     <Compile Include="Model\CrmLeadModel.cs" />
     <Compile Include="Model\Quotation.cs" />
     <Compile Include="Model\SalesQuotationDetail.cs" />
+    <Compile Include="PM.Master.cs">
+      <DependentUpon>PM.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PM.Master.designer.cs">
+      <DependentUpon>PM.Master</DependentUpon>
+    </Compile>
     <Compile Include="POS.Master.cs">
       <DependentUpon>POS.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -538,6 +485,13 @@
     </Compile>
     <Compile Include="wfCrmCustomerMaster.aspx.designer.cs">
       <DependentUpon>wfCrmCustomerMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfCrmLeadMaster.aspx.cs">
+      <DependentUpon>wfCrmLeadMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfCrmLeadMaster.aspx.designer.cs">
+      <DependentUpon>wfCrmLeadMaster.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfCrmMain.aspx.cs">
       <DependentUpon>wfCrmMain.aspx</DependentUpon>
@@ -700,6 +654,27 @@
     <Compile Include="wfInventStockReportPutwayRule.aspx.designer.cs">
       <DependentUpon>wfInventStockReportPutwayRule.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfInventTransportDetail.aspx.cs">
+      <DependentUpon>wfInventTransportDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfInventTransportDetail.aspx.designer.cs">
+      <DependentUpon>wfInventTransportDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfInventTransportDetail_display.aspx.cs">
+      <DependentUpon>wfInventTransportDetail_display.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfInventTransportDetail_display.aspx.designer.cs">
+      <DependentUpon>wfInventTransportDetail_display.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfInventTransportMaster.aspx.cs">
+      <DependentUpon>wfInventTransportMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfInventTransportMaster.aspx.designer.cs">
+      <DependentUpon>wfInventTransportMaster.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfInventWarehouseMaster.aspx.cs">
       <DependentUpon>wfInventWarehouseMaster.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -713,6 +688,13 @@
     </Compile>
     <Compile Include="wfManufactureMain.aspx.designer.cs">
       <DependentUpon>wfManufactureMain.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmBomEntry.aspx.cs">
+      <DependentUpon>wfMmBomEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmBomEntry.aspx.designer.cs">
+      <DependentUpon>wfMmBomEntry.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfMmCategoryMasterNew.aspx.cs">
       <DependentUpon>wfMmCategoryMasterNew.aspx</DependentUpon>
@@ -734,6 +716,13 @@
     </Compile>
     <Compile Include="wfMmItemMaster.aspx.designer.cs">
       <DependentUpon>wfMmItemMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfMmItemMasterNew.aspx.cs">
+      <DependentUpon>wfMmItemMasterNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfMmItemMasterNew.aspx.designer.cs">
+      <DependentUpon>wfMmItemMasterNew.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfMmItemPackagingMaster.aspx.cs">
       <DependentUpon>wfMmItemPackagingMaster.aspx</DependentUpon>
@@ -832,6 +821,20 @@
     </Compile>
     <Compile Include="wfMnfMaterialManufactureOperationsDetail.aspx.designer.cs">
       <DependentUpon>wfMnfMaterialManufactureOperationsDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfPmCustomerMaster.aspx.cs">
+      <DependentUpon>wfPmCustomerMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfPmCustomerMaster.aspx.designer.cs">
+      <DependentUpon>wfPmCustomerMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfPmMain.aspx.cs">
+      <DependentUpon>wfPmMain.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfPmMain.aspx.designer.cs">
+      <DependentUpon>wfPmMain.aspx</DependentUpon>
     </Compile>
     <Compile Include="wfPosCustomer.aspx.cs">
       <DependentUpon>wfPosCustomer.aspx</DependentUpon>
@@ -952,6 +955,13 @@
     <Compile Include="wfHrPfMaster.aspx.designer.cs">
       <DependentUpon>wfHrPfMaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wfHrEmpMaster.aspx.cs">
+      <DependentUpon>wfHrEmpMaster.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfHrEmpMaster.aspx.designer.cs">
+      <DependentUpon>wfHrEmpMaster.aspx</DependentUpon>
+    </Compile>
     <Compile Include="wfHrHrmsMain.aspx.cs">
       <DependentUpon>wfHrHrmsMain.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1064,6 +1074,13 @@
     <Compile Include="wSdSalesQuotationMaster.aspx.designer.cs">
       <DependentUpon>wSdSalesQuotationMaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="wSdSalesQuotationMaster_display.aspx.cs">
+      <DependentUpon>wSdSalesQuotationMaster_display.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wSdSalesQuotationMaster_display.aspx.designer.cs">
+      <DependentUpon>wSdSalesQuotationMaster_display.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\bootstrap.less" />
@@ -1084,6 +1101,8 @@
     <Content Include="SdMainMenu.Master" />
     <Content Include="Site1.Master" />
     <Content Include="POS.Master" />
+    <Content Include="PM.Master" />
+    <Content Include="Templates\Attendance.xlsx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

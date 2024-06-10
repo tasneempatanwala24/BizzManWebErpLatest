@@ -24,9 +24,10 @@ using DocumentFormat.OpenXml.Office.CoverPageProps;
 //using DocumentFormat.OpenXml.Drawing.Charts;
 
 [assembly: AllowPartiallyTrustedCallers]
+
 namespace BizzManWebErp
 {
-
+    [SecuritySafeCritical]
     public partial class wSdSalesQuotationMaster : System.Web.UI.Page
     {
         static clsMain objMain;
@@ -206,7 +207,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
             try
             {
 
-                        dtQuotationDetails = objMain.dtFetchData(@"select                          QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions 
+                dtQuotationDetails = objMain.dtFetchData(@"select                          QuotationId,QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions 
                         ,cust.CustomerId,isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email 
                         ,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSdSalesQuotationMaster SM  
                          inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.QuotationId='" + QuotationId + "'");
@@ -267,7 +268,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
 
             try
             {
-              
+
                 dtEmpList = objMain.dtFetchData(@"select a.QuotationId,a.QuotationDate,a.NetTotal,a.NetGST,a.ShippingCharges,a.NetAmount,a.Notes,a.TermsAndConditions,a.QuotationStatus,b.CustomerName as ContactName
                     from tblSdSalesQuotationMaster as a Inner Join tblCrmCustomers as b 
                     on a.[CustomerId]=b.[CustomerId] order by a.CreateDate desc");
@@ -298,8 +299,83 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
         }
 
 
+      
 
-        private static  void AddInvoiceContent(Document document, string QuotationId)
+
+
+        [WebMethod]
+        public static string UpdateQuotationStatus(string QuotationId, string QuotationStatus)
+        {
+            //  clsMain objMain = new clsMain();
+            SqlParameter[] objParam = new SqlParameter[2];
+
+
+            objParam[0] = new SqlParameter("@QuotationId", SqlDbType.VarChar);
+            objParam[0].Direction = ParameterDirection.Input;
+            objParam[0].Value = QuotationId;
+
+
+            objParam[1] = new SqlParameter("@QuotationStatus", SqlDbType.VarChar);
+            objParam[1].Direction = ParameterDirection.Input;
+            objParam[1].Value = QuotationStatus;
+
+
+
+            var result = objMain.ExecuteProcedure("procSdSalesQuotationMasterUpdate", objParam);
+
+
+            return "";
+        }
+
+        [WebMethod]
+        public static string GenerateQuotationID(string QuotationDate)
+        {
+            DataTable dtNewQuotationID = new DataTable();
+
+            try
+            {
+                string formattedQuotationDate = DateTime.ParseExact(QuotationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+                dtNewQuotationID = objMain.dtFetchData("select 'QUOT' + CONVERT(NVARCHAR(10), '" + formattedQuotationDate + "', 120) + '/' +\r\n                             RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(QuotationID, LEN(QuotationID) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4)\r\n as QuotationID    FROM tblSdSalesQuotationMaster\r\n    WHERE QuotationDate ='" + formattedQuotationDate + "'");
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+
+            return JsonConvert.SerializeObject(dtNewQuotationID);
+        }
+
+
+        [WebMethod]
+        [SecuritySafeCritical]
+        public static string GetPdfContent(string QuotationId)
+        {
+
+            // Generate PDF content (replace this with your actual PDF generation logic)
+            byte[] pdfBytes = GeneratePdfBytes(QuotationId);
+
+            // Convert PDF content to base64 string
+            string base64String = Convert.ToBase64String(pdfBytes);
+
+            return base64String;
+        }
+        [SecuritySafeCritical]
+        private static byte[] GeneratePdfBytes(string QuotationId)
+        {
+            // Example: Generate a simple PDF using iTextSharp library
+            using (MemoryStream ms = new MemoryStream())
+            {
+                iTextSharp.text.Document document = new iTextSharp.text.Document();
+                iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms);
+                document.Open();
+                //document.Add(new iTextSharp.text.Paragraph("Hello, World!"));
+                AddInvoiceContent(document, QuotationId);
+                document.Close();
+                return ms.ToArray();
+            }
+        }
+        [SecuritySafeCritical]
+        private static void AddInvoiceContent(Document document, string QuotationId)
         {// Open the document before adding content
          // Your company information
          //string filePath = Server.MapPath("Images\\logo.jpg");
@@ -336,13 +412,13 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
             PdfPCell companyInfoCell = new PdfPCell();
             DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1,PhoneNo,EmailAddress,WebSiteAddress,Logo from tblAdminCompanyMaster");
 
- 
+
             if (dtCompanyDetails != null && dtCompanyDetails.Rows.Count > 0)
             {
                 string companyName = Convert.ToString(dtCompanyDetails.Rows[0]["CompanyName"]);
                 companyInfoCell.AddElement(new Paragraph("" + companyName, FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12)));
 
-              
+
 
 
 
@@ -361,9 +437,11 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
                 PdfPCell companyLogoCell = new PdfPCell();
                 // Load the logo image from the specified file path
                 string logoPath = System.IO.Path.Combine("Images", "CompanyLogo.png");
-                if (File.Exists(logoPath))
+                string imagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "CompanyLogo.png");
+
+                if (File.Exists(imagePath))
                 {
-                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(logoPath);
+                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imagePath);
                     logo.ScaleToFit(100, 100); // Adjust the size of the logo as needed
 
                     // Add the logo to the logo cell
@@ -376,7 +454,7 @@ inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.C
 
             }
 
-           
+
 
             // Bill To section
             PdfPTable billToTable = new PdfPTable(2);
@@ -467,7 +545,7 @@ inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.Quotat
                         itemTable.AddCell(row["GST"].ToString());
                         itemTable.AddCell(row["Amount"].ToString());
 
-                        centralTaxPercent = Convert.ToDecimal(row["CentralTaxPercent"].ToString()); 
+                        centralTaxPercent = Convert.ToDecimal(row["CentralTaxPercent"].ToString());
                         stateTaxPercent = Convert.ToDecimal(row["StateTaxPercent"].ToString());
                         cessTaxPercent = Convert.ToDecimal(row["CessPercent"].ToString());
                         qty = Convert.ToDecimal(row["Qty"].ToString());
@@ -542,79 +620,6 @@ inner join tblMmMaterialMaster material on material.Id=SD.ItemId where SM.Quotat
                 // Example: Adding terms and conditions
                 string terms = Convert.ToString(dtQuotationDetails.Rows[0]["TermsAndConditions"]);
                 document.Add(new Paragraph("Terms and Conditions: " + terms, FontFactory.GetFont(FontFactory.HELVETICA, 10)));
-            }
-        }
-
-
-
-        [WebMethod]
-        public static string UpdateQuotationStatus(string QuotationId, string QuotationStatus)
-        {
-            //  clsMain objMain = new clsMain();
-            SqlParameter[] objParam = new SqlParameter[2];
-
-
-            objParam[0] = new SqlParameter("@QuotationId", SqlDbType.VarChar);
-            objParam[0].Direction = ParameterDirection.Input;
-            objParam[0].Value = QuotationId;
-
-
-            objParam[1] = new SqlParameter("@QuotationStatus", SqlDbType.VarChar);
-            objParam[1].Direction = ParameterDirection.Input;
-            objParam[1].Value = QuotationStatus;
-
-
-
-            var result = objMain.ExecuteProcedure("procSdSalesQuotationMasterUpdate", objParam);
-
-
-            return "";
-        }
-
-        [WebMethod]
-        public static string GenerateQuotationID(string QuotationDate)
-        {
-            DataTable dtNewQuotationID = new DataTable();
-
-            try
-            {
-                string formattedQuotationDate = DateTime.ParseExact(QuotationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
-                dtNewQuotationID = objMain.dtFetchData("select 'QUOT' + CONVERT(NVARCHAR(10), '"+ formattedQuotationDate + "', 120) + '/' +\r\n                             RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(QuotationID, LEN(QuotationID) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4)\r\n as QuotationID    FROM tblSdSalesQuotationMaster\r\n    WHERE QuotationDate ='" + formattedQuotationDate + "'");
-            }
-            catch (Exception ex)
-            {
-                return "";
-            }
-
-            return JsonConvert.SerializeObject(dtNewQuotationID);
-        }
-
-
-        [WebMethod]
-        public static string GetPdfContent(string QuotationId)
-        {
-          
-            // Generate PDF content (replace this with your actual PDF generation logic)
-            byte[] pdfBytes = GeneratePdfBytes(QuotationId);
-
-            // Convert PDF content to base64 string
-            string base64String = Convert.ToBase64String(pdfBytes);
-
-            return base64String;
-        }
-
-        private static byte[] GeneratePdfBytes(string QuotationId)
-        {
-            // Example: Generate a simple PDF using iTextSharp library
-            using (MemoryStream ms = new MemoryStream())
-            {
-                iTextSharp.text.Document document = new iTextSharp.text.Document();
-                iTextSharp.text.pdf.PdfWriter.GetInstance(document, ms);
-                document.Open();
-                //document.Add(new iTextSharp.text.Paragraph("Hello, World!"));
-                AddInvoiceContent(document, QuotationId);
-                document.Close();
-                return ms.ToArray();
             }
         }
     }

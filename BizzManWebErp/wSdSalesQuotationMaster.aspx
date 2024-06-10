@@ -173,7 +173,7 @@
         <th>Item Name</th>
         <th  style="width:10%">Qty</th>
             <th  style="width:10%">Unit Measure</th>
-        <th style="width:10%">Rate</th>
+        <th style="width:10%">Rate (incl Tax)</th>
            <th style="width:10%">Discount %</th>
             <th style="width:10%">GST %</th>
             <th style="width:20%">Amount</th>
@@ -304,7 +304,7 @@
         <th>Item Name</th>
         <th>Qty</th>
           <th>Unit Measure</th>
-        <th>Rate</th>
+        <th>Rate (incl Tax)</th>
            <th>Discount %</th>
             <th>GST %</th>
             <th>Amount</th>

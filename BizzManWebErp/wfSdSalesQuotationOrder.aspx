@@ -75,7 +75,7 @@
           
            <div class="card">
             <div class="card-header">
-                Add Sales Order
+               Quotation Sales Orders
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -128,7 +128,7 @@
                             </tr>
                             <tr>
 
-                                <td>GST Treatment *</td>
+                                <td>GST Treatment</td>
                                 <td>
                                     <select id="ddlGSTTreatment" name="ddlGSTTreatment" class="form-control">
                                         <option value="">-Select GST Treatment-</option>
@@ -158,7 +158,7 @@
 
                             </tr>
                             <tr>
-                                <td>Currency *</td>
+                                <td>Currency</td>
                                 <td>
                                     <select id="ddlCurrency" name="ddlCurrency" class="form-control" style="width: 300px;">
                                         <option value="">-Select Currency-</option>

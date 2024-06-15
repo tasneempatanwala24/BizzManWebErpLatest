@@ -24,8 +24,18 @@ $(document).ready(function () {
     BindDepartmentDropdown()
     BindSalesOrderMasterList();
 
-});
+    
 
+   
+
+});
+function getCurrentDate() {
+    var today = new Date();
+    var day = ("0" + today.getDate()).slice(-2); // Add leading zero if needed
+    var month = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based, so add 1 and add leading zero if needed
+    var year = today.getFullYear();
+    return year + "-" + month + "-" + day;
+}
 function BindSalesOrderMasterList() {
     showLoader();
     $.ajax({
@@ -40,7 +50,7 @@ function BindSalesOrderMasterList() {
         success: function (response) {
             var data = JSON.parse(response.d);
 
-            setTimeout(function () {
+          
 
                 $('#tblSalesOrderList').DataTable().clear();
                 $('#tblSalesOrderList').DataTable().destroy();
@@ -88,7 +98,7 @@ function BindSalesOrderMasterList() {
                 hideLoader();
 
 
-            }, 1000); // Hide loader after 3 seconds
+           
 
 
 
@@ -309,16 +319,16 @@ function AddSalesOrder() {
         alertify.error('Please select any Expiration Date');
         return;
     }
-    else if ($('#ddlGSTTreatment').val() == '') {
-        alertify.error('Please select any GST Treatment');
+    else if ($('#ddlDept').val() == '') {
+        alertify.error('Please select any Department');
         return;
     }
     else if ($('#txtQuotationDate').val() == '') {
-        alertify.error('Please select any Quotation Date');
+        alertify.error('Please select any Order Date');
         return;
     }
-    else if ($('#ddlCurrency').val() == '') {
-        alertify.error('Please select any Currency');
+    else if ($('#ddlBranch').val() == '') {
+        alertify.error('Please select any Branch');
         return;
     }
    
@@ -468,14 +478,16 @@ function ClearAll() {
     $('#txtQuotationDate').val('');
     $('#txtTermsConditions').val('');
     $('#txtTotalAmount').val('0');
-    $('#txtorderDate').val('');
+    // Set the value of the date input to today's date
+    $("#txtorderDate").val(getCurrentDate());
+    GenerateOrderID();
     $('#txtCustomer').val('');
     $('#txtOutstandingAmount').val('0');
     $('#txtDeliveryCharges').val('0');
     $('#txtAdvance').val('0');
-    $('#ddlGSTTreatment').val('');
-    $('#ddlCurrency').val('').trigger('change');;
-    $('#ddlPaymentTerms').val('').trigger('change');;
+    $('#ddlGSTTreatment').val('Registered Business - Regular').trigger('change');
+    $('#ddlCurrency').val('1').trigger('change');;
+    $('#ddlPaymentTerms').val('Immediate Payment').trigger('change');;
     $('#ddlBranch').val('').trigger('change');;
     $('#ddlDept').val('').trigger('change');;
     BindQuotationDropdown();
@@ -569,32 +581,32 @@ function FetchSalesOrderMasterDetails(id, OrderStatus) {
 
 
 function PrintPreview() {
-     showLoader();
-
+    // showLoader();
+    window.open('wfSdSalesQuotationOrder_display.aspx?id=' + $('#dispSalesOrderId').val(), "_blank");
     // Call the server-side method to get the PDF content
-    $.ajax({
-        type: 'POST',
-        url: 'wfSdSalesQuotationOrder.aspx/GetPdfContent',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({
-            "SalesOrderId": $('#dispSalesOrderId').val()
-        }),
-        dataType: 'json',
-        success: function (response) {
-            setTimeout(function () {
-                hideLoader();
+    //$.ajax({
+    //    type: 'POST',
+    //    url: 'wfSdSalesQuotationOrder.aspx/GetPdfContent',
+    //    contentType: 'application/json; charset=utf-8',
+    //    data: JSON.stringify({
+    //        "SalesOrderId": $('#dispSalesOrderId').val()
+    //    }),
+    //    dataType: 'json',
+    //    success: function (response) {
+    //        setTimeout(function () {
+    //            hideLoader();
 
 
-                // Display the PDF content in the modal
-                $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
-                $('#pdfModal').modal('show');
-            }, 1000); // Hide loader after 3 seconds
+    //            // Display the PDF content in the modal
+    //            $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
+    //            $('#pdfModal').modal('show');
+    //        }, 1000); // Hide loader after 3 seconds
 
-        },
-        error: function (xhr, status, error) {
-            console.log('Error fetching PDF:', error);
-        }
-    });
+    //    },
+    //    error: function (xhr, status, error) {
+    //        console.log('Error fetching PDF:', error);
+    //    }
+    //});
 
 }
 

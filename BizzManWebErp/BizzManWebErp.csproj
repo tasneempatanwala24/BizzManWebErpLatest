@@ -339,6 +339,7 @@
     <Content Include="wfSdSalesOrderDelivery.aspx" />
     <Content Include="wfSdSalesOrderInvoice.aspx" />
     <Content Include="wfSdSalesQuotationOrder.aspx" />
+    <Content Include="wfSdSalesQuotationOrder_display.aspx" />
     <Content Include="wSdSalesQuotationMaster.aspx" />
     <Content Include="wSdSalesQuotationMaster_display.aspx" />
   </ItemGroup>
@@ -1066,6 +1067,13 @@
     </Compile>
     <Compile Include="wfSdSalesQuotationOrder.aspx.designer.cs">
       <DependentUpon>wfSdSalesQuotationOrder.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="wfSdSalesQuotationOrder_display.aspx.cs">
+      <DependentUpon>wfSdSalesQuotationOrder_display.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="wfSdSalesQuotationOrder_display.aspx.designer.cs">
+      <DependentUpon>wfSdSalesQuotationOrder_display.aspx</DependentUpon>
     </Compile>
     <Compile Include="wSdSalesQuotationMaster.aspx.cs">
       <DependentUpon>wSdSalesQuotationMaster.aspx</DependentUpon>

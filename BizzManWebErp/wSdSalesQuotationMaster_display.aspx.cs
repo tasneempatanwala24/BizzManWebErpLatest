@@ -52,10 +52,13 @@ namespace BizzManWebErp
         public static string GetQuotationData(string QuotationId)
         {
             // Fetch company details
-            DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1,PhoneNo,EmailAddress,WebSiteAddress,Logo from tblAdminCompanyMaster");
+            DataTable dtCompanyDetails = objMain.dtFetchData("select CompanyName,Address1+' '+Address2 as Address1,PhoneNo,EmailAddress,WebSiteAddress,Logo from tblAdminCompanyMaster");
 
             // Fetch client details
-            DataTable dtClientDetails = objMain.dtFetchData(@"SELECT CustomerName as ContactName, Street1, Phone, Email from tblCrmCustomerContacts inner join tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WHERE tblCrmCustomers.CustomerId = (SELECT CustomerId FROM tblSdSalesQuotationMaster WHERE QuotationId = '" + QuotationId + "')");
+            DataTable dtClientDetails = objMain.dtFetchData(@"SELECT CustomerName as ContactName, 
+tblCrmCustomerContacts.Street1+' '+tblCrmCustomerContacts.Street2+' '+tblCrmCustomerContacts.City+' '+tblCrmCustomerContacts.State+' '+tblCrmCustomerContacts.Zip as Address,
+Phone, Email from tblCrmCustomerContacts inner join 
+tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WHERE tblCrmCustomers.CustomerId = (SELECT CustomerId FROM tblSdSalesQuotationMaster WHERE QuotationId = '" + QuotationId + "')");
 
             // Fetch quotation details
             DataTable dtQuotationDetails = objMain.dtFetchData(@"select QuotationId,FORMAT(QuotationDate, 'dd/MM/yyyy') as QuotationDate,QuotationStatus,NetTotal,NetGST,NetAmount,ShippingCharges,Notes,TermsAndConditions 

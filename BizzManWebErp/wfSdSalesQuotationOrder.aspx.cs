@@ -93,7 +93,8 @@ INNER JOIN   tblCrmCustomers on tblCrmCustomers.CustomerId=Quot.CustomerId
 inner join tblCrmCustomerContacts on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId
 where QuotationId='" + QuotationId + "'");
 
-                dtSalesQuotationDetail = objMain.dtFetchData(@" select QuotationId,SD.Id as SalesQuotationDetailId,ItemId,materialName,material.Id as MaterialId,material.UnitMesure as UnitMeasure,Qty,Rate,Discount,GST,Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,
+                dtSalesQuotationDetail = objMain.dtFetchData(@" select QuotationId,SD.Id as SalesQuotationDetailId,SD.ItemId,material.materialName,material.Id as MaterialId,material.UnitMesure as UnitMeasure,
+ SD.Qty,SD.Rate,SD.Discount,SD.GST,SD.Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,
 material.MRP as ActualRate from tblSdSalesQuotationMaster SM 
 inner join tblSdSalesQuotationDetail SD on SM.QuotationId=SD.QuotationMasterId inner join 
 tblMmMaterialMaster material on material.Id=SD.ItemId where SM.QuotationId='" + QuotationId + "' and SD.SalesOrderGenerate='n'");
@@ -482,11 +483,11 @@ from tblSdSalesOrder SO
                     //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
 
                     // Attempt to create an iTextSharp Image instance from the byte array
-                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
+                   // iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
 
 
-                    logo.ScaleToFit(100, 100); // Adjust the width and height as needed
-                    companyLogoCell.AddElement(logo);
+                    //logo.ScaleToFit(100, 100); // Adjust the width and height as needed
+                    //companyLogoCell.AddElement(logo);
 
 
 
@@ -526,14 +527,14 @@ tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId WH
                 clientInfoCell.Padding = 0;
                 //clientInfoCell.HorizontalAlignment = Element.ALIGN_LEFT;
                 billToTable.AddCell(clientInfoCell);
-                DataTable dtQuotationDetails = objMain.dtFetchData(@"select SM.SalesOrderId,FORMAT(OrderDate, 'dd/MM/yyyy') as OrderDate,(isnull(TotalAmount,0)-isnull(Deliveycharges,0)) as NetTotal,
-(Select cast (Sum(isnull(Qty*MM.MRP*(SP.Tax/100),0))as decimal(16,2)) from tblSdSalesOrderProductDetails SP 
+                DataTable dtQuotationDetails = objMain.dtFetchData(@"select SM.SalesOrderId,FORMAT(SM.OrderDate, 'dd/MM/yyyy') as OrderDate,(isnull(SM.TotalAmount,0)-isnull(SM.Deliveycharges,0)) as NetTotal,
+(Select cast (Sum(isnull(SP.Qty*MM.MRP*(SP.Tax/100),0))as decimal(16,2)) from tblSdSalesOrderProductDetails SP 
 inner join tblSdSalesOrder on tblSdSalesOrder.SalesOrderId=SP.SalesOrderId
 inner join tblMmMaterialMaster MM on MM.Id=SP.MaterialId
 where SP.SalesOrderId=SM.SalesOrderId
 )NetGST
-,TotalAmount as NetAmount,
-isnull(Deliveycharges,0) as ShippingCharges,TermCondition as TermsAndConditions ,isnull(Description,'') as Notes,cust.CustomerId,
+,SM.TotalAmount as NetAmount,
+isnull(SM.Deliveycharges,0) as ShippingCharges,SM.TermCondition as TermsAndConditions ,isnull(SM.Description,'') as Notes,cust.CustomerId,
 isnull(CustomerName,'')as CustomerName,isnull(Mobile,'')as Mobile,isnull(Email,'')as Email ,isnull(Street1,'')+' '+isnull(City,'')+' '+isnull(State,'')+' '+
 isnull(Zip,'')+' '+isnull(Country,'') as Address from tblSdSalesOrder SM  inner join tblCrmCustomers cust on SM.CustomerId=cust.CustomerId  
 inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId where SM.SalesOrderId='" + SalesOrderId + "'");
@@ -570,7 +571,8 @@ inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId wh
                 itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
                 itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-                DataTable dtSalesQuotationDetail = objMain.dtFetchData(@" select SM.SalesOrderId,MaterialId as ItemId,materialName,Qty,UnitPrice as Rate,DiscountPercent Discount,Tax GST,SubTotal Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate
+                DataTable dtSalesQuotationDetail = objMain.dtFetchData(@" select SM.SalesOrderId,SD.MaterialId as ItemId,material.materialName,SD.Qty,SD.UnitPrice as Rate,SD.DiscountPercent Discount,SD.Tax GST,SD.SubTotal Amount,
+ SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate
 from   tblSdSalesOrder SM  inner join tblSdSalesOrderProductDetails SD on SM.SalesOrderId=SD.SalesOrderId 
 inner join tblMmMaterialMaster material on material.Id=SD.MaterialId where SM.SalesOrderId='" + SalesOrderId + "'");
                 // Add table rows with item details

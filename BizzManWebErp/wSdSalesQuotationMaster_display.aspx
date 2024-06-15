@@ -115,7 +115,7 @@
                           content += '<div>';
                           content += '<h3 style="margin-bottom: 10px; font-weight: bold;">Bill To</h3>';
                           content += '<p style="margin: 5px 0;">Name: ' + clientDetails[0].ContactName + '</p>';
-                          content += '<p style="margin: 5px 0;">Address: ' + clientDetails[0].Street1 + '</p>';
+                          content += '<p style="margin: 5px 0;">Address: ' + clientDetails[0].Address + '</p>';
                           content += '<p style="margin: 5px 0;">Phone: ' + clientDetails[0].Phone + '</p>';
                           content += '<p style="margin: 5px 0;">Email: ' + clientDetails[0].Email + '</p>';
                           content += '</div>';

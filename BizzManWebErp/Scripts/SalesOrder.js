@@ -3,36 +3,222 @@ $(document).ready(function () {
         event.preventDefault();
     });
     $('#ddlCustomer').select2();
-   // $('#ddlMaterialName').select2();
+    $('#ddlMaterialName').select2();
+   
     
 
-    BindMaterialMasterDropdown();
-    BindCustomerDropdown();
+   
     BindCurrencyDropdown();
     BindCustomerTypeDropdown();
     BindStateDropdown();
     BindBranchDropdown();
     BindDepartmentDropdown()
     BindSalesOrderMasterList();
+    // Initialize Bootstrap Datepicker
+    $('.datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+        todayHighlight: true
+      
+    });
+  
+    // Detect Ctrl+S key press
+    $(document).on("keydown", function (event) {
+        // Check if Ctrl key is pressed along with 'S' key
+        if (event.ctrlKey && event.key === "s") {
+            event.preventDefault(); // Prevent the default save dialog
+            AddSalesOrder(); // Call the save function
+        }
+    });
+   
+    attachKeydownListeners();
 });
 
 
+
+
+
+function attachKeydownListeners() {
+    $("#ddlCustomer").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            setTimeout(function () {
+                $("#txtorderDate").focus(); // Trigger click to open the calendar popup
+            }, 300);
+        }
+    });
+
+    $("#ddlCustomer").on("change", function (event) {
+        if ($('#hdnSalesOrderId').val() == '') {
+            setTimeout(function () {
+                $("#txtorderDate").focus(); // Trigger click to open the calendar popup
+            }, 300);
+        }
+           
+       
+    });
+ 
+    $("#txtorderDate").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlGSTTreatment").focus();
+        }
+    });
+    $("#ddlGSTTreatment").focus(function () {
+        $(this).dropdown("toggle"); // This opens the dropdown
+    });
+    $("#ddlGSTTreatment").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtDeliveryDate").focus();
+        }
+    });
+    
+    $("#txtDeliveryDate").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlCurrency").focus();
+        }
+    });
+
+    $("#ddlCurrency").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlDept").focus();
+        }
+    });
+
+  
+
+    $("#ddlDept").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtExpirationDate").focus();
+        }
+    });
+
+    $("#txtExpirationDate").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtTermsConditions").focus();
+        }
+    });
+
+    $("#txtTermsConditions").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlPaymentTerms").focus();
+        }
+    });
+
+    $("#ddlPaymentTerms").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlBranch").focus();
+        }
+    });
+
+  
+
+    $("#ddlBranch").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtManualOrderId").focus();
+        }
+    });
+
+    $("#txtManualOrderId").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtDeliveryCharges").focus();
+        }
+    });
+
+    $("#txtDeliveryCharges").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtAdvance").focus();
+        }
+    });
+
+    $("#txtAdvance").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlMaterialName").focus();
+        }
+    });
+
+    $("#ddlMaterialName").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtMaterialQty").focus();
+        }
+    });
+
+    $("#txtMaterialQty").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#ddlPackage").focus();
+        }
+    });
+
+    $("#ddlPackage").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtMaterialRate").focus();
+        }
+    });
+    $("#txtMaterialRate").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtMaterialDiscount").focus();
+        }
+    });
+
+    $("#txtMaterialDiscount").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            SaveSalesOrderDetails();
+        }
+    });
+}
+
+
 // Function to handle numeric input
+function checkInputGiven(event) {
+    var value = event.target.value;
+    if (/^\d\.$/.test(value)) { // Checks if input is a single digit followed by a dot
+        event.target.value = value.charAt(0); // Sets the value to the single digit
+    }
+    // Allow focus to change
+    $(event.target).trigger('focusout');
+}
 function handleNumericInput(event) {
     // Get the input element
     var inputElement = event.target;
 
-    // Remove non-numeric characters (except 0)
-    var numericValue = inputElement.value.replace(/[^0-9]/g, '');
+    // Remove non-numeric characters (except decimal point)
+    var numericValue = inputElement.value.replace(/[^\d.]/g, '');
 
-    // Handle leading zeros
-    if (numericValue.length > 1 && numericValue.charAt(0) === '0') {
-        numericValue = numericValue.slice(1); // Remove leading zero
+    // Handle multiple decimal points
+    numericValue = numericValue.replace(/(\..*)\./g, '$1');
+
+    // Limit to two decimal places
+    numericValue = numericValue.replace(/(\.\d{2})\d+$/g, '$1');
+
+    // If the input starts with a decimal point, add a leading zero
+    if (numericValue.charAt(0) === '.') {
+        numericValue = '0' + numericValue;
     }
 
     // Set the default value to 0 if the input is empty
     if (numericValue === '') {
         numericValue = '0';
+    }
+
+    // Handle leading zeros
+    if (numericValue.length > 1 && numericValue.charAt(0) === '0' && numericValue.charAt(1) !== '.') {
+        numericValue = numericValue.slice(1); // Remove leading zero
     }
 
     // Update the input value
@@ -219,7 +405,7 @@ function BindMaterialMasterDropdown() {
             var data = JSON.parse(response.d);
             var req = "<option value=''>-Select Material-</option>";
             for (var i = 0; i < JSON.parse(response.d).length; i++) {
-                req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].MaterialName + "</option>";
+                req = req + "<option value='" + JSON.parse(response.d)[i].Id + "'>" + JSON.parse(response.d)[i].Id + '-' + JSON.parse(response.d)[i].MaterialName + "</option>";
             }
             $('#ddlMaterialName').append(req);
         },
@@ -345,9 +531,11 @@ function BindCustomerDropdown() {
             var data = JSON.parse(response.d);
             var branch = "<option value=''>-Select Customer-</option>";
             for (var i = 0; i < JSON.parse(response.d).length; i++) {
-                branch = branch + "<option value='" + JSON.parse(response.d)[i].CustomerId + "'>" + JSON.parse(response.d)[i].CustomerName + "</option>";
+                
+                branch = branch + "<option value='" + JSON.parse(response.d)[i].CustomerId + "'>" + JSON.parse(response.d)[i].CustomerName + '--' + JSON.parse(response.d)[i].Phone + "</option>";
             }
             $('#ddlCustomer').append(branch);
+            $('#ddlCustomer').focus();
         },
         complete: function () {
 
@@ -400,8 +588,11 @@ function CreateSalesOrder() {
     $('#btnExport').hide();
 
     $('#tr_SalesOrderEntry').show();
-
+    
     ClearAll();
+   
+   
+    $("ddlCustomer").focus();
 }
 
 function ViewSalesOrderList() {
@@ -414,27 +605,26 @@ function ViewSalesOrderList() {
     $('#btnCancel').hide();
     $('#previewBtn').hide();
     BindSalesOrderMasterList();
+ 
 }
 
 
 
 function ClearAll() {
     $('#tbody_SalesOrderDetails').children('tr:not(:first)').remove();
-    $('#ddlMaterialName').val('');
-    $('#txtMaterialQty').val('');
-    $('#txtMaterialDiscount').val('0');
+     $('#txtMaterialQty').val('');
+    $('#txtMaterialDiscount').val('');
     $('#txtMaterialStock').val('');
     $('#txtMaterialUnitMeasure').val('');
     $('#ddlPackage').html("<option value=''>-Select Package-</option>");
     $('#txtMaterialRate').val('');
     $('#txtMaterialTax').val('');
     $('#txtMaterialTotalAmount').val('');
-    
-    $('#txtExpirationDate').val('');
-    $('#ddlGSTTreatment').val('');
-    $('#txtQuotationDate').val('');
-    $('#ddlCurrency').val('');
-    $('#ddlPaymentTerms').val('');
+    $("#txtExpirationDate").val(getCurrentDate());
+   
+    $('#ddlGSTTreatment').val('Registered Business - Regular');
+    $('#ddlCurrency').val('1');
+    $('#ddlPaymentTerms').val('Immediate Payment');
     $('#txtTermsConditions').val('');
     $('#txtTotalAmount').val('');
     $('#hdnSalesOrderId').val('');
@@ -451,7 +641,7 @@ function ClearAll() {
     $('#ddlDept').val('');
 
     $('#txtorderDate').val('');
-    $('#txtDeliveryDate').val('');
+    $('#txtDeliveryDate').val(getCurrentDate());
     $('#txtManualOrderId').val('');
     $('#txtDeliveryCharges').val('0');
     $('#txtOutstandingAmount').val('0');
@@ -461,7 +651,16 @@ function ClearAll() {
     $('#btnConfirm').hide();
     $('#btnCancel').hide();
     $('#previewBtn').hide();
-    $('#ddlCustomer').val('').trigger('change');;
+    $('#ddlCustomer').select2('destroy');
+    $('#ddlCustomer').html('<option value="">-Select Customer-</option>');
+    $('#ddlCustomer').select2();
+    BindCustomerDropdown();
+
+    $('#ddlMaterialName').select2('destroy');
+    $('#ddlMaterialName').html('<option value="">-Select Customer-</option>');
+    $('#ddlMaterialName').select2();
+    BindMaterialMasterDropdown();
+   
 }
 
 
@@ -568,7 +767,16 @@ function BindSalesOrderMasterList() {
 
 }
 
+// Function to format the date as mm/dd/yyyy
+function formatDate(date) {
+    var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
+    var month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are zero-based, so add 1 and add leading zero if needed
+    var year = date.getFullYear();
 
+   
+
+    return month + '/' + day + '/' + year;
+}
 
 function FetchSalesOrderMasterDetails(id, OrderStatus) {
     if (OrderStatus == '1' || OrderStatus == '2') {
@@ -596,33 +804,46 @@ function FetchSalesOrderMasterDetails(id, OrderStatus) {
                 $('#btnExport').hide();
                 $('#btnView').show();
                 $('#txtSaleOrderId').val(id);
-                
-                $('#ddlGSTTreatment').val(data[0].GST_Treatment);
-                $('#ddlCurrency').val(data[0].CurrencyId);
-                $('#ddlPaymentTerms').val(data[0].PaymentTerms);
-                $('#txtTermsConditions').val(data[0].TermCondition);
-                $('#txtTotalAmount').val(data[0].TotalAmount);
-                $('#txtOutstandingAmount').val(data[0].OutstandingAmount);
-                $('#txtAdvance').val(data[0].Advance);
-                $('#ddlBranch').val(data[0].BranchCode);
-                $('#ddlDept').val(data[0].DepartmentID);
-                var dtExpirationDate = new Date(data[0].ExpirationDate);
-                document.getElementById("txtExpirationDate").valueAsDate = dtExpirationDate;
+              //  (data[i].SalesOrderSource != undefined ? data[0].SalesOrderSource : '')
+                $('#ddlGSTTreatment').val((data[0].GST_Treatment != undefined ? data[0].GST_Treatment : ''));
+                $('#ddlCurrency').val((data[0].CurrencyId != undefined ? data[0].CurrencyId : ''));
+                $('#ddlPaymentTerms').val((data[0].PaymentTerms != undefined ? data[0].PaymentTerms : ''));
+                $('#txtTermsConditions').val((data[0].TermCondition != undefined ? data[0].TermCondition : ''));
+                $('#txtTotalAmount').val((data[0].TotalAmount != undefined ? data[0].TotalAmount : ''));
+                $('#txtOutstandingAmount').val((data[0].OutstandingAmount != undefined ? data[0].OutstandingAmount : ''));
+                $('#txtAdvance').val((data[0].Advance != undefined ? data[0].Advance : ''));
+                $('#ddlBranch').val((data[0].BranchCode != undefined ? data[0].BranchCode : ''));
+                $('#ddlDept').val((data[0].DepartmentID != undefined ? data[0].DepartmentID : ''));
+                if (data[0].ExpirationDate != undefined) {
+                    var dtExpirationDate = new Date(data[0].ExpirationDate);
+                    $('#txtExpirationDate').val(formatDate(dtExpirationDate));
+                }
+                else {
+                    $('#txtExpirationDate').val(getCurrentDate());
+                }
               //  var dtQuotationDate = new Date(data[0].QuotationDate);
              //   document.getElementById("txtQuotationDate").valueAsDate = dtQuotationDate;
-                $('#hdnSalesOrderId').val(data[0].SalesOrderId);
-                $('#txtSaleOrderId').val(data[0].SalesOrderId);
-                $('#txtManualOrderId').val(data[0].ManualOrderId);
-                $('#txtDeliveryDate').val(data[0].DeliveryDateTime);
-                $('#txtQuotationId').val(data[0].SalesQuotationMasterId);
-                var dtOrderDate = new Date(data[0].OrderDate);
-                document.getElementById("txtorderDate").valueAsDate = dtOrderDate;
-
-                if (data[0].Deliveycharges!=null)
-                    $('#txtDeliveryCharges').val(data[0].Deliveycharges);
-                else
-                    $('#txtDeliveryCharges').val('0');
-
+                $('#hdnSalesOrderId').val((data[0].SalesOrderId != undefined ? data[0].SalesOrderId : '') );
+                $('#txtSaleOrderId').val((data[0].SalesOrderId != undefined ? data[0].SalesOrderId : ''));
+                $('#txtManualOrderId').val((data[0].ManualOrderId != undefined ? data[0].ManualOrderId : ''));
+                if (data[0].DeliveryDateTime != undefined) {
+                    var dtDeliveryDate = new Date(data[0].DeliveryDateTime.split('T')[0]);
+                    $('#txtDeliveryDate').val(formatDate(dtDeliveryDate));
+                }
+                else {
+                    $('#txtDeliveryDate').val(getCurrentDate());
+                }
+                $('#txtQuotationId').val((data[0].SalesQuotationMasterId != undefined ? data[0].SalesQuotationMasterId : ''));
+                if (data[0].OrderDate != undefined) {
+                    var dtOrderDate = new Date(data[0].OrderDate.split('T')[0]);
+                    $('#txtorderDate').val(formatDate(dtOrderDate));
+                    //$('#txtOrderDate').datepicker('setDate', dtOrderDate); // Set datepicker value
+                }
+              
+               
+                $('#txtDeliveryCharges').val((data[0].Deliveycharges != undefined ? data[0].Deliveycharges : '') );
+            
+           
 
 
 
@@ -632,7 +853,15 @@ function FetchSalesOrderMasterDetails(id, OrderStatus) {
                     $('#btnCancel').show();
                 }
                 $('#previewBtn').show();
-                $('#ddlCustomer').val(data[0].CustomerId).trigger('change');
+                //$('#ddlCustomer').select2("val", data[0].CustomerId)
+                setTimeout(function () {
+                    $('#ddlCustomer').val(data[0].CustomerId).trigger('change');
+                   
+                }, 30);
+                setTimeout(function () {
+                  
+                    $('#ddlCustomer').focus();
+                }, 100);
                 hideLoader();
             },
             complete: function () {
@@ -779,7 +1008,8 @@ function Base64ToBytes(base64) {
 function FetchMaterialDetails() {
     if ($('#ddlBranch').val() == '') {
         alertify.error('Please Select Branch');
-        $('#ddlMaterialName').val('');
+        $('#ddlMaterialName').val('').trigger('change');
+        $('#ddlBranch').focus();
         return;
     }
 
@@ -797,7 +1027,7 @@ function FetchMaterialDetails() {
         });
         if (found) {
             alertify.error('Material already added');
-            $('#ddlMaterialName').val('');
+            $('#ddlMaterialName').val('').trigger('change');
             return;
         }
         showLoader();
@@ -827,6 +1057,7 @@ function FetchMaterialDetails() {
                     $('#txtMaterialStock').val(data[0].Stock);
                     BindMaterialPackagingDropdown($('#ddlMaterialName').val());
                     hideLoader();
+                    $("#txtMaterialQty").focus();
                 }, 1000); // Hide loader after 3 seconds
             },
             complete: function () {
@@ -844,28 +1075,82 @@ function FetchMaterialDetails() {
 
 function calculateGrandTotal() {
     var grandTotal = 0;
-  
+
     var shippingCharges = parseFloat($('#txtDeliveryCharges').val());
+    shippingCharges = isNaN(shippingCharges) ? 0 : shippingCharges;
+
     // Iterate through each row in the table body
     $('#tbody_SalesOrderDetails tr').each(function (i) {
         if (i > 0) {
-            var totalAmount = parseFloat($(this)[0].cells[10].innerText)
+            var totalAmount = parseFloat($(this)[0].cells[10].innerText);
+            totalAmount = isNaN(totalAmount) ? 0 : totalAmount;
             grandTotal += totalAmount;
         }
-        
     });
 
-    grandTotal += shippingCharges
+    grandTotal += shippingCharges;
     $('#txtTotalAmount').val(grandTotal.toFixed(2));
+
     var outstanding = 0;
-    var advance = 0;
-    advance = parseFloat($('#txtAdvance').val());
+    var advance = parseFloat($('#txtAdvance').val());
+    advance = isNaN(advance) ? 0 : advance;
+
     outstanding = grandTotal - advance;
     $('#txtOutstandingAmount').val(outstanding.toFixed(2));
 }
 
-function SaveSalesOrderDetails() {
 
+function validateRows() {
+    var isValid = true;
+    var errorMessage = "";
+
+ 
+        var itemName = $("#ddlMaterialName").val();
+    var qty = $("#txtMaterialQty").val();
+    var rate = $("#txtMaterialRate").val();
+    var discount = $("#txtMaterialDiscount").val();
+        if (!itemName) {
+            isValid = false;
+            errorMessage += "Item Name is required.\n";
+            $("#ddlMaterialName").addClass("is-invalid");
+        } else {
+            $("#ddlMaterialName").removeClass("is-invalid");
+        }
+
+        if (!qty || isNaN(qty) || parseFloat(qty) <= 0 || !/^\d+(\.\d{1,2})?$/.test(qty)) {
+            isValid = false;
+            errorMessage += "Quantity must be a number greater than 0 with up to 2 decimal places.\n";
+            $("#txtMaterialQty").addClass("is-invalid");
+        } else {
+            $("#txtMaterialQty").removeClass("is-invalid");
+        }
+
+        if (!rate || isNaN(rate) || parseFloat(rate) <= 0 || !/^\d+(\.\d{1,2})?$/.test(rate)) {
+            isValid = false;
+            errorMessage += "Rate must be a number greater than 0 with up to 2 decimal places.\n";
+            $("#txtMaterialRate").addClass("is-invalid");
+        } else {
+            $("#txtMaterialRate").removeClass("is-invalid");
+    }
+    discount = (discount=='') ? '0' : discount;
+    if (!discount || isNaN(discount) || parseFloat(discount) < 0 || !/^\d+(\.\d{1,2})?$/.test(discount)) {
+        isValid = false;
+        errorMessage += "Discount must be a number .\n";
+        $("#txtMaterialDiscount").addClass("is-invalid");
+    } else {
+        $("#txtMaterialDiscount").removeClass("is-invalid");
+    }
+
+    if (!isValid) {
+        alertify.error(errorMessage);
+    }
+
+    return isValid;
+}
+function SaveSalesOrderDetails() {
+    if (!validateRows()) {
+        return;
+    }
     if ($('#ddlMaterialName').val() != '') {
 
 
@@ -895,15 +1180,17 @@ function SaveSalesOrderDetails() {
             //        $('#txtTotalAmount').val(totalAmnt.toFixed(2));
             //    } commented by tasneem9
             calculateGrandTotal();
-                $('#ddlMaterialName').val('');
+               
                 $('#txtMaterialQty').val('');
                 $('#txtMaterialUnitMeasure').val('');
                 $('#txtMaterialRate').val('');
                 $('#txtMaterialTotalAmount').val('');
                 $('#ddlPackage').html("<option value=''>-Select Package-</option>");
                 $('#txtMaterialTax').val('');
-            $('#txtMaterialDiscount').val('0');
+            $('#txtMaterialDiscount').val('');
             $('#txtMaterialStock').val('');
+            $('#ddlMaterialName').val('').trigger('change');
+            $('#ddlMaterialName').focus();
             //}
             //else {
             //    alertify.error('Please select any package');
@@ -935,23 +1222,28 @@ function DeleteSalesOrderDetailEntry(ele) {
 function UpdateTotalAmount() {
     if ($('#txtMaterialQty').val() != '') {
         if ($('#ddlMaterialName').val() != '') {
-           // var totalAmnt = parseFloat($('#txtMaterialRate').val()) * parseInt($('#txtMaterialQty').val());
-           // totalAmnt = totalAmnt + ((totalAmnt * parseInt($('#txtMaterialTax').val())) / 100);
-          /*  var amount = (qty * rate) * (1 - discount / 100) * (1 + gst / 100);*/
+            var qty = parseFloat($('#txtMaterialQty').val());
+            var rate = parseFloat($('#txtMaterialRate').val());
+            var discount = parseFloat($('#txtMaterialDiscount').val());
+            var tax = parseFloat($('#txtMaterialTax').val());
 
-            var totalAmnt = (parseInt($('#txtMaterialQty').val()) * parseFloat($('#txtMaterialRate').val())) * (1 - parseInt($('#txtMaterialDiscount').val()) / 100) * (1 + parseInt($('#txtMaterialTax').val()) / 100);
+            // Convert NaN values to 0
+            qty = isNaN(qty) ? 0 : qty;
+            rate = isNaN(rate) ? 0 : rate;
+            discount = isNaN(discount) ? 0 : discount;
+            tax = isNaN(tax) ? 0 : tax;
 
+            var totalAmnt = (qty * rate) * (1 - discount / 100) * (1 + tax / 100);
             $('#txtMaterialTotalAmount').val(totalAmnt.toFixed(2));
-        }
-        else {
+        } else {
             $('#txtMaterialQty').val('');
             alertify.error('Please select any material first');
         }
-    }
-    else {
+    } else {
         $('#txtMaterialTotalAmount').val('');
     }
 }
+
 
 
 //function AddSalesOrder() {
@@ -1074,30 +1366,30 @@ function UpdateTotalAmount() {
 //}
 
 
-
+function getCurrentDate() {
+    var today = new Date();
+    var day = ("0" + today.getDate()).slice(-2); // Add leading zero if needed
+    var month = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based, so add 1 and add leading zero if needed
+    var year = today.getFullYear();
+    return month + "/" + day + "/" + year;
+}
 
 function AddSalesOrder() {
     if ($('#ddlCustomer').val() == '') {
         alertify.error('Please select any Customer');
         return;
     }
-    else if ($('#txtExpirationDate').val() == '') {
-        alertify.error('Please select any Expiration Date');
+    else if ($('#ddlDept').val() == '') {
+        alertify.error('Please select any Department');
+        $('#ddlDept').focus();
         return;
     }
-    else if ($('#ddlGSTTreatment').val() == '') {
-        alertify.error('Please select any GST Treatment');
+    else if ($('#ddlBranch').val() == '') {
+        alertify.error('Please select any Branch');
+        $('#ddlBranch').focus();
         return;
     }
-    else if ($('#txtManualOrderId').val() == '') {
-        alertify.error('Please enter Manual OrderId');
-        return;
-    }
-    else if ($('#ddlCurrency').val() == '') {
-        alertify.error('Please select any Currency');
-        return;
-    }
-
+    
     var hasRows = $('#tbody_SalesOrderDetails tr').length > 1;
     if (!hasRows) {
         alertify.error('Please add Sales Order Lines');
@@ -1115,7 +1407,7 @@ function AddSalesOrder() {
             var discount = $(this)[0].cells[8].innerText;
             var amount = $(this)[0].cells[10].innerText;
             var packageId = $(this)[0].cells[6].innerText;
-
+            discount = (discount == '') ? 0 : discount;
             data.push({ ItemID: materialID, Quantity: Qty, Rate: Rate, GST: GST, UnitMeasure: UnitMeasure, Amount: amount, PackageId: packageId, Discount: discount });
 
         }
@@ -1363,33 +1655,34 @@ function AddNewCustomerType() {
 
 
 function PrintPreview() {
-    showLoader();
+    window.open('wfSdSalesOrder_display.aspx?id=' + $('#hdnSalesOrderId').val(), "_blank");
+    //showLoader();
   
-    // Call the server-side method to get the PDF content
-    $.ajax({
-        type: 'POST',
-        url: 'wfSdSalesOrder.aspx/GetPdfContent',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({
-            "SalesOrderId": $('#hdnSalesOrderId').val()
-        }),
-        dataType: 'json',
-        success: function (response) {
-            setTimeout(function () {
-                hideLoader();
+    //// Call the server-side method to get the PDF content
+    //$.ajax({
+    //    type: 'POST',
+    //    url: 'wfSdSalesOrder.aspx/GetPdfContent',
+    //    contentType: 'application/json; charset=utf-8',
+    //    data: JSON.stringify({
+    //        "SalesOrderId": $('#hdnSalesOrderId').val()
+    //    }),
+    //    dataType: 'json',
+    //    success: function (response) {
+    //        setTimeout(function () {
+    //            hideLoader();
 
 
-                // Display the PDF content in the modal
-                $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
-                $('#pdfModal').modal('show');
-                $('.modal-backdrop').remove();
-            }, 1000); // Hide loader after 3 seconds
+    //            // Display the PDF content in the modal
+    //            $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
+    //            $('#pdfModal').modal('show');
+    //            $('.modal-backdrop').remove();
+    //        }, 1000); // Hide loader after 3 seconds
 
-        },
-        error: function (xhr, status, error) {
-            console.log('Error fetching PDF:', error);
-        }
-    });
+    //    },
+    //    error: function (xhr, status, error) {
+    //        console.log('Error fetching PDF:', error);
+    //    }
+    //});
 
 }
 

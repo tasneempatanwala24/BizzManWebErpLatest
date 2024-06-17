@@ -299,8 +299,8 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
             strBuild.Append("<SalesOrderId>" + SalesOrderId + "</SalesOrderId>");
             strBuild.Append("<ManualOrderId>" + ManualOrderId + "</ManualOrderId>");
             strBuild.Append("<CustomerId>" + CustomerId + "</CustomerId>");
-            strBuild.Append("<ExpirationDate>" + DateTime.ParseExact(ExpirationDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</ExpirationDate>");
-            strBuild.Append("<OrderDate>" + DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) + "</OrderDate>");
+            strBuild.Append("<ExpirationDate>" + DateTime.ParseExact(ExpirationDate, "MM/dd/yyyy", CultureInfo.InvariantCulture) + "</ExpirationDate>");
+            strBuild.Append("<OrderDate>" + DateTime.ParseExact(OrderDate, "MM/dd/yyyy", CultureInfo.InvariantCulture) + "</OrderDate>");
             strBuild.Append("<GSTTreatment>" + GSTTreatment + "</GSTTreatment>");
             strBuild.Append("<DeliveryDateTime>" + DeliveryDateTime.Replace("T"," ") + "</DeliveryDateTime>");
             strBuild.Append("<Currency>" + Currency + "</Currency>");
@@ -480,7 +480,8 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
             try
             {
 
-                dtCustomerList = objMain.dtFetchData("select CustomerId,CustomerName FROM tblCrmCustomers");
+                dtCustomerList = objMain.dtFetchData(@"SELECT tblCrmCustomers.CustomerId,CustomerName, Street1, Phone, Email from tblCrmCustomerContacts inner join 
+tblCrmCustomers on tblCrmCustomers.ContactId=tblCrmCustomerContacts.ContactId");
             }
             catch (Exception ex)
             {
@@ -705,7 +706,7 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
 
             try
             {
-                string formattedOrderDate = DateTime.ParseExact(OrderDate, "yyyy-MM-dd", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
+                string formattedOrderDate = DateTime.ParseExact(OrderDate, "MM/dd/yyyy", CultureInfo.InvariantCulture).ToString("yyyy/MM/dd");
               //  dtNewQuotationID = objMain.dtFetchData(@"select 'SORD' + CONVERT(NVARCHAR(10), '" + formattedOrderDate + "', 120)   +'/'+                       RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(SalesOrderId, LEN(SalesOrderId) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4) as SalesOrderId    FROM tblSdSalesOrder    WHERE OrderDate ='" + formattedOrderDate + "'");
 
                 dtNewQuotationID = objMain.dtFetchData("select 'SORD' + CONVERT(NVARCHAR(10), '" + formattedOrderDate + "', 120) + '/' +\r\n                             RIGHT('0000' + CAST(ISNULL(MAX(SUBSTRING(SalesOrderId, LEN(SalesOrderId) - 3, 4)), 0) + 1 AS NVARCHAR(4)), 4)\r\n as SalesOrderId    FROM tblSdSalesOrder\r\n    WHERE OrderDate ='" + formattedOrderDate + "'");
@@ -836,11 +837,11 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
                 //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(filePath);
 
                 // Attempt to create an iTextSharp Image instance from the byte array
-                iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
+                //iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(imageData);
 
 
-                logo.ScaleToFit(100, 100); // Adjust the width and height as needed
-                companyLogoCell.AddElement(logo);
+               // logo.ScaleToFit(100, 100); // Adjust the width and height as needed
+               // companyLogoCell.AddElement(logo);
 
 
 
@@ -924,7 +925,8 @@ inner join tblCrmCustomerContacts CustCon on CustCon.ContactId=cust.ContactId wh
             itemTable.AddCell(new PdfPCell(new Phrase("Discount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
             itemTable.AddCell(new PdfPCell(new Phrase("GST %", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
             itemTable.AddCell(new PdfPCell(new Phrase("Amount", FontFactory.GetFont(FontFactory.HELVETICA_BOLD))));
-            DataTable dtSalesQuotationDetail = objMain.dtFetchData(@" select SM.SalesOrderId,MaterialId as ItemId,materialName,Qty,UnitPrice as Rate,DiscountPercent Discount,Tax GST,SubTotal Amount,SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate
+            DataTable dtSalesQuotationDetail = objMain.dtFetchData(@" select SM.SalesOrderId,SD.MaterialId as ItemId,material.materialName,SD.Qty,SD.UnitPrice as Rate,SD.DiscountPercent Discount,SD.Tax GST,SD.SubTotal Amount,
+ SD.CentralTaxPercent,SD.StateTaxPercent,SD.CessPercent,material.MRP as ActualRate
 from   tblSdSalesOrder SM  inner join tblSdSalesOrderProductDetails SD on SM.SalesOrderId=SD.SalesOrderId 
 inner join tblMmMaterialMaster material on material.Id=SD.MaterialId where SM.SalesOrderId='" + SalesOrderId + "'");
             // Add table rows with item details

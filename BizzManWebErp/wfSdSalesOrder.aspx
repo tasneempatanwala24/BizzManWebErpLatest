@@ -107,7 +107,7 @@
                                 <td>
                                     <input type="date" class="form-control" id="txtQuotationDate" name="txtQuotationDate" />
                                 </td>--%>
-                                 <td style="width: 10%;">Delivery Date & Time</td>
+                                 <td style="width: 10%;">Delivery Date</td>
                                 <td>  
                                 <input type="text"  class="form-control datepicker" id="txtDeliveryDate" name="txtDeliveryDate" placeholder="mm/dd/yyyy" />
                                     </td>
@@ -231,12 +231,12 @@
             <th style="display: none;">Material Master Id</th>
             <th style="width: 250px;">Material Name</th>
             <th>Stock</th>
-            <th>Qty</th>
+            <th style="width: 100px;">Qty</th>
             <th>Unit Measure</th>
             <th>Package</th>
             <th style="display: none;">Package Id</th>
-            <th>Unit Price</th>
-            <th>Discount (%)</th>
+            <th style="width: 100px;">Unit Price</th>
+            <th style="width: 100px;">Discount (%)</th>
             <th>Tax (%)</th>
             <th>Total Amount</th>
             <th></th>
@@ -251,31 +251,31 @@
                     <option value="">-Select Material Name-</option>
                 </select>
             </td>
-            <td>
+            <td style="width: 100px;">
                 <input type="text" class="form-control" id="txtMaterialStock" name="txtMaterialStock" readonly="readonly" />
             </td>
-            <td>
+            <td style="width: 100px;" >
                 <input type="text" class="form-control" id="txtMaterialQty" name="txtMaterialQty" onchange="UpdateTotalAmount();" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" value="0" />
             </td>
             <td>
                 <input type="text" class="form-control" id="txtMaterialUnitMeasure" name="txtMaterialUnitMeasure" readonly="readonly" />
             </td>
-            <td>
+            <td style="width: 100px;">
                 <select id="ddlPackage" name="ddlPackage" class="form-control">
                     <option value="">-Select Package-</option>
                 </select>
             </td>
             <td style="display: none;"></td>
-            <td>
+            <td style="width: 100px;">
                 <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" />
             </td>
-            <td>
+            <td style="width: 100px;">
                 <input type="text" class="form-control" id="txtMaterialDiscount" name="txtMaterialDiscount" onchange="UpdateTotalAmount();"  oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" />
             </td>
-            <td>
+            <td style="width: 100px;">
                 <input type="text" class="form-control" id="txtMaterialTax" name="txtMaterialTax" readonly="readonly" />
             </td>
-            <td>
+            <td style="width: 100px;">
                 <input type="text" class="form-control" id="txtMaterialTotalAmount" name="txtMaterialTotalAmount" readonly="readonly" />
             </td>
             <td>

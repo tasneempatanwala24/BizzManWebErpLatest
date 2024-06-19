@@ -895,16 +895,16 @@ function FetchSalesOrderDetailsList(salesorderid) {
             var html = '';
             for (var i = 0; i < data.length; i++) {
                 $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + data[i].MaterialId + '</td>'
-                    + '<td>' + (data[i].MaterialName != undefined ? data[i].MaterialName : "") + '</td>'
-                    + '<td>' + (data[i].Stock != undefined ? data[i].Stock : "") + '</td>'
-                    + '<td>' + (data[i].Qty != undefined ? data[i].Qty : "") + '</td>'
+                    + '<td style="width: 250px;">' + (data[i].MaterialName != undefined ? data[i].MaterialName : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].Stock != undefined ? data[i].Stock : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].Qty != undefined ? data[i].Qty : "") + '</td>'
                     + '<td>' + (data[i].UnitMesure != undefined ? data[i].UnitMesure : "") + '</td>'
-                    + '<td>' + (data[i].Packaging != undefined ? data[i].Packaging : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].Packaging != undefined ? data[i].Packaging : "") + '</td>'
                     + '<td style="display: none;">' + (data[i].PackageId != undefined ? data[i].PackageId : "") + '</td>'
-                    + '<td>' + (data[i].UnitPrice != undefined ? data[i].UnitPrice : "") + '</td>'
-                    + '<td>' + (data[i].DiscountPercent != undefined ? data[i].DiscountPercent : "") + '</td>'
-                    + '<td>' + (data[i].Tax != undefined ? data[i].Tax : "") + '</td>'
-                    + '<td>' + (data[i].SubTotal != undefined ? data[i].SubTotal : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].UnitPrice != undefined ? data[i].UnitPrice : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].DiscountPercent != undefined ? data[i].DiscountPercent : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].Tax != undefined ? data[i].Tax : "") + '</td>'
+                    + '<td style="width: 100px;">' + (data[i].SubTotal != undefined ? data[i].SubTotal : "") + '</td>'
                     + '<td><a onclick="DeleteSalesOrderDetailEntry(this);" style="cursor:pointer;"><i class="fa fa-trash" aria-hidden="true"></i></a></td>'
                     + '</tr>');
             }
@@ -1008,7 +1008,7 @@ function Base64ToBytes(base64) {
 function FetchMaterialDetails() {
     if ($('#ddlBranch').val() == '') {
         alertify.error('Please Select Branch');
-        $('#ddlMaterialName').val('').trigger('change');
+        $('#ddlMaterialName').val('');
         $('#ddlBranch').focus();
         return;
     }
@@ -1027,7 +1027,7 @@ function FetchMaterialDetails() {
         });
         if (found) {
             alertify.error('Material already added');
-            $('#ddlMaterialName').val('').trigger('change');
+            $('#ddlMaterialName').val('');
             return;
         }
         showLoader();
@@ -1158,16 +1158,16 @@ function SaveSalesOrderDetails() {
         if ($('#txtMaterialQty').val() != '') {
             //if ($('#ddlPackage').val() != '') {
                 $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + $('#ddlMaterialName').val() + '</td>'
-                    + '<td>' + $("#ddlMaterialName option:selected").text() + '</td>'
-                    + '<td>' + $("#txtMaterialStock").val() + '</td>'
-                    + '<td>' + $("#txtMaterialQty").val() + '</td>'
+                    + '<td style="width: 250px;">' + $("#ddlMaterialName option:selected").text() + '</td>'
+                    + '<td style="width: 100px;">' + $("#txtMaterialStock").val() + '</td>'
+                    + '<td style="width: 100px;">' + $("#txtMaterialQty").val() + '</td>'
                     + '<td>' + $("#txtMaterialUnitMeasure").val() + '</td>'
-                    + '<td>' + ($("#ddlPackage").val()!=""? $("#ddlPackage option:selected").text():"") + '</td>'
+                    + '<td  style="width: 100px;">' + ($("#ddlPackage").val()!=""? $("#ddlPackage option:selected").text():"") + '</td>'
                     + '<td style="display: none;">' + ($("#ddlPackage").val() != "" ? $("#ddlPackage").val():"0") + '</td>'
-                    + '<td>' + $("#txtMaterialRate").val() + '</td>'
-                    + '<td>' + $("#txtMaterialDiscount").val() + '</td>'
-                    + '<td>' + $("#txtMaterialTax").val() + '</td>'
-                    + '<td>' + $("#txtMaterialTotalAmount").val() + '</td>'
+                    + '<td style="width: 100px;">' + $("#txtMaterialRate").val() + '</td>'
+                    + '<td style="width: 100px;">' + $("#txtMaterialDiscount").val() + '</td>'
+                    + '<td style="width: 100px;">' + $("#txtMaterialTax").val() + '</td>'
+                    + '<td style="width: 100px;">' + $("#txtMaterialTotalAmount").val() + '</td>'
                     + '<td><a onclick="DeleteSalesOrderDetailEntry(this);" style="cursor:pointer;"><i class="fa fa-trash" aria-hidden="true"></i></a></td>'
                     + '</tr>');
 

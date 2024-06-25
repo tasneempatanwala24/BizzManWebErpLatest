@@ -70,7 +70,7 @@
           
            <div class="card">
             <div class="card-header">
-                Add Sales Order Invoice
+               Sales Invoice
             </div>
             <div class="card-body">
                 <div class="panel panel-default">
@@ -94,7 +94,7 @@
                                 </td>
                                  <td style="width: 10%;">Sales Invoice Date*</td>
                                 <td>  
-                                <input type="date" class="form-control" id="txtSalesInvoiceDate" name="txtSalesInvoiceDate" onchange="GenerateOrderID()"/>
+                                <input type="text" class="form-control datepicker" id="txtSalesInvoiceDate" name="txtSalesInvoiceDate" onchange="GenerateOrderID()"/>
                                     </td>
                             </tr>
                             <tr>
@@ -129,7 +129,7 @@
                                
                                  <td>Delivery Charges</td>
                                 <td>
-                                    <input type="number" class="form-control" id="txtDeliveryCharges" name="txtDeliveryCharges" onchange="GetTotalAmount()" oninput="handleNumericInput(event)" />
+                                    <input type="text" class="form-control" id="txtDeliveryCharges" name="txtDeliveryCharges" onchange="GetTotalAmount()" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" />
                                 </td>
                                <td>Advance</td>
                                 <td>

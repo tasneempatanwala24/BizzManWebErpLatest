@@ -9,20 +9,62 @@ $(document).ready(function () {
 
 
 
-    // Initialize Bootstrap Datepicker
     $('.datepicker').datepicker({
-        format: 'dd/mm/yyyy',
+        format: 'mm/dd/yyyy',
         autoclose: true,
-        todayHighlight: true,
-        startDate: '0d' // Restrict to the current date and future dates
-    });
+        todayHighlight: true
 
+    });
     BindSalesOrderDropdown();
    
     BindSalesOrderInvoiceMasterList();
+    $(document).on("keydown", function (event) {
+        // Check if Ctrl key is pressed along with 'S' key
+        if (event.ctrlKey && event.key === "s") {
+            event.preventDefault(); // Prevent the default save dialog
+            AddSalesOrder(); // Call the save function
+        }
+    });
+    attachKeydownListeners();
 
 });
 
+function attachKeydownListeners() {
+    $("#ddlSalesOrderd").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            setTimeout(function () {
+                $("#txtSalesInvoiceDate").focus(); // Trigger click to open the calendar popup
+            }, 300);
+        }
+    });
+
+    $("#ddlSalesOrderd").on("change", function (event) {
+      
+            setTimeout(function () {
+                $("#txtSalesInvoiceDate").focus(); // Trigger click to open the calendar popup
+            }, 300);
+        
+
+
+    });
+
+    $("#txtSalesInvoiceDate").on("keydown", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            $("#txtDeliveryCharges").focus();
+        }
+    });
+   
+   
+}
+function getCurrentDate() {
+    var today = new Date();
+    var day = ("0" + today.getDate()).slice(-2); // Add leading zero if needed
+    var month = ("0" + (today.getMonth() + 1)).slice(-2); // Months are zero-based, so add 1 and add leading zero if needed
+    var year = today.getFullYear();
+    return month + "/" + day + "/" + year;
+}
 function BindSalesOrderInvoiceMasterList() {
     showLoader();
     $.ajax({
@@ -114,6 +156,7 @@ function BindSalesOrderDropdown() {
                 abranch = abranch + "<option value='" + JSON.parse(response.d)[i].SalesOrderId + "'>" + JSON.parse(response.d)[i].SalesOrderId + "</option>";
             }
             $('#ddlSalesOrderd').append(abranch);
+            $('#ddlSalesOrderd').focus();
         },
         complete: function () {
 
@@ -354,13 +397,17 @@ function ClearAll() {
       $('#txtCustomer').val('');
     $('#txtSalesInvoiceDate').val('');
     $('#txtCustomer').val('');
-
-
-      BindSalesOrderDropdown();
-    $('#ddlSalesOrderd').val('').trigger('change');;
+    $('#txtSalesInvoiceDate').val(getCurrentDate());
+    $('#ddlSalesOrderd').select2('destroy');
+    $('#ddlSalesOrderd').html('<option value="">-Select Customer-</option>');
+    $('#ddlSalesOrderd').select2();
+    BindSalesOrderDropdown();
+    GenerateOrderID();
+    
 }
 
 function CreateData() {
+    showLoader();
     //  $('#divEmpJobList').hide();
     $('#divDataList').hide();
     $('#divDataEntryDetails').hide();
@@ -370,6 +417,7 @@ function CreateData() {
     $('#saveDataBtn').show();
 
     ClearAll();
+    hideLoader()
 }
 function FetchSalesOrderMasterDetails(id) {
 
@@ -446,16 +494,30 @@ function FetchSalesOrderMasterDetails(id) {
 }
 
 // Function to handle numeric input
+function checkInputGiven(event) {
+    var value = event.target.value;
+    if (/^\d\.$/.test(value)) { // Checks if input is a single digit followed by a dot
+        event.target.value = value.charAt(0); // Sets the value to the single digit
+    }
+    // Allow focus to change
+    $(event.target).trigger('focusout');
+}
 function handleNumericInput(event) {
     // Get the input element
     var inputElement = event.target;
 
-    // Remove non-numeric characters (except 0)
-    var numericValue = inputElement.value.replace(/[^0-9]/g, '');
+    // Remove non-numeric characters (except decimal point)
+    var numericValue = inputElement.value.replace(/[^\d.]/g, '');
 
-    // Handle leading zeros
-    if (numericValue.length > 1 && numericValue.charAt(0) === '0') {
-        numericValue = numericValue.slice(1); // Remove leading zero
+    // Handle multiple decimal points
+    numericValue = numericValue.replace(/(\..*)\./g, '$1');
+
+    // Limit to two decimal places
+    numericValue = numericValue.replace(/(\.\d{2})\d+$/g, '$1');
+
+    // If the input starts with a decimal point, add a leading zero
+    if (numericValue.charAt(0) === '.') {
+        numericValue = '0' + numericValue;
     }
 
     // Set the default value to 0 if the input is empty
@@ -463,38 +525,46 @@ function handleNumericInput(event) {
         numericValue = '0';
     }
 
+    // Handle leading zeros
+    if (numericValue.length > 1 && numericValue.charAt(0) === '0' && numericValue.charAt(1) !== '.') {
+        numericValue = numericValue.slice(1); // Remove leading zero
+    }
+
     // Update the input value
     inputElement.value = numericValue;
 }
 
+
 function PrintPreview() {
-    showLoader();
+    //showLoader();
 
-    // Call the server-side method to get the PDF content
-    $.ajax({
-        type: 'POST',
-        url: 'wfSdSalesOrderInvoice.aspx/GetPdfContent',
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({
-            "SalesInvoiceId": $('#dispSalesInvoiceId').val()
-        }),
-        dataType: 'json',
-        success: function (response) {
-            setTimeout(function () {
-                hideLoader();
+    //// Call the server-side method to get the PDF content
+    //$.ajax({
+    //    type: 'POST',
+    //    url: 'wfSdSalesOrderInvoice.aspx/GetPdfContent',
+    //    contentType: 'application/json; charset=utf-8',
+    //    data: JSON.stringify({
+    //        "SalesInvoiceId": $('#dispSalesInvoiceId').val()
+    //    }),
+    //    dataType: 'json',
+    //    success: function (response) {
+    //        setTimeout(function () {
+    //            hideLoader();
 
 
-                // Display the PDF content in the modal
-                $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
-                $('#pdfModal').modal('show');
-                $('.modal-backdrop').remove();
-            }, 1000); // Hide loader after 3 seconds
+    //            // Display the PDF content in the modal
+    //            $('#pdfPreview').attr('src', 'data:application/pdf;base64,' + response.d);
+    //            $('#pdfModal').modal('show');
+    //            $('.modal-backdrop').remove();
+    //        }, 1000); // Hide loader after 3 seconds
 
-        },
-        error: function (xhr, status, error) {
-            console.log('Error fetching PDF:', error);
-        }
-    });
+    //    },
+    //    error: function (xhr, status, error) {
+    //        console.log('Error fetching PDF:', error);
+    //    }
+    //});
+
+    window.open('wfSdSalesOrderInvoice_display.aspx?id=' + $('#dispSalesInvoiceId').val(), "_blank");
 
 }
 

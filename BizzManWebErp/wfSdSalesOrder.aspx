@@ -267,7 +267,7 @@
             </td>
             <td style="display: none;"></td>
             <td style="width: 100px;">
-                <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" />
+                <input type="text" class="form-control" id="txtMaterialRate" name="txtMaterialRate" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" onchange="UpdateTotalAmount();" />
             </td>
             <td style="width: 100px;">
                 <input type="text" class="form-control" id="txtMaterialDiscount" name="txtMaterialDiscount" onchange="UpdateTotalAmount();"  oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" />

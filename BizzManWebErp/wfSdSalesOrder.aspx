@@ -235,7 +235,7 @@
             <th>Unit Measure</th>
             <th>Package</th>
             <th style="display: none;">Package Id</th>
-            <th style="width: 100px;">Unit Price</th>
+            <th style="width: 100px;">Unit Price(Tax incl.)</th>
             <th style="width: 100px;">Discount (%)</th>
             <th>Tax (%)</th>
             <th>Total Amount</th>

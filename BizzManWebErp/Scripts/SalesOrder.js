@@ -795,75 +795,76 @@ function FetchSalesOrderMasterDetails(id, OrderStatus) {
 
             },
             success: function (response) {
-
-                var data = JSON.parse(response.d);
-                ClearAll();
-                $('#divSalesOrderList').hide();
-                $('#divSalesOrderEntry').show();
-                $('#divSalesOrderDetails').show();
-                $('#btnSave').show();
-                $('#btnExport').hide();
-                $('#btnView').show();
-                $('#txtSaleOrderId').val(id);
-              //  (data[i].SalesOrderSource != undefined ? data[0].SalesOrderSource : '')
-                $('#ddlGSTTreatment').val((data[0].GST_Treatment != undefined ? data[0].GST_Treatment : ''));
-                $('#ddlCurrency').val((data[0].CurrencyId != undefined ? data[0].CurrencyId : ''));
-                $('#ddlPaymentTerms').val((data[0].PaymentTerms != undefined ? data[0].PaymentTerms : ''));
-                $('#txtTermsConditions').val((data[0].TermCondition != undefined ? data[0].TermCondition : ''));
-                $('#txtTotalAmount').val((data[0].TotalAmount != undefined ? data[0].TotalAmount : ''));
-                $('#txtOutstandingAmount').val((data[0].OutstandingAmount != undefined ? data[0].OutstandingAmount : ''));
-                $('#txtAdvance').val((data[0].Advance != undefined ? data[0].Advance : ''));
-                $('#ddlBranch').val((data[0].BranchCode != undefined ? data[0].BranchCode : ''));
-                $('#ddlDept').val((data[0].DepartmentID != undefined ? data[0].DepartmentID : ''));
-                if (data[0].ExpirationDate != undefined) {
-                    var dtExpirationDate = new Date(data[0].ExpirationDate);
-                    $('#txtExpirationDate').val(formatDate(dtExpirationDate));
-                }
-                else {
-                    $('#txtExpirationDate').val(getCurrentDate());
-                }
-              //  var dtQuotationDate = new Date(data[0].QuotationDate);
-             //   document.getElementById("txtQuotationDate").valueAsDate = dtQuotationDate;
-                $('#hdnSalesOrderId').val((data[0].SalesOrderId != undefined ? data[0].SalesOrderId : '') );
-                $('#txtSaleOrderId').val((data[0].SalesOrderId != undefined ? data[0].SalesOrderId : ''));
-                $('#txtManualOrderId').val((data[0].ManualOrderId != undefined ? data[0].ManualOrderId : ''));
-                if (data[0].DeliveryDateTime != undefined) {
-                    var dtDeliveryDate = new Date(data[0].DeliveryDateTime.split('T')[0]);
-                    $('#txtDeliveryDate').val(formatDate(dtDeliveryDate));
-                }
-                else {
-                    $('#txtDeliveryDate').val(getCurrentDate());
-                }
-                $('#txtQuotationId').val((data[0].SalesQuotationMasterId != undefined ? data[0].SalesQuotationMasterId : ''));
-                if (data[0].OrderDate != undefined) {
-                    var dtOrderDate = new Date(data[0].OrderDate.split('T')[0]);
-                    $('#txtorderDate').val(formatDate(dtOrderDate));
-                    //$('#txtOrderDate').datepicker('setDate', dtOrderDate); // Set datepicker value
-                }
-              
-               
-                $('#txtDeliveryCharges').val((data[0].Deliveycharges != undefined ? data[0].Deliveycharges : '') );
-            
-           
-
-
-
-                FetchSalesOrderDetailsList(data[0].SalesOrderId);
-                if (OrderStatus == '1') {
-                    $('#btnConfirm').show();
-                    $('#btnCancel').show();
-                }
-                $('#previewBtn').show();
-                //$('#ddlCustomer').select2("val", data[0].CustomerId)
                 setTimeout(function () {
-                    $('#ddlCustomer').val(data[0].CustomerId).trigger('change');
-                   
-                }, 30);
-                setTimeout(function () {
-                  
-                    $('#ddlCustomer').focus();
-                }, 100);
-                hideLoader();
+                    var data = JSON.parse(response.d);
+                    ClearAll();
+                    $('#divSalesOrderList').hide();
+                    $('#divSalesOrderEntry').show();
+                    $('#divSalesOrderDetails').show();
+                    $('#btnSave').show();
+                    $('#btnExport').hide();
+                    $('#btnView').show();
+                    $('#txtSaleOrderId').val(id);
+                    //  (data[i].SalesOrderSource != undefined ? data[0].SalesOrderSource : '')
+                    $('#ddlGSTTreatment').val((data[0].GST_Treatment != undefined ? data[0].GST_Treatment : ''));
+                    $('#ddlCurrency').val((data[0].CurrencyId != undefined ? data[0].CurrencyId : ''));
+                    $('#ddlPaymentTerms').val((data[0].PaymentTerms != undefined ? data[0].PaymentTerms : ''));
+                    $('#txtTermsConditions').val((data[0].TermCondition != undefined ? data[0].TermCondition : ''));
+                    $('#txtTotalAmount').val((data[0].TotalAmount != undefined ? data[0].TotalAmount : ''));
+                    $('#txtOutstandingAmount').val((data[0].OutstandingAmount != undefined ? data[0].OutstandingAmount : ''));
+                    $('#txtAdvance').val((data[0].Advance != undefined ? data[0].Advance : ''));
+                    $('#ddlBranch').val((data[0].BranchCode != undefined ? data[0].BranchCode : ''));
+                    $('#ddlDept').val((data[0].DepartmentID != undefined ? data[0].DepartmentID : ''));
+                    if (data[0].ExpirationDate != undefined) {
+                        var dtExpirationDate = new Date(data[0].ExpirationDate);
+                        $('#txtExpirationDate').val(formatDate(dtExpirationDate));
+                    }
+                    else {
+                        $('#txtExpirationDate').val(getCurrentDate());
+                    }
+                    //  var dtQuotationDate = new Date(data[0].QuotationDate);
+                    //   document.getElementById("txtQuotationDate").valueAsDate = dtQuotationDate;
+                    $('#hdnSalesOrderId').val((data[0].SalesOrderId != undefined ? data[0].SalesOrderId : ''));
+                    $('#txtSaleOrderId').val((data[0].SalesOrderId != undefined ? data[0].SalesOrderId : ''));
+                    $('#txtManualOrderId').val((data[0].ManualOrderId != undefined ? data[0].ManualOrderId : ''));
+                    if (data[0].DeliveryDateTime != undefined) {
+                        var dtDeliveryDate = new Date(data[0].DeliveryDateTime.split('T')[0]);
+                        $('#txtDeliveryDate').val(formatDate(dtDeliveryDate));
+                    }
+                    else {
+                        $('#txtDeliveryDate').val(getCurrentDate());
+                    }
+                    $('#txtQuotationId').val((data[0].SalesQuotationMasterId != undefined ? data[0].SalesQuotationMasterId : ''));
+                    if (data[0].OrderDate != undefined) {
+                        var dtOrderDate = new Date(data[0].OrderDate.split('T')[0]);
+                        $('#txtorderDate').val(formatDate(dtOrderDate));
+                        //$('#txtOrderDate').datepicker('setDate', dtOrderDate); // Set datepicker value
+                    }
+
+
+                    $('#txtDeliveryCharges').val((data[0].Deliveycharges != undefined ? data[0].Deliveycharges : ''));
+
+
+
+
+
+                    FetchSalesOrderDetailsList(data[0].SalesOrderId);
+                    if (OrderStatus == '1') {
+                        $('#btnConfirm').show();
+                        $('#btnCancel').show();
+                    }
+                    $('#previewBtn').show();
+                    //$('#ddlCustomer').select2("val", data[0].CustomerId)
+                    setTimeout(function () {
+                        $('#ddlCustomer').val(data[0].CustomerId).trigger('change');
+
+                    }, 30);
+                    setTimeout(function () {
+
+                        $('#ddlCustomer').focus();
+                    }, 30);
+                    hideLoader();
+                }, 200);
             },
             complete: function () {
 
@@ -1234,7 +1235,8 @@ function UpdateTotalAmount() {
             discount = isNaN(discount) ? 0 : discount;
             tax = isNaN(tax) ? 0 : tax;
 
-            var totalAmnt = (qty * rate) * (1 - discount / 100) * (1 + tax / 100);
+            // var totalAmnt = (qty * rate) * (1 - discount / 100) * (1 + tax / 100);
+            var totalAmnt = (qty * rate) * (1 - discount / 100) ;
             $('#txtMaterialTotalAmount').val(totalAmnt.toFixed(2));
         } else {
             $('#txtMaterialQty').val('');

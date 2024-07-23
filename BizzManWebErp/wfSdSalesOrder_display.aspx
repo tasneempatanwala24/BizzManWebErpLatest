@@ -153,7 +153,8 @@
                       var cessTaxPercent = 0;
                       var qty = 0;
                       var Rate = 0;
-
+                      var Amount = 0;
+                      var NetGST = 0;
                       for (var i = 0; i < salesQuotationDetail.length; i++) {
                           content += '<tr>';
                           content += '<td style="border: 1px solid #000; padding: 8px;">' + salesQuotationDetail[i].materialName + '</td>';
@@ -168,12 +169,17 @@
                           cessTaxPercent = parseFloat(salesQuotationDetail[i].CessPercent);
                           qty = parseFloat(salesQuotationDetail[i].Qty);
                           Rate = parseFloat(salesQuotationDetail[i].Rate);
+                          Amount = parseFloat(salesQuotationDetail[i].Amount);
+                          //centralTaxValue += (qty * Rate) * (centralTaxPercent / 100);
+                          //stateTaxValue += (qty * Rate) * (stateTaxPercent / 100);
+                          //cessTaxValue += (qty * Rate) * (cessTaxPercent / 100);
 
-                          centralTaxValue += (qty * Rate) * (centralTaxPercent / 100);
-                          stateTaxValue += (qty * Rate) * (stateTaxPercent / 100);
-                          cessTaxValue += (qty * Rate) * (cessTaxPercent / 100);
+                          centralTaxValue += (Amount * (centralTaxPercent / 100));
+                          stateTaxValue += (Amount * (stateTaxPercent / 100));
+                          cessTaxValue += (Amount * (cessTaxPercent / 100));
+
                       }
-
+                      NetGST = centralTaxValue + stateTaxValue + cessTaxValue;
                       content += '</tbody>';
                       content += '<tfoot>';
                       if (quotationDetails && quotationDetails.length > 0) {
@@ -195,7 +201,7 @@
                           
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Net GST:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + quotationDetails[0].NetGST + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + NetGST + '</td>';
                           content += '</tr>';
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Shipping Charges:</td>';

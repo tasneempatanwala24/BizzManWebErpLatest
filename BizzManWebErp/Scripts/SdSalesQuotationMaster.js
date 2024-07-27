@@ -355,6 +355,13 @@ function calculateGrandTotal() {
         shippingCharges = 0;
     }
 
+    var centralTaxValue = 0;
+    var stateTaxValue = 0;
+    var cessTaxValue = 0;
+
+    var centralTaxPercent = 0;
+    var stateTaxPercent = 0;
+    var cessTaxPercent = 0;
     // Iterate through each row in the table body
     $('#dataTable tbody tr').each(function () {
         var qty = parseFloat($(this).find('.txtQuantity').val());
@@ -362,6 +369,12 @@ function calculateGrandTotal() {
         var actualRate = parseFloat($(this).find('.hdnActualRate').val());
         var totalAmount = parseFloat($(this).find('.txtAmount').val());
         var gst = parseFloat($(this).find('.txtGST').val());
+        var discount = parseFloat($(this).find('.txtDiscount ').val());
+        centralTaxPercent = parseFloat($(this).find('.hdnCentralTaxPercent ').val());
+        stateTaxPercent = parseFloat($(this).find('.hdnStateTaxPercent ').val());
+        cessTaxPercent = parseFloat($(this).find('.hdnCessPercent ').val());
+
+       
 
         // Check if the values are valid numbers, if not set to 0
         if (isNaN(qty)) qty = 0;
@@ -369,11 +382,20 @@ function calculateGrandTotal() {
         if (isNaN(actualRate)) actualRate = 0;
         if (isNaN(totalAmount)) totalAmount = 0;
         if (isNaN(gst)) gst = 0;
+        if (isNaN(discount)) discount = 0;
+        if (isNaN(centralTaxPercent)) centralTaxPercent = 0;
+        if (isNaN(stateTaxPercent)) stateTaxPercent = 0;
+        if (isNaN(cessTaxPercent)) cessTaxPercent = 0;
+
+
+        centralTaxValue += (totalAmount * (centralTaxPercent / 100));
+        stateTaxValue += (totalAmount * (stateTaxPercent / 100));
+        cessTaxValue += (totalAmount * (cessTaxPercent / 100));
 
         grandTotal += totalAmount;
-        grandTotalGST += (qty * rate) * (gst / 100);
+       
     });
-
+    grandTotalGST = centralTaxValue + stateTaxValue + cessTaxValue;
     // Display the calculated values in the table footer
     $('#grandTotal').val(grandTotal.toFixed(2));
     $('#grandTotalGST').val(grandTotalGST.toFixed(2));
@@ -802,7 +824,8 @@ function GetSdSalesQuotationMasterById(QuoatId) {
             var cessTaxPercent = 0;
             var qty = 0;
             var Rate = 0;
-
+            var Amount = 0;
+            var NetGST = 0;
             var html = '';
             for (var i = 0; i < data.SalesItems[0].Table.length; i++) {
                 html = html + '<tr"><td>' + data.SalesItems[0].Table[i].materialName + '</td>'
@@ -813,15 +836,20 @@ function GetSdSalesQuotationMasterById(QuoatId) {
                     + '<td>' + data.SalesItems[0].Table[i].GST + '</td>'
                     + '<td>' + data.SalesItems[0].Table[i].Amount + '</td></tr>';
 
+                Amount = parseFloat(data.SalesItems[0].Table[i].Amount);
                 centralTaxPercent = parseFloat(data.SalesItems[0].Table[i].CentralTaxPercent);
                 stateTaxPercent = parseFloat(data.SalesItems[0].Table[i].StateTaxPercent);
                 cessTaxPercent = parseFloat(data.SalesItems[0].Table[i].CessPercent);
                 qty = parseFloat(data.SalesItems[0].Table[i].Qty);
                 Rate = parseFloat(data.SalesItems[0].Table[i].Rate);
 
-                centralTaxValue += (qty * Rate) * (centralTaxPercent / 100);
-                stateTaxValue += (qty * Rate) * (stateTaxPercent / 100);
-                cessTaxValue += (qty * Rate) * (cessTaxPercent / 100);
+                //centralTaxValue += (qty * Rate) * (centralTaxPercent / 100);
+                //stateTaxValue += (qty * Rate) * (stateTaxPercent / 100);
+                //cessTaxValue += (qty * Rate) * (cessTaxPercent / 100);
+
+                centralTaxValue += (Amount * (centralTaxPercent / 100));
+                stateTaxValue += (Amount * (stateTaxPercent / 100));
+                cessTaxValue += (Amount * (cessTaxPercent / 100));
             }
 
 

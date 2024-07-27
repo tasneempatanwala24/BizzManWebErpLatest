@@ -224,7 +224,7 @@
                                 </td>
                                  <td style="width: 10%;">Sales Invoice Date*</td>
                                 <td>  
-                                <input type="date" class="form-control" id="dispSalesInvoiceDate" name="dispSalesInvoiceDate" disabled/>
+                                <input type="text" class="form-control" id="dispSalesInvoiceDate" name="dispSalesInvoiceDate" disabled/>
                                     </td>
                             </tr>
                             <tr>

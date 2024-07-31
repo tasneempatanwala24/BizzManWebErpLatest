@@ -429,7 +429,9 @@ where tblFaWarehouseMaster.BranchCode=SO.BranchCode and MaterialMasterId=o.Mater
             try
             {
 
-                dtMaterialDetails = objMain.dtFetchData(@"select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,(select isnull(Sum(QtyBalance),0) from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode where tblFaWarehouseMaster.BranchCode='"+BranchCode+"' and MaterialMasterId=MM.Id) as Stock from tblMmMaterialMaster MM where Id=" + MaterialId + "");
+                dtMaterialDetails = objMain.dtFetchData(@"select Id,MaterialName,UnitMesure,MRP,isnull(IntegratedTaxPercent,0) as IntegratedTaxPercent,isnull(CentralTaxPercent,0) as CentralTaxPercent
+,isnull(StateTaxPercent,0) as StateTaxPercent,isnull(CessPercent,0) as CessPercent,
+(select isnull(Sum(QtyBalance),0) from tblMmMaterialStockMaster inner join tblFaWarehouseMaster on tblFaWarehouseMaster.Id = tblMmMaterialStockMaster.WarehouseId inner join tblHrBranchMaster on tblHrBranchMaster.BranchCode=tblFaWarehouseMaster.BranchCode where tblFaWarehouseMaster.BranchCode='" + BranchCode+"' and MaterialMasterId=MM.Id) as Stock from tblMmMaterialMaster MM where Id=" + MaterialId + "");
             }
             catch (Exception ex)
             {

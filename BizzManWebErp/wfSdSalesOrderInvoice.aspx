@@ -141,9 +141,21 @@
                                 <td >
                                     <input type="text" class="form-control" id="txtPaymentComplete" name="txtPaymentComplete" value="n" readonly />
                                 </td>
-                                <td></td>
-                                <td></td>
+                                                              <td>Net GST</td>
+<td>
+    <input type="text" class="form-control" id="txtNetGST" name="txtNetGST" readonly="readonly" />
+</td>
                             </tr>
+                                                                                   <tr>
+                                <td>Central Tax Value</td>
+                               <td>
+                                   <input type="text" class="form-control" id="txtCentralTax" name="txtCentralTax" readonly="readonly"  />
+                               </td>
+                               <td>State Tax Value</td>
+<td>
+    <input type="text" class="form-control" id="txtStateTax" name="txtStateTax" readonly="readonly" />
+</td>
+                           </tr>
                          
                            </table>
                     </div>
@@ -271,9 +283,21 @@
                                 <td >
                                     <input type="text" class="form-control" id="dispPaymentComplete" name="dispPaymentComplete" value="n" readonly />
                                 </td> 
-                                <td></td>
-                                <td></td>
+                               <td>Net GST</td>
+<td>
+    <input type="text" class="form-control" id="dispNetGST" name="dispNetGST" readonly="readonly" />
+</td>
                             </tr>
+                                                                                                               <tr>
+                                <td>Central Tax Value</td>
+                               <td>
+                                   <input type="text" class="form-control" id="dispCentralTax" name="dispCentralTax" readonly="readonly"  />
+                               </td>
+                               <td>State Tax Value</td>
+<td>
+    <input type="text" class="form-control" id="dispStateTax" name="dispStateTax" readonly="readonly" />
+</td>
+                           </tr>
                          
                            </table>
                     </div>

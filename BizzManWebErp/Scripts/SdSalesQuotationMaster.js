@@ -655,6 +655,9 @@ function ClearAll() {
     $('#notes').val('');
     $('#terms').val('');
     $('#ShippingCharges').val('0')
+    $('#grandTotal').prop('disabled', false).val('0').prop('disabled', true);
+    $('#grandTotalGST').prop('disabled', false).val('0').prop('disabled', true);
+    $('#netAmount').prop('disabled', false).val('0').prop('disabled', true);
     toggleTfootVisibility();
     $('#ddlClientName').select2('destroy');
     $('#ddlClientName').html('<option value="">-Select Client Name-</option>');

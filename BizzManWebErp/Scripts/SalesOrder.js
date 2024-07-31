@@ -895,8 +895,24 @@ function FetchSalesOrderDetailsList(salesorderid) {
             var data = JSON.parse(response.d);
 
             var html = '';
+            var centralTaxValue = 0;
+            var stateTaxValue = 0;
+            var cessTaxValue = 0;
+
+            var centralTaxPercent = 0;
+            var stateTaxPercent = 0;
+            var cessTaxPercent = 0;
+            var NetGST = 0;
             for (var i = 0; i < data.length; i++) {
-                $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + data[i].MaterialId + '</td>'
+                centralTaxPercent = parseFloat(data[i].CentralTaxPercent);
+                stateTaxPercent = parseFloat(data[i].StateTaxPercent);
+                cessTaxPercent = parseFloat(data[i].CessPercent);
+                var amount = parseFloat(data[i].SubTotal);
+
+                centralTaxValue += (amount * (centralTaxPercent / 100));
+                stateTaxValue += (amount * (stateTaxPercent / 100));
+                cessTaxValue += (amount * (cessTaxPercent / 100));
+                $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + data[i].MaterialId + '<input type="hidden" value="' + data[i].CentralTaxPercent + '" class="hdnCentralTaxPercent"><input type="hidden" value="' + data[i].StateTaxPercent + '" class="hdnStateTaxPercent"><input type="hidden" value="' + data[i].CessPercent +'" class="hdnCessPercent"></td>'
                     + '<td style="width: 250px;">' + (data[i].MaterialName != undefined ? data[i].MaterialName : "") + '</td>'
                     + '<td style="width: 100px;">' + (data[i].Stock != undefined ? data[i].Stock : "") + '</td>'
                     + '<td style="width: 100px;">' + (data[i].Qty != undefined ? data[i].Qty : "") + '</td>'
@@ -910,9 +926,11 @@ function FetchSalesOrderDetailsList(salesorderid) {
                     + '<td><a onclick="DeleteSalesOrderDetailEntry(this);" style="cursor:pointer;"><i class="fa fa-trash" aria-hidden="true"></i></a></td>'
                     + '</tr>');
             }
+            NetGST = centralTaxValue + stateTaxValue + cessTaxValue;
 
-
-
+            $('#txtNetGST').val(NetGST.toFixed(2));
+            $('#txtCentralTax').val(centralTaxValue.toFixed(2));
+            $('#txtStateTax').val(stateTaxValue.toFixed(2));
 
         },
         complete: function () {
@@ -1057,6 +1075,12 @@ function FetchMaterialDetails() {
                     $('#txtMaterialRate').val(data[0].MRP);
                     $('#txtMaterialTax').val(data[0].IntegratedTaxPercent);
                     $('#txtMaterialStock').val(data[0].Stock);
+                    $('#hdnCentralTaxPercent').val(data[0].CentralTaxPercent);
+
+                    $('#hdnStateTaxPercent').val(data[0].StateTaxPercent);
+
+                    $('#hdnCessPercent').val(data[0].CessPercent);
+
                     BindMaterialPackagingDropdown($('#ddlMaterialName').val());
                     hideLoader();
                     $("#txtMaterialQty").focus();
@@ -1077,20 +1101,40 @@ function FetchMaterialDetails() {
 
 function calculateGrandTotal() {
     var grandTotal = 0;
-
+    var grandTotalGST = 0;
     var shippingCharges = parseFloat($('#txtDeliveryCharges').val());
     shippingCharges = isNaN(shippingCharges) ? 0 : shippingCharges;
+    var centralTaxValue = 0;
+    var stateTaxValue = 0;
+    var cessTaxValue = 0;
 
+    var centralTaxPercent = 0;
+    var stateTaxPercent = 0;
+    var cessTaxPercent = 0;
     // Iterate through each row in the table body
     $('#tbody_SalesOrderDetails tr').each(function (i) {
         if (i > 0) {
+            centralTaxPercent = parseFloat($(this).find('.hdnCentralTaxPercent ').val());
+            stateTaxPercent = parseFloat($(this).find('.hdnStateTaxPercent ').val());
+            cessTaxPercent = parseFloat($(this).find('.hdnCessPercent ').val());
+
+            if (isNaN(centralTaxPercent)) centralTaxPercent = 0;
+            if (isNaN(stateTaxPercent)) stateTaxPercent = 0;
+            if (isNaN(cessTaxPercent)) cessTaxPercent = 0;
             var totalAmount = parseFloat($(this)[0].cells[10].innerText);
             totalAmount = isNaN(totalAmount) ? 0 : totalAmount;
+            centralTaxValue += (totalAmount * (centralTaxPercent / 100));
+            stateTaxValue += (totalAmount * (stateTaxPercent / 100));
+            cessTaxValue += (totalAmount * (cessTaxPercent / 100));
             grandTotal += totalAmount;
+            
         }
     });
-
+    grandTotalGST = centralTaxValue + stateTaxValue + cessTaxValue;
     grandTotal += shippingCharges;
+     $('#txtNetGST').val(grandTotalGST.toFixed(2));
+    $('#txtCentralTax').val(centralTaxValue.toFixed(2));
+    $('#txtStateTax').val(stateTaxValue.toFixed(2));
     $('#txtTotalAmount').val(grandTotal.toFixed(2));
 
     var outstanding = 0;
@@ -1159,7 +1203,10 @@ function SaveSalesOrderDetails() {
 
         if ($('#txtMaterialQty').val() != '') {
             //if ($('#ddlPackage').val() != '') {
-                $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + $('#ddlMaterialName').val() + '</td>'
+            var centralTaxPercent = $('#hdnCentralTaxPercent').val();
+            var stateTaxPercent = $('#hdnStateTaxPercent').val();
+            var cessTaxPercent = $('#hdnCessPercent').val();
+            $('#tbody_SalesOrderDetails').append('<tr><td style="display: none;">' + $('#ddlMaterialName').val() + '<input type="hidden" value="' + centralTaxPercent + '" class="hdnCentralTaxPercent"><input type="hidden" value="' + stateTaxPercent + '" class="hdnStateTaxPercent"><input type="hidden" value="' + cessTaxPercent +'" class="hdnCessPercent"></td>'
                     + '<td style="width: 250px;">' + $("#ddlMaterialName option:selected").text() + '</td>'
                     + '<td style="width: 100px;">' + $("#txtMaterialStock").val() + '</td>'
                     + '<td style="width: 100px;">' + $("#txtMaterialQty").val() + '</td>'

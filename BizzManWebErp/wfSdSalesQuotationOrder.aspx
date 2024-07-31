@@ -202,9 +202,21 @@
                                 <td>
                                     <input type="text" class="form-control" id="txtDeliveryCharges" name="txtDeliveryCharges" onchange="GetTotalAmount()" oninput="handleNumericInput(event)"  />
                                 </td>
-                                <td></td>
-                                <td></td>
+                                <td>Net GST</td>
+ <td>
+     <input type="text" class="form-control" id="txtNetGST" name="txtNetGST" readonly="readonly" />
+ </td>
                             </tr>
+                                                       <tr>
+                                <td>Central Tax Value</td>
+                               <td>
+                                   <input type="text" class="form-control" id="txtCentralTax" name="txtCentralTax" readonly="readonly"  />
+                               </td>
+                               <td>State Tax Value</td>
+<td>
+    <input type="text" class="form-control" id="txtStateTax" name="txtStateTax" readonly="readonly" />
+</td>
+                           </tr>
                             <tr>
                                 <td>Terms & Conditions</td>
                                 <td colspan="3">
@@ -377,12 +389,22 @@
                                 <td>
                                     <input type="text" class="form-control" id="dispDeliveryCharges" name="dispDeliveryCharges" readonly="readonly" />
                                 </td>
-                               <td></td>
-                                <td>
-                                   
-                                </td>
+                                                             <td>Net GST</td>
+<td>
+    <input type="text" class="form-control" id="dispNetGST" name="dispNetGST" readonly="readonly" />
+</td>
 
                             </tr>
+                                                                                   <tr>
+                                <td>Central Tax Value</td>
+                               <td>
+                                   <input type="text" class="form-control" id="dispCentralTax" name="dispCentralTax" readonly="readonly"  />
+                               </td>
+                               <td>State Tax Value</td>
+<td>
+    <input type="text" class="form-control" id="dispStateTax" name="dispStateTax" readonly="readonly" />
+</td>
+                           </tr>
                             <tr>
                                 <td>Terms & Conditions</td>
                                 <td colspan="3">

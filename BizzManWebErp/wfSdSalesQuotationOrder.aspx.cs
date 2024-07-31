@@ -335,7 +335,8 @@ from tblSdSalesOrder SO
                     where SalesOrderId='" + SalesOrderId + "'");
 
                 dtSalesOrderDetailsList = objMain.dtFetchData(@"select o.MaterialId,m.MaterialName,o.Qty,m.UnitMesure,p.Packaging,
-                                                                  o.PackageId,o.UnitPrice,o.Tax,o.SubTotal
+                                                                  o.PackageId,o.UnitPrice,o.Tax,o.SubTotal,
+o.CentralTaxPercent,o.StateTaxPercent,o.CessPercent
                                                                   from tblSdSalesOrderProductDetails o
                                                                   left join tblMmMaterialMaster m on m.Id=o.MaterialId
                                                                   left join tblMmMaterialPackagingDetails p on p.id=o.PackageId

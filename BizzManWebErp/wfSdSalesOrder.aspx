@@ -205,11 +205,21 @@
                                 <td>
                                     <input type="text" class="form-control" id="txtOutstandingAmount" name="txtOutstandingAmount" value="0" oninput="handleNumericInput(event)"  onblur="checkInputGiven(event)" onchange="calculateGrandTotal()" disabled />
                                 </td>
-                                <td>
-
-                                </td>
-                                <td></td>
+                                                               <td>Net GST</td>
+<td>
+    <input type="text" class="form-control" id="txtNetGST" name="txtNetGST" readonly="readonly" />
+</td>
                             </tr>
+                                                                                   <tr>
+                                <td>Central Tax Value</td>
+                               <td>
+                                   <input type="text" class="form-control" id="txtCentralTax" name="txtCentralTax" readonly="readonly"  />
+                               </td>
+                               <td>State Tax Value</td>
+<td>
+    <input type="text" class="form-control" id="txtStateTax" name="txtStateTax" readonly="readonly" />
+</td>
+                           </tr>
                            </table>
                     </div>
                 </div>
@@ -245,7 +255,7 @@
 
     <tbody id="tbody_SalesOrderDetails">
         <tr id="tr_SalesOrderDetailEntry">
-            <td style="display: none;"></td>
+            <td style="display: none;"><input type="hidden" value="" id="hdnCentralTaxPercent"><input type="hidden" value="" id="hdnStateTaxPercent"><input type="hidden" value="" id="hdnCessPercent"></td>
             <td style="width: 250px;">
                 <select id="ddlMaterialName" name="ddlMaterialName" class="form-control" onchange="FetchMaterialDetails();">
                     <option value="">-Select Material Name-</option>

@@ -34,7 +34,8 @@ function attachKeydownListeners() {
         if (event.key === "Enter") {
             event.preventDefault();
             setTimeout(function () {
-                $("#txtSalesInvoiceDate").focus(); // Trigger click to open the calendar popup
+                //$("#txtSalesInvoiceDate").focus(); // Trigger click to open the calendar popup
+                $("#txtDeliveryCharges").focus();
             }, 300);
         }
     });
@@ -42,7 +43,8 @@ function attachKeydownListeners() {
     $("#ddlSalesOrderd").on("change", function (event) {
       
             setTimeout(function () {
-                $("#txtSalesInvoiceDate").focus(); // Trigger click to open the calendar popup
+               // $("#txtSalesInvoiceDate").focus(); // Trigger click to open the calendar popup
+                $("#txtDeliveryCharges").focus();
             }, 300);
         
 
@@ -194,7 +196,7 @@ function GetSalesOrderIdDetails() {
 
                     var html = '';
                     for (var i = 0; i < data.SalesOrderInvoiceItems[0].Table.length; i++) {
-                        html = html + '<tr><td><input type="checkbox" class="rowCheckbox"></td>'
+                        html = html + '<tr><td><input type="checkbox" class="rowCheckbox"><input type="hidden" value="' + data.SalesOrderInvoiceItems[0].Table[i].CentralTaxPercent + '" class="hdnCentralTaxPercent"><input type="hidden" value="' + data.SalesOrderInvoiceItems[0].Table[i].StateTaxPercent + '" class="hdnStateTaxPercent"><input type="hidden" value="' + data.SalesOrderInvoiceItems[0].Table[i].CessPercent +'" class="hdnCessPercent"></td>'
                             + '<td class="materialID" style="display:none">' + data.SalesOrderInvoiceItems[0].Table[i].MaterialId + '</td>'
                             + '<td class="SalesOrderProductDetailId" style="display:none">' + data.SalesOrderInvoiceItems[0].Table[i].SalesOrderProductDetailId + '</td>'
                             + '<td class="materialName">' + data.SalesOrderInvoiceItems[0].Table[i].materialName + '</td>'
@@ -333,14 +335,37 @@ function AddSalesOrder() {
 
 
 function GetTotalAmount() {
-    var amount = 0;
+    var grandTotal = 0;
+    var grandTotalGST = 0;
+    var centralTaxValue = 0;
+    var stateTaxValue = 0;
+    var cessTaxValue = 0;
+
+    var centralTaxPercent = 0;
+    var stateTaxPercent = 0;
+    var cessTaxPercent = 0;
     $('#tbody_SalesOrderDetails tr').each(function () {
         if ($(this).find('.rowCheckbox').is(':checked')) {
-            amount += parseFloat($(this).find('.amount').text());
+            centralTaxPercent = parseFloat($(this).find('.hdnCentralTaxPercent ').val());
+            stateTaxPercent = parseFloat($(this).find('.hdnStateTaxPercent ').val());
+            cessTaxPercent = parseFloat($(this).find('.hdnCessPercent ').val());
+
+            if (isNaN(centralTaxPercent)) centralTaxPercent = 0;
+            if (isNaN(stateTaxPercent)) stateTaxPercent = 0;
+            if (isNaN(cessTaxPercent)) cessTaxPercent = 0;
+            var amount = parseFloat($(this).find('.amount').text());
+            centralTaxValue += (amount * (centralTaxPercent / 100));
+            stateTaxValue += (amount * (stateTaxPercent / 100));
+            cessTaxValue += (amount * (cessTaxPercent / 100));
+            grandTotal += parseFloat($(this).find('.amount').text());
         }
     });
-    amount = amount + parseFloat($('#txtDeliveryCharges').val())
-    $('#txtTotalAmount').val(amount);
+    grandTotalGST = centralTaxValue + stateTaxValue + cessTaxValue;
+    grandTotal = grandTotal + parseFloat($('#txtDeliveryCharges').val())
+    $('#txtNetGST').val(grandTotalGST.toFixed(2));
+    $('#txtCentralTax').val(centralTaxValue.toFixed(2));
+    $('#txtStateTax').val(stateTaxValue.toFixed(2));
+    $('#txtTotalAmount').val(grandTotal);
    // $('#txtOutstandingAmount').val(amount);
 }
 
@@ -397,6 +422,9 @@ function ClearAll() {
       $('#txtCustomer').val('');
     $('#txtSalesInvoiceDate').val('');
     $('#txtCustomer').val('');
+    $('#txtNetGST').prop('disabled', false).val('0').prop('disabled', true);
+    $('#txtCentralTax').prop('disabled', false).val('0').prop('disabled', true);
+    $('#txtStateTax').prop('disabled', false).val('0').prop('disabled', true);
     $('#txtSalesInvoiceDate').val(getCurrentDate());
     $('#ddlSalesOrderd').select2('destroy');
     $('#ddlSalesOrderd').html('<option value="">-Select Customer-</option>');
@@ -447,7 +475,14 @@ function FetchSalesOrderMasterDetails(id) {
             $('#dispPaymentComplete').val(data.SalesQuotationOrderMastertInfo.PaymentComplete);
             $('#dispDeliveryCharges').val(data.SalesQuotationOrderMastertInfo.DeliveryCharges);
            
+            var centralTaxValue = 0;
+            var stateTaxValue = 0;
+            var cessTaxValue = 0;
 
+            var centralTaxPercent = 0;
+            var stateTaxPercent = 0;
+            var cessTaxPercent = 0;
+            var NetGST = 0;
 
          
 
@@ -465,10 +500,20 @@ function FetchSalesOrderMasterDetails(id) {
                     + '<td class="Rate">' + data.SalesOrderInvoiceItems[0].Table[i].UnitPrice + '</td>'
                     + '<td class="GST">' + data.SalesOrderInvoiceItems[0].Table[i].Tax + '</td>'
                     + '<td class="amount">' + data.SalesOrderInvoiceItems[0].Table[i].SubTotal + '</td></tr>';
+                centralTaxPercent = parseFloat(data.SalesOrderInvoiceItems[0].Table[i].CentralTaxPercent);
+                stateTaxPercent = parseFloat(data.SalesOrderInvoiceItems[0].Table[i].StateTaxPercent);
+                cessTaxPercent = parseFloat(data.SalesOrderInvoiceItems[0].Table[i].CessPercent);
+                var amount = parseFloat(data.SalesOrderInvoiceItems[0].Table[i].SubTotal);
 
+                centralTaxValue += (amount * (centralTaxPercent / 100));
+                stateTaxValue += (amount * (stateTaxPercent / 100));
+                cessTaxValue += (amount * (cessTaxPercent / 100));
 
             }
-
+            NetGST = centralTaxValue + stateTaxValue + cessTaxValue;
+            $('#dispNetGST').val(NetGST);
+            $('#dispCentralTax').val(centralTaxValue);
+            $('#dispStateTax').val(stateTaxValue);
 
 
 

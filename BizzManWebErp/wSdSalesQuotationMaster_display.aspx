@@ -189,18 +189,18 @@
 
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Central Tax Value:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + centralTaxValue + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + centralTaxValue.toFixed(2) + '</td>';
                           content += '</tr>';
 
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">State Tax Value:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + stateTaxValue + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + stateTaxValue.toFixed(2) + '</td>';
                           content += '</tr>';
 
                           
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Net GST:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + NetGST + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + NetGST.toFixed(2) + '</td>';
                           content += '</tr>';
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Shipping Charges:</td>';
@@ -208,7 +208,10 @@
                           content += '</tr>';
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Net Amount:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + quotationDetails[0].NetAmount + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;"><b>' + Math.round(parseFloat(quotationDetails[0].NetAmount)) + '</b></td>';
+                          content += '</tr>';
+                          content += '<tr>';
+                          content += '<td colspan="6" style="text-align:left; border: 1px solid #000; padding: 8px;">Amount in Words : <br/><b>' + numberToWords(Math.round(parseFloat(quotationDetails[0].NetAmount))) + '</b></td>';
                           content += '</tr>';
                       }
                       content += '</tfoot>';
@@ -245,6 +248,35 @@
               html2pdf().set(opt).from(element).save();
           }
 
+          function numberToWords(num) {
+              const belowTwenty = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+                  "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+                  "Seventeen", "Eighteen", "Nineteen"];
+              const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+              const thousands = ["", "Thousand", "Million", "Billion"];
+
+              if (num === 0) return "Zero";
+
+              let words = '';
+
+              function helper(n) {
+                  if (n < 20) {
+                      return belowTwenty[n];
+                  } else if (n < 100) {
+                      return tens[Math.floor(n / 10)] + (n % 10 ? " " + belowTwenty[n % 10] : "");
+                  } else {
+                      return belowTwenty[Math.floor(n / 100)] + " Hundred" + (n % 100 ? " and " + helper(n % 100) : "");
+                  }
+              }
+
+              for (let i = 0, unit = 1000; num > 0; i++, num = Math.floor(num / 1000)) {
+                  if (num % 1000 !== 0) {
+                      words = helper(num % 1000) + " " + thousands[i] + (words ? " " + words : "");
+                  }
+              }
+
+              return words.trim();
+          }
 
       </script>
 </head>

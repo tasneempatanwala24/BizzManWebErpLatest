@@ -190,18 +190,18 @@
 
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Central Tax Value:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + centralTaxValue + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + centralTaxValue.toFixed(2) + '</td>';
                           content += '</tr>';
 
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">State Tax Value:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + stateTaxValue + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + stateTaxValue.toFixed(2) + '</td>';
                           content += '</tr>';
 
                           
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Net GST:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + NetGST + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;">' + NetGST.toFixed(2) + '</td>';
                           content += '</tr>';
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Shipping Charges:</td>';
@@ -209,7 +209,10 @@
                           content += '</tr>';
                           content += '<tr>';
                           content += '<td colspan="5" style="text-align:right; border: 1px solid #000; padding: 8px;">Net Amount:</td>';
-                          content += '<td style="border: 1px solid #000; padding: 8px;">' + quotationDetails[0].NetAmount + '</td>';
+                          content += '<td style="border: 1px solid #000; padding: 8px;"><b>' + Math.round(parseFloat(quotationDetails[0].NetAmount)) + '</b></td>';
+                          content += '</tr>';
+                          content += '<tr>';
+                          content += '<td colspan="6" style="text-align:left; border: 1px solid #000; padding: 8px;">Amount in Words : <br/><b>' + numberToWords(Math.round(parseFloat(quotationDetails[0].NetAmount))) + '</b></td>';
                           content += '</tr>';
                       }
                       content += '</tfoot>';

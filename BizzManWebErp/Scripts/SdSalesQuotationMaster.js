@@ -401,7 +401,7 @@ function calculateGrandTotal() {
     $('#grandTotalGST').val(grandTotalGST.toFixed(2));
 
     grandTotal += shippingCharges;
-    $('#netAmount').val(grandTotal.toFixed(2));
+    $('#netAmount').val(Math.round(grandTotal.toFixed(2)));
 }
 
 
@@ -757,7 +757,7 @@ function displayDataList(data) {
         row += '<td>' + data[i].NetTotal + '</td>';
         row += '<td>' + data[i].NetGST + '</td>';
         row += '<td>' + data[i].ShippingCharges + '</td>';
-        row += '<td>' + data[i].NetAmount + '</td>';
+        row += '<td>' + Math.round(data[i].NetAmount) + '</td>';
       
         row += '</tr>';
 
@@ -814,7 +814,7 @@ function GetSdSalesQuotationMasterById(QuoatId) {
 
             $('#dispgrandTotalGST').val(data.SalesQuotationMastertInfo.NetGST)
             $('#dispShippingCharges').val(data.SalesQuotationMastertInfo.ShippingCharges)
-            $('#dispnetAmount').val(data.SalesQuotationMastertInfo.NetAmount)
+            $('#dispnetAmount').val(Math.round(parseFloat(data.SalesQuotationMastertInfo.NetAmount)))
             $('#dispnotes').val(data.SalesQuotationMastertInfo.Notes)
             $('#dispterms').val(data.SalesQuotationMastertInfo.TermsAndConditions)
 
